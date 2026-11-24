@@ -1,0 +1,136 @@
+---
+interface Props {
+  id: string;
+  dark?: boolean;
+}
+const { id, dark = false } = Astro.props;
+---
+
+<div class:list={['wl', { dark }]}>
+  <form class="pill" data-waitlist novalidate>
+    <label class="sr" for={`email-${id}`}>Your email</label>
+    <input id={`email-${id}`} type="email" name="email" placeholder="Your email" autocomplete="email" required />
+    <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <button class="btn" type="submit">Join the waitlist</button>
+  </form>
+  <p class="fine" data-status role="status" aria-live="polite">We email you once, when it opens.</p>
+</div>
+
+<style>
+  .wl {
+    width: 100%;
+    max-width: 440px;
+  }
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: var(--radius-pill);
+    padding: 5px;
+    box-shadow: inset 0 0 0 1px var(--color-line), 0 10px 24px -14px rgba(30, 40, 90, 0.35);
+  }
+  .dark .pill {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: var(--text-body);
+    padding: 10px 16px;
+    color: var(--color-ink);
+  }
+  input:focus {
+    outline: none;
+  }
+  .pill:focus-within {
+    outline: 2px solid var(--color-haze);
+    outline-offset: 2px;
+  }
+  .dark .pill:focus-within {
+    outline-color: var(--color-sheen);
+  }
+  .fine {
+    margin-top: 10px;
+    font-size: var(--text-small);
+    color: var(--color-ink-faint);
+  }
+  .dark .fine {
+    color: var(--color-panel-soft);
+  }
+  .fine.err {
+    color: var(--color-skip);
+  }
+  .dark .fine.err {
+    color: var(--color-no-bright);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>
+
+<script>
+  const ENDPOINT = import.meta.env.PUBLIC_WAITLIST_ENDPOINT as string | undefined;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  document.querySelectorAll<HTMLFormElement>('form[data-waitlist]').forEach((form) => {
+    const status = form.parentElement!.querySelector<HTMLElement>('[data-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    const show = (msg: string, error = false) => {
+      status.textContent = msg;
+      status.classList.toggle('err', error);
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      // Honeypot: bots fill the hidden field, people never see it.
+      if (data.get('company')) return;
+
+      const email = data.get('email')?.toString().trim() ?? '';
+      if (!EMAIL_RE.test(email)) return show('Enter a valid email address.', true);
+
+      button.disabled = true;
+      show('Joining…');
+      try {
+        if (!ENDPOINT) {
+          if (!import.meta.env.DEV) throw new Error('Waitlist endpoint is not configured');
+          console.warn('PUBLIC_WAITLIST_ENDPOINT is not set; simulating success in dev.');
+        } else {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ email, source: 'landing-page' }),
+          });
+          if (!res.ok) throw new Error(`Waitlist request failed (${res.status})`);
+        }
+        form.reset();
+        show("You're on the list. We'll email you once, when it opens.");
+      } catch (err) {
+        console.error(err);
+        show("Couldn't sign you up just now. Please try again in a moment.", true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>

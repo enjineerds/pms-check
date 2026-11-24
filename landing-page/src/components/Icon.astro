@@ -1,0 +1,50 @@
+---
+/** One stroke icon family (24px grid, round caps). Sized in em so it follows the surrounding text. */
+type Name =
+  | 'check'
+  | 'question'
+  | 'x'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'car'
+  | 'flash'
+  | 'copy'
+  | 'doc'
+  | 'clock';
+interface Props {
+  name: Name;
+  size?: string;
+  stroke?: number;
+  class?: string;
+}
+const { name, size = '1em', stroke = 2.4, class: className } = Astro.props;
+
+const paths: Record<Name, string> = {
+  check: 'M5 12.5l4.5 4.5L19 7',
+  question: 'M9.2 9.2a2.9 2.9 0 1 1 4.1 2.6c-.8.4-1.3 1.1-1.3 2v.4M12 17.6v.1',
+  x: 'M7 7l10 10M17 7L7 17',
+  'chevron-left': 'M14.5 6l-6 6 6 6',
+  'chevron-right': 'M9.5 6l6 6-6 6',
+  car: 'M5 15.5V12l1.8-4.2A2 2 0 0 1 8.6 6.6h6.8a2 2 0 0 1 1.8 1.2L19 12v3.5M4 15.5h16v2.5H4zM7.5 18v1.5M16.5 18v1.5M5 12h14',
+  flash: 'M13 3L6 13.5h5.5L10.5 21 18 10.5h-5.5z',
+  copy: 'M9 9h10v10H9zM5 15V5h10',
+  doc: 'M7 4h10v16H7zM10 9h4M10 13h4',
+  clock: 'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zM12 8v4l2.5 1.5',
+};
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[name]}></path>
+</svg>

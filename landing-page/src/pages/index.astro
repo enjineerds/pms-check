@@ -1,0 +1,946 @@
+---
+import Base from '../layouts/Base.astro';
+import Phone from '../components/Phone.astro';
+import Screen from '../components/Screen.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import Icon from '../components/Icon.astro';
+
+const problems = [
+  {
+    tone: 'optional',
+    icon: 'doc',
+    title: "You have never seen your car's schedule",
+    text: 'The maker lists what is due at each kilometre mark. Most new owners learn it from the quote itself.',
+  },
+  {
+    tone: 'skip',
+    icon: 'x',
+    title: 'Add-ons sound as firm as the real thing',
+    text: 'An engine flush and an oil change are listed one under the other on the same quote. Only one is in your 10,000 km service.',
+    chips: [
+      { name: 'Oil change', verdict: 'yes', note: "In your Vios's 10,000 km schedule." },
+      { name: 'Engine flush', verdict: 'no', note: "Not in your Vios's schedule. You can say no." },
+    ],
+  },
+  {
+    tone: 'required',
+    icon: 'clock',
+    title: 'The decision is due while you stand there',
+    text: 'The advisor is waiting and you have a phone in your hand. You have seconds to answer.',
+  },
+];
+
+const steps = [
+  { title: 'Tell us your car', text: 'Pick your model and variant, then enter your odometer reading. We find the service that is due at that mileage.', screen: 'pick', label: 'Pick your car screen listing the Toyota Vios, Wigo, Mitsubishi Mirage, Honda City, Suzuki Ertiga and Nissan Almera.' },
+  { title: 'Scan or type the quote', text: 'Photograph the page, or type the lines. You can fix anything we misread before we compare.', screen: 'scan', label: 'Scan the quote screen showing a photographed service quotation totalling ₱14,000.' },
+  { title: 'Get a verdict on every line', text: 'See what to say yes to, what to ask about, and what to decline, with the price of each.', screen: 'verdict', label: 'Verdict screen: say no to ₱8,800 of this quote, with ₱3,400 to say yes and ₱1,800 to ask first.' },
+] as const;
+
+const faqs = [
+  ['Is my car covered?', 'We are starting with popular models in the Philippines, such as the Toyota Vios, Wigo, Mitsubishi Mirage, Honda City, Suzuki Ertiga and Nissan Almera. If yours is missing, you can pick the closest schedule and ask the advisor about differences.'],
+  ["What if the advisor says it's required?", "Show them the line and its source, then ask them to point to it in your owner's manual. If the manual says otherwise, the answer is yours to give."],
+  ['Will it tell me to skip real maintenance?', 'It marks an item Say no only when it is not in your car\'s schedule for that service. Items that are due soon are marked Ask first, so you can choose.'],
+  ['Is my quote saved when I scan it?', 'Nothing is saved while we read the lines. You check them first, then run the comparison.'],
+  ['What if it misreads a price?', 'Lines it is unsure about are marked amber. Tap one to fix the text or the price before the verdict is calculated.'],
+  ['Can I type the quote instead?', 'Yes. Type each line, or tap a suggestion, and add the price. Scanning is optional.'],
+];
+---
+
+<Base
+  title="PMS Check: quote checker for new car owners in the Philippines"
+  description="Photograph your casa's PMS quote and get a Say yes, Ask first or Say no on every line, checked against your car's manufacturer schedule."
+>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="#top" aria-label="PMS Check home">
+        <span class="logo" aria-hidden="true">
+          <Icon name="check" size="12px" stroke={3.4} />
+        </span>
+        PMS Check
+      </a>
+      <nav aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#why">Why</a>
+        <a href="#questions">Questions</a>
+      </nav>
+      <a class="btn" href="#join">Join the waitlist</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="wrap hero-in">
+        <div class="hero-copy">
+          <p class="eyebrow"><i></i>For new car owners in the Philippines</p>
+          <h1>Say no to the PMS items that aren't in your manual.</h1>
+          <p class="lede">
+            Photograph your casa's quote. Every line comes back as Say yes, Ask first or Say no, checked against your car's manufacturer schedule.
+          </p>
+          <WaitlistForm id="hero" />
+        </div>
+        <div class="hero-visual">
+          <Phone label="PMS Check result for a 10,000 km quote of ₱14,000: ₱3,400 to say yes, ₱1,800 to ask first, ₱8,800 to say no."><Screen kind="verdict" /></Phone>
+          <div class="chip chip-no"><span class="ic-no"><Icon name="x" size="12px" stroke={3.4} /></span><div><small>Say no</small><b>₱8,800</b></div></div>
+          <div class="chip chip-yes"><span class="ic-yes"><Icon name="check" size="12px" stroke={3.4} /></span><div><small>Say yes</small><b>₱3,400</b></div></div>
+          <p class="sample">Example quote with sample figures</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section id="why">
+      <div class="wrap">
+        <h2 class="sec-title">The advisor reads the list. You're seeing it for the first time.</h2>
+        <p class="sec-lead">At the casa counter, required service and optional add-ons sit in one quote, in the same tone of voice.</p>
+        <div class="cards">
+          {problems.map((p) => (
+            <article class="pcard">
+              <span class={`pic ${p.tone}`} aria-hidden="true">
+                <Icon name={p.icon as 'doc' | 'x' | 'clock'} size="14px" stroke={2.6} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+              {p.chips && (
+                <ul class="mini">
+                  {p.chips.map((c, i) => (
+                    <li class={`chk ${c.verdict}`}>
+                      <button type="button" aria-expanded="false" aria-controls={`chk-${i}`} data-check>
+                        <span class="chk-name">{c.name}</span>
+                        <span class="chk-pill">
+                          <span class="chk-idle">Tap to check</span>
+                          <span class="chk-done">
+                            <Icon name={c.verdict === 'yes' ? 'check' : 'x'} size="11px" stroke={3.4} />
+                            {c.verdict === 'yes' ? 'Say yes' : 'Say no'}
+                          </span>
+                        </span>
+                      </button>
+                      <div class="chk-note" id={`chk-${i}`}>
+                        <p>{c.note}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps -->
+    <section id="how" class="steps">
+      <div class="wrap">
+        <h2 class="sec-title">Three steps, at the counter.</h2>
+        <ol class="step-grid">
+          {steps.map((s, i) => (
+            <li>
+              <span class="num">{i + 1}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+              <div class="stage"><Phone label={s.label}><Screen kind={s.screen} /></Phone></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <div class="wrap mid-cta">
+      <p>Due for a PMS soon? Get on the list before your next casa visit.</p>
+      <a class="btn" href="#join">Join the waitlist</a>
+    </div>
+
+    <!-- Three answers -->
+    <section>
+      <div class="wrap split">
+        <div class="split-copy">
+          <h2 class="sec-title">Three answers for every line.</h2>
+          <p class="sec-lead">Each line is Say yes, Ask first or Say no. Ask first means the item is reasonable but not due yet, so you can ask the advisor to show it to you.</p>
+          <ul class="checks">
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>What you would pay for the items in your schedule</li>
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>How much of the quote you can decline</li>
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>The price of each line, next to its answer</li>
+          </ul>
+        </div>
+        <ul class="answers" aria-label="The three answers">
+          <li class="ans yes">
+            <span class="ans-ic"><Icon name="check" size="16px" stroke={3.2} /></span>
+            <div><b>Say yes</b><p>Change oil + oil filter</p><small>In Toyota's 10,000 km schedule</small></div>
+            <strong>₱2,450</strong>
+          </li>
+          <li class="ans ask">
+            <span class="ans-ic"><Icon name="question" size="16px" stroke={3} /></span>
+            <div><b>Ask first</b><p>Cabin air filter</p><small>Due at 20,000 km. Ask to see it.</small></div>
+            <strong>₱750</strong>
+          </li>
+          <li class="ans no">
+            <span class="ans-ic"><Icon name="x" size="16px" stroke={3.2} /></span>
+            <div><b>Say no</b><p>Engine flush</p><small>Not in your Vios's schedule</small></div>
+            <strong>₱1,800</strong>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Advisor (dark) -->
+    <section class="dark-band">
+      <div class="wrap split rev">
+        <div class="stage dark-stage"><Phone label="Show the advisor screen: please do only change oil and oil filter, tire rotation and brake inspection, for ₱3,400 in total."><Screen kind="advisor" /></Phone></div>
+        <div class="split-copy">
+          <h2 class="sec-title">Hand your phone to the advisor.</h2>
+          <p class="sec-lead">One screen lists only what you want done, at arm's length in large type, with what you will pay. You don't have to argue the list line by line.</p>
+          <ul class="checks">
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>A polite sentence to say for each line you decline</li>
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>Copy it, or read it out</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reason -->
+    <section>
+      <div class="wrap split">
+        <div class="split-copy">
+          <h2 class="sec-title">Every verdict shows its reason and its source.</h2>
+          <p class="sec-lead">Tap a line to see what the manual says, why a shop might offer it, and when yes is the right answer. Think we got one wrong? Report it from the same screen.</p>
+          <ul class="checks">
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>A source line on every answer</li>
+            <li><span class="tick"><Icon name="check" size="11px" stroke={4} /></span>A report link when you disagree</li>
+          </ul>
+        </div>
+        <div class="stage big"><Phone label="Engine flush explained: not in your Vios's schedule, with a sentence to say and the manual source."><Screen kind="reason" /></Phone></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="questions">
+      <div class="wrap">
+        <h2 class="sec-title">Questions before you sign up</h2>
+        <dl class="faq">
+          {faqs.map(([q, a]) => (
+            <div>
+              <dt>{q}</dt>
+              <dd>{a}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-sec" id="join">
+      <div class="wrap">
+        <div class="cta-card">
+          <div>
+            <h2>Walk in knowing what your car needs.</h2>
+            <p>Join the waitlist and be first to check a casa quote before you say yes.</p>
+          </div>
+          <WaitlistForm id="cta" dark />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <b>PMS Check</b>
+      <p>Verdicts are checked against the manufacturer's schedule for your car. Figures shown on this page are sample data.</p>
+      <p>© 2026 [NEED: legal name]. All rights reserved.</p>
+      <nav class="foot-links" aria-label="Legal">
+        <a href="/privacy">Privacy policy</a>
+      </nav>
+    </div>
+  </footer>
+</Base>
+
+<script>
+  // Tap-to-check rows in the problem card: toggle the verdict and its reason.
+  document.querySelectorAll<HTMLButtonElement>('[data-check]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      btn.closest('.chk')?.classList.toggle('open', open);
+    });
+  });
+
+  const links = document.querySelectorAll<HTMLAnchorElement>('.nav nav a');
+  const targets = [...links]
+    .map((a) => document.querySelector(a.hash))
+    .filter((el): el is Element => !!el);
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const hash = `#${e.target.id}`;
+        if (e.isIntersecting) {
+          links.forEach((a) => a.setAttribute('aria-current', String(a.hash === hash)));
+        } else {
+          links.forEach((a) => a.hash === hash && a.setAttribute('aria-current', 'false'));
+        }
+      }
+    },
+    { rootMargin: '-40% 0px -55% 0px' },
+  );
+  targets.forEach((t) => io.observe(t));
+</script>
+
+<style>
+  /* Nav */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+    background: rgba(241, 243, 248, 0.8);
+  }
+  .nav-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 64px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: var(--text-small);
+    text-decoration: none;
+  }
+  .logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-sheen);
+    display: grid;
+    place-items: center;
+  }
+  .nav nav {
+    display: flex;
+    gap: 28px;
+  }
+  .nav nav a {
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+  }
+  .nav nav a:hover,
+  .nav nav a[aria-current='true'] {
+    color: var(--color-ink);
+  }
+
+  /* Hero */
+  .hero {
+    padding-block: 56px 72px;
+  }
+  .hero-in {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-pill);
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+  }
+  .eyebrow i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-required);
+  }
+  h1 {
+    margin-top: 22px;
+    font-size: clamp(40px, 5.2vw, 58px);
+    letter-spacing: -0.045em;
+    max-width: 520px;
+    text-wrap: balance;
+  }
+  .lede {
+    margin-top: 20px;
+    max-width: 480px;
+    font-size: var(--text-lead);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+  }
+  .hero-copy :global(.wl) {
+    margin-top: 28px;
+  }
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-top: 4px;
+  }
+  .hero-visual :global(.phone) {
+    mask-image: linear-gradient(#000 82%, transparent);
+  }
+  .chip {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 10px 16px 10px 10px;
+    box-shadow: var(--shadow-soft);
+    animation: float 6s ease-in-out infinite;
+  }
+  .chip small {
+    display: block;
+    font-size: 10px;
+    color: var(--color-ink-faint);
+  }
+  .chip b {
+    font-size: 17px;
+    letter-spacing: -0.03em;
+  }
+  /* Anchored to the phone's centre so the overlap is identical at every desktop width */
+  .chip-no {
+    left: calc(50% + 118px);
+    top: 30px;
+    background: var(--gloss);
+    color: #fff;
+  }
+  .chip-no small {
+    color: #d5d7dc;
+  }
+  .chip-yes {
+    left: calc(50% + 140px);
+    top: 128px;
+    animation-delay: -3s;
+  }
+  .ic-no,
+  .ic-yes {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .ic-no {
+    background: #fff;
+    color: var(--color-skip);
+  }
+  .ic-yes {
+    background: var(--color-required-bg);
+    color: var(--color-required);
+  }
+  .sample {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 12px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px 10px;
+    box-shadow: var(--shadow-soft);
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  /* Problem cards */
+  .cards {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .pcard {
+    background: linear-gradient(180deg, #fff, #f8f9fc);
+    border-radius: var(--radius-md);
+    padding: 20px 20px 24px;
+    box-shadow: var(--shadow-soft);
+    min-height: 190px;
+  }
+  .pic {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin-bottom: 18px;
+  }
+  .pic.optional {
+    background: var(--color-optional-bg);
+    color: var(--color-optional);
+  }
+  .pic.skip {
+    background: var(--color-skip-bg);
+    color: var(--color-skip);
+  }
+  .pic.required {
+    background: var(--color-required-bg);
+    color: var(--color-required);
+  }
+  .pcard h3 {
+    font-size: var(--text-lead);
+    letter-spacing: -0.03em;
+  }
+  .pcard p {
+    margin-top: 8px;
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+  }
+  .mini {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
+    display: grid;
+    gap: 6px;
+  }
+  /* Tap-to-check rows: a button reveals the verdict and its reason */
+  .chk {
+    background: var(--color-ground);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    transition:
+      background-color 0.25s ease-out,
+      border-color 0.25s ease-out;
+  }
+  .chk button {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 8px 8px 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 12px;
+  }
+  .chk button:focus-visible {
+    outline: 2px solid var(--color-haze);
+    outline-offset: 2px;
+  }
+  .chk-pill {
+    display: grid;
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(30, 40, 90, 0.08);
+    transition:
+      background-color 0.25s ease-out,
+      color 0.25s ease-out,
+      transform 0.15s ease-out;
+  }
+  .chk button:hover .chk-pill {
+    transform: translateY(-1px);
+  }
+  .chk-idle,
+  .chk-done {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 10px;
+    transition:
+      opacity 0.2s ease-out,
+      visibility 0.2s;
+  }
+  /* visibility (not just opacity) keeps the unseen label out of the accessibility tree */
+  .chk-done {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .chk-note {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .chk-note p {
+    visibility: hidden;
+    transition: visibility 0.3s;
+    overflow: hidden;
+    margin: 0;
+    padding: 0 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+  }
+
+  .chk.open .chk-idle {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .chk.open .chk-done {
+    opacity: 1;
+    visibility: visible;
+  }
+  .chk.open .chk-note {
+    grid-template-rows: 1fr;
+  }
+  .chk.open .chk-note p {
+    visibility: visible;
+    padding-bottom: 10px;
+  }
+  .chk.yes.open {
+    background: var(--color-required-bg);
+    border-color: color-mix(in srgb, var(--color-required) 25%, transparent);
+  }
+  .chk.yes.open .chk-pill {
+    background: var(--color-required);
+    color: #fff;
+  }
+  .chk.no.open {
+    background: var(--color-skip-bg);
+    border-color: color-mix(in srgb, var(--color-skip) 25%, transparent);
+  }
+  .chk.no.open .chk-pill {
+    background: var(--color-skip);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chk,
+    .chk-pill,
+    .chk-idle,
+    .chk-done,
+    .chk-note {
+      transition: none;
+    }
+  }
+
+  /* Steps */
+  .step-grid {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .num {
+    font-size: 13px;
+    color: var(--color-ink-faint);
+  }
+  .step-grid h3 {
+    margin-top: 6px;
+    font-size: var(--text-lead);
+  }
+  .step-grid p {
+    margin-top: 6px;
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+    min-height: 70px;
+  }
+  .stage {
+    margin-top: 18px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(160deg, #e9edf6, #f4f6fb);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 18px 0 0;
+    overflow: hidden;
+  }
+
+  /* Split sections */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 48px;
+  }
+  .split.rev .split-copy {
+    order: 2;
+  }
+  .split .stage {
+    margin: 0;
+    padding-top: 28px;
+  }
+  .stage.big {
+    background: linear-gradient(150deg, #f8f9fc, #e3e7f1);
+  }
+  .dark-band {
+    background: var(--color-gloss-top);
+    color: #fff;
+    background-image: linear-gradient(180deg, #050607, #0e1014);
+  }
+  .dark-band .sec-lead {
+    color: #b6bac2;
+  }
+  .dark-band .checks .tick {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+  .dark-stage {
+    background: linear-gradient(150deg, #20242c, #3a3f4a);
+    padding-inline: 40px;
+  }
+
+  /* Three answers */
+  .answers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .ans {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: var(--radius-md);
+    padding: 18px 22px;
+    box-shadow: var(--shadow-soft);
+  }
+  .ans b {
+    font-size: var(--text-small);
+  }
+  .ans p {
+    font-size: var(--text-lead);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 2px;
+  }
+  .ans small {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--text-small);
+    color: var(--color-ink-soft);
+  }
+  .ans strong,
+  .chip b {
+    font-variant-numeric: tabular-nums;
+  }
+  .ans strong {
+    font-size: var(--text-title);
+    letter-spacing: -0.04em;
+  }
+  .ans-ic {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+  }
+  .ans.yes b { color: var(--color-required); }
+  .ans.yes .ans-ic { background: var(--color-required-bg); color: var(--color-required); }
+  .ans.ask b { color: var(--color-optional); }
+  .ans.ask .ans-ic { background: var(--color-optional-bg); color: var(--color-optional); }
+  .ans.no b { color: var(--color-skip); }
+  .ans.no .ans-ic { background: var(--color-skip-bg); color: var(--color-skip); }
+  .ans.no { background: var(--gloss); color: #fff; }
+  .ans.no small { color: #d5d7dc; }
+  .ans.no b { color: var(--color-no-bright); }
+
+  .mid-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 28px;
+    background: #fff;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-soft);
+  }
+  .mid-cta p {
+    font-size: var(--text-lead);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* FAQ */
+  .faq {
+    margin: 36px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 32px;
+  }
+  .faq > div {
+    border-top: 1px solid var(--color-line);
+    padding: 16px 0 24px;
+  }
+  .faq dt {
+    font-size: var(--text-lead);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .faq dd {
+    margin: 8px 0 0;
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+  }
+
+  /* CTA */
+  .cta-sec {
+    padding-bottom: 32px;
+  }
+  .cta-card {
+    background: linear-gradient(180deg, #0a0b0f, #4a4d54);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+  }
+  .cta-card h2 {
+    font-size: var(--text-display);
+    max-width: 300px;
+  }
+  .cta-card p {
+    margin-top: 12px;
+    font-size: var(--text-body);
+    line-height: 1.55;
+    color: #c7cad1;
+    max-width: 300px;
+  }
+
+  footer {
+    padding-block: 24px 48px;
+  }
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--color-ink-faint);
+  }
+  .foot b {
+    color: var(--color-ink);
+  }
+  .foot-links a {
+    color: var(--color-ink-soft);
+  }
+
+  /* Responsive */
+  /* Three 323px phones need ~1000px of row. Below that, the steps become a
+     swipe row: one card per snap, the next card peeking in at the edge. */
+  @media (max-width: 1079px) {
+    .step-grid {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 330px;
+      gap: 12px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      margin-inline: -24px;
+      padding: 0 24px 8px;
+      scroll-padding-inline: 24px;
+      scrollbar-width: none;
+    }
+    .step-grid::-webkit-scrollbar {
+      display: none;
+    }
+    .step-grid > li {
+      scroll-snap-align: start;
+    }
+    .step-grid p {
+      min-height: 72px;
+    }
+
+    /* The hero column is too narrow for chips hanging off the phone:
+       they move into a row underneath it instead. */
+    .hero-visual {
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: center;
+      gap: 12px 10px;
+    }
+    .hero-visual :global(.phone) {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+    .chip {
+      position: static;
+      animation: none;
+    }
+    .sample {
+      position: static;
+      transform: none;
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+  }
+  @media (max-width: 820px) {
+    .nav nav {
+      display: none;
+    }
+    .hero {
+      padding-block: 32px 48px;
+    }
+    .hero-in,
+    .split,
+    .cta-card,
+    .faq {
+      grid-template-columns: 1fr;
+    }
+    .split {
+      gap: 28px;
+    }
+    .split.rev .split-copy {
+      order: 0;
+    }
+    .cards {
+      grid-template-columns: 1fr;
+    }
+    .step-grid {
+      margin-inline: -16px;
+      padding-inline: 16px;
+      scroll-padding-inline: 16px;
+    }
+    .pcard {
+      min-height: 0;
+    }
+    .mid-cta {
+      flex-direction: column;
+      align-items: flex-start;
+      border-radius: var(--radius-md);
+    }
+    .ans {
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .dark-stage {
+      padding-inline: 16px;
+    }
+    .cta-card {
+      padding: 32px 24px;
+      gap: 24px;
+    }
+    .foot {
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip {
+      animation: none;
+    }
+  }
+</style>

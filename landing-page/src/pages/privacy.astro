@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Privacy policy | PMS Check"
+  description="How PMS Check handles the email addresses you give us for the waitlist."
+>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="/" aria-label="PMS Check home">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7" /></svg>
+        </span>
+        PMS Check
+      </a>
+      <a class="btn" href="/#join">Join the waitlist</a>
+    </div>
+  </header>
+
+  <main id="main" class="legal">
+    <div class="wrap narrow">
+      <p class="draft" role="note">
+        Draft. Fill every [NEED] before publishing. Have a lawyer check it against the Philippine Data Privacy Act of 2012 (RA 10173).
+      </p>
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated: [NEED: date]</p>
+
+      <h2>What we collect</h2>
+      <p>
+        The only personal information we collect is the email address you type into a waitlist form on this site. The form also records which page it came from, so we know which sign-up location is working.
+      </p>
+      <p>
+        We don't ask for your name, phone number, car registration, or any part of your quote on this site. Nothing you type or scan into the product is sent to us through this site.
+      </p>
+
+      <h2>Why we use it</h2>
+      <p>
+        We use your email for one purpose: to tell you once when PMS Check opens. We won't send you marketing or other emails, and we won't share or sell your address.
+      </p>
+
+      <h2>Who processes it</h2>
+      <p>
+        Your address is sent to [NEED: name of waitlist/form provider, for example Formspree or Mailchimp] to be stored. That provider processes it only on our behalf. [NEED: link to that provider's privacy policy]
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        We keep your address until the launch email is sent or until you ask us to delete it, whichever comes first. [NEED: confirm this, or state the actual retention period]
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under the Data Privacy Act you can ask what we hold about you, ask us to correct it, ask us to delete it, and withdraw consent at any time. To do any of these, email [NEED: privacy contact address]. We'll reply within [NEED: response time].
+      </p>
+
+      <h2>Who we are</h2>
+      <p>
+        PMS Check is operated by [NEED: legal name of the business], [NEED: business address]. Our data protection contact is [NEED: name and email].
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If we change how we handle your address, we'll update this page and the date above. For anything that changes how we use emails we already hold, we'll ask you again first.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <b>PMS Check</b>
+      <p>© 2026 [NEED: legal name]. All rights reserved.</p>
+      <nav class="foot-links" aria-label="Legal">
+        <a href="/privacy">Privacy policy</a>
+      </nav>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+    background: rgba(241, 243, 248, 0.8);
+  }
+  .nav-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: var(--text-small);
+    text-decoration: none;
+  }
+  .logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-sheen);
+    display: grid;
+    place-items: center;
+  }
+  .legal {
+    padding-block: 48px 72px;
+  }
+  .narrow {
+    max-width: 680px;
+  }
+  .draft {
+    background: var(--color-optional-bg);
+    color: var(--color-optional);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: var(--text-small);
+    font-weight: 600;
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: clamp(32px, 4vw, 40px);
+  }
+  .updated {
+    margin-top: 10px;
+    font-size: var(--text-small);
+    color: var(--color-ink-faint);
+  }
+  h2 {
+    font-size: var(--text-title);
+    margin-top: 36px;
+    letter-spacing: -0.03em;
+  }
+  .legal p {
+    margin-top: 12px;
+    font-size: var(--text-read);
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--color-ink-faint);
+  }
+  .foot b {
+    color: var(--color-ink);
+  }
+  .foot-links a {
+    color: var(--color-ink-soft);
+  }
+</style>

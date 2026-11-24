@@ -192,12 +192,15 @@ const { id, dark = false } = Astro.props;
           if (!import.meta.env.DEV) throw new Error('Waitlist endpoint is not configured');
           console.warn('PUBLIC_WAITLIST_ENDPOINT is not set; simulating success in dev.');
         } else {
+          // Form-encoded on purpose: it is a "simple" request, so the browser sends no CORS
+          // preflight, which Google Apps Script web apps cannot answer.
           const res = await fetch(ENDPOINT, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ email, source: 'landing-page' }),
+            body: new URLSearchParams({ email, source: 'landing-page', company: '' }),
           });
           if (!res.ok) throw new Error(`Waitlist request failed (${res.status})`);
+          const result = await res.json().catch(() => null);
+          if (result && result.ok === false) throw new Error(`Waitlist rejected: ${result.error}`);
         }
         form.reset();
         show("You're on the list. We'll email you once, when it opens.");

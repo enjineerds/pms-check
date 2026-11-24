@@ -80,7 +80,7 @@ const faqs = [
           <WaitlistForm id="hero" />
         </div>
         <div class="hero-visual">
-          <Phone label="PMS Check result for a 10,000 km quote of ₱14,000: ₱3,400 to say yes, ₱1,800 to ask first, ₱8,800 to say no."><Screen kind="verdict" /></Phone>
+          <Phone label="PMS Check result for a 10,000 km quote of ₱14,000: ₱3,400 to say yes, ₱1,800 to ask first, ₱8,800 to say no."><Screen kind="verdict" intro /></Phone>
           <div class="chip chip-no"><span class="ic-no"><Icon name="x" size="12px" stroke={3.4} /></span><div><small>Say no</small><b>₱8,800</b></div></div>
           <div class="chip chip-yes"><span class="ic-yes"><Icon name="check" size="12px" stroke={3.4} /></span><div><small>Say yes</small><b>₱3,400</b></div></div>
           <p class="sample">Example quote with sample figures</p>
@@ -421,7 +421,6 @@ const faqs = [
     border-radius: 18px;
     padding: 10px 16px 10px 10px;
     box-shadow: var(--shadow-soft);
-    animation: float 6s ease-in-out infinite;
   }
   .chip small {
     display: block;
@@ -445,7 +444,6 @@ const faqs = [
   .chip-yes {
     left: calc(50% + 140px);
     top: 128px;
-    animation-delay: -3s;
   }
   .ic-no,
   .ic-yes {
@@ -476,6 +474,43 @@ const faqs = [
     border-radius: 8px;
     padding: 5px 10px;
     box-shadow: var(--shadow-soft);
+  }
+  /* Load-in, one authored sequence: the phone rises, its lines are checked and the totals
+     land (see Screen.astro), then the two price chips drop in and begin their idle float. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-visual :global(.phone) {
+      animation: phone-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .chip-no {
+      animation:
+        chip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.8s both,
+        float 6s ease-in-out 2.6s infinite;
+    }
+    .chip-yes {
+      animation:
+        chip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.95s both,
+        float 6s ease-in-out 2.75s infinite;
+    }
+  }
+  @keyframes phone-rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes chip-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   @keyframes float {
     50% {
@@ -952,7 +987,15 @@ const faqs = [
     }
     .chip {
       position: static;
-      animation: none;
+    }
+    /* Static chips on small screens: they arrive, but don't float */
+    @media (prefers-reduced-motion: no-preference) {
+      .chip-no {
+        animation: chip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.8s both;
+      }
+      .chip-yes {
+        animation: chip-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.95s both;
+      }
     }
     .sample {
       position: static;

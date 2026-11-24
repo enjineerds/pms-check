@@ -4,8 +4,10 @@ import Icon from './Icon.astro';
 type Kind = 'verdict' | 'pick' | 'scan' | 'advisor' | 'reason';
 interface Props {
   kind: Kind;
+  /** Play the verdict-arriving sequence once on load (hero only). */
+  intro?: boolean;
 }
-const { kind } = Astro.props;
+const { kind, intro = false } = Astro.props;
 
 const cars = [
   ['Toyota Vios', '1.3 XE, 1.3 XLE, 1.5 G · 2014 to 2025'],
@@ -27,7 +29,7 @@ const receipt = [
 
 {
   kind === 'verdict' && (
-    <div class="s">
+    <div class:list={['s', { intro }]}>
       <div class="top">
         <span class="back"><Icon name="chevron-left" stroke={2.8} /></span>
         <div>
@@ -38,9 +40,9 @@ const receipt = [
       <h4>Say no to ₱8,800 of this quote.</h4>
       <p class="sub">The casa quoted ₱14,000 for your Vios.</p>
       <div class="tiles">
-        <div class="tile"><i class="ic yes"><Icon name="check" stroke={3.2} /></i><b>₱3,400</b><span>Say yes</span></div>
-        <div class="tile"><i class="ic ask"><Icon name="question" stroke={3} /></i><b>₱1,800</b><span>Ask first</span></div>
-        <div class="tile on"><i class="ic no"><Icon name="x" stroke={3.2} /></i><b>₱8,800</b><span>Say no</span></div>
+        <div class="tile" style="--t:0"><i class="ic yes"><Icon name="check" stroke={3.2} /></i><b>₱3,400</b><span>Say yes</span></div>
+        <div class="tile" style="--t:1"><i class="ic ask"><Icon name="question" stroke={3} /></i><b>₱1,800</b><span>Ask first</span></div>
+        <div class="tile on" style="--t:2"><i class="ic no"><Icon name="x" stroke={3.2} /></i><b>₱8,800</b><span>Say no</span></div>
       </div>
       <p class="note">
         <b class="amber">Ask first</b> means reasonable, but not due yet. Ask to see it.
@@ -48,11 +50,11 @@ const receipt = [
       <div class="cta">Show this to the advisor</div>
       <div class="card">
         <div class="cardhead"><b class="green">Say yes</b><span>All in Toyota's schedule</span></div>
-        <div class="row"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Change oil + oil filter</span><em>₱2,450<small class="green">Say yes</small></em></div>
-        <div class="row"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Tire rotation</span><em>₱600<small class="green">Say yes</small></em></div>
-        <div class="row"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Brake inspection</span><em>₱350<small class="green">Say yes</small></em></div>
+        <div class="row" style="--i:0"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Change oil + oil filter</span><em>₱2,450<small class="green">Say yes</small></em></div>
+        <div class="row" style="--i:1"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Tire rotation</span><em>₱600<small class="green">Say yes</small></em></div>
+        <div class="row" style="--i:2"><i class="ic yes sm"><Icon name="check" stroke={3.2} /></i><span>Brake inspection</span><em>₱350<small class="green">Say yes</small></em></div>
         <div class="cardhead"><b class="amber">Ask first</b><span>Due at 20,000 km</span></div>
-        <div class="row"><i class="ic ask sm"><Icon name="question" stroke={3} /></i><span>Cabin air filter</span><em>₱750<small class="amber">Ask first</small></em></div>
+        <div class="row" style="--i:3"><i class="ic ask sm"><Icon name="question" stroke={3} /></i><span>Cabin air filter</span><em>₱750<small class="amber">Ask first</small></em></div>
       </div>
     </div>
   )
@@ -164,6 +166,58 @@ const receipt = [
 }
 
 <style is:global>
+  /* The verdict arrives: each line's answer pops in down the list, then the three
+     totals land, and "Say no" lands last and heaviest. Only transform and opacity,
+     so nothing shifts; the text itself is on screen from the first paint. */
+  @media (prefers-reduced-motion: no-preference) {
+    .s.intro .row .ic {
+      animation: s-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(0.55s + var(--i, 0) * 0.15s);
+    }
+    .s.intro .tile {
+      animation: s-tile 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(1.25s + var(--t, 0) * 0.13s);
+    }
+    .s.intro .tile.on {
+      animation-name: s-tile-no;
+      animation-duration: 0.8s;
+    }
+  }
+  @keyframes s-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes s-tile {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes s-tile-no {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.88);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .s .top {
     display: flex;
     gap: 6px;

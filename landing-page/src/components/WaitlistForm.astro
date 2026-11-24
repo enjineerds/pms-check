@@ -137,6 +137,43 @@ const { id, dark = false } = Astro.props;
   .dark .fine {
     color: var(--color-panel-soft);
   }
+  .fine.ok {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fine :global(.wl-badge) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    background: var(--color-required-bg);
+    color: var(--color-required);
+    font-size: var(--text-caption);
+    font-weight: 700;
+  }
+  .dark .fine :global(.wl-badge) {
+    background: rgba(61, 220, 151, 0.16);
+    color: var(--color-yes-bright);
+  }
+  /* A stamp pressed onto the page: lands slightly large and tilted, settles flat. */
+  @media (prefers-reduced-motion: no-preference) {
+    .fine :global(.wl-badge) {
+      animation: stamp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+  }
+  @keyframes stamp {
+    from {
+      opacity: 0;
+      transform: scale(1.7) rotate(-8deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
   .fine.err {
     color: var(--color-skip);
   }
@@ -174,6 +211,21 @@ const { id, dark = false } = Astro.props;
     const show = (msg: string, error = false) => {
       status.textContent = msg;
       status.classList.toggle('err', error);
+      status.classList.remove('ok');
+    };
+
+    // The page answers in verdicts, so joining gets one too. The badge is decorative:
+    // screen readers get the sentence alone.
+    const showJoined = () => {
+      status.textContent = '';
+      const badge = document.createElement('span');
+      badge.className = 'wl-badge';
+      badge.setAttribute('aria-hidden', 'true');
+      badge.innerHTML =
+        '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Say yes';
+      status.append(badge, "You're on the list. We'll email you once, when it opens.");
+      status.classList.remove('err');
+      status.classList.add('ok');
     };
 
     form.addEventListener('submit', async (e) => {
@@ -203,7 +255,7 @@ const { id, dark = false } = Astro.props;
           if (result && result.ok === false) throw new Error(`Waitlist rejected: ${result.error}`);
         }
         form.reset();
-        show("You're on the list. We'll email you once, when it opens.");
+        showJoined();
       } catch (err) {
         console.error(err);
         show("Couldn't sign you up just now. Please try again in a moment.", true);

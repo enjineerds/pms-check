@@ -121,6 +121,9 @@ const faqs = [
                     </li>
                   ))}
                 </ul>
+                <div class="chk-payoff">
+                  <p>Two lines, two verdicts. The engine flush is ₱1,800 you can decline.</p>
+                </div>
               )}
             </article>
           ))}
@@ -260,8 +263,32 @@ const faqs = [
       const open = btn.getAttribute('aria-expanded') !== 'true';
       btn.setAttribute('aria-expanded', String(open));
       btn.closest('.chk')?.classList.toggle('open', open);
+
+      // Once the visitor has tried it, the nudge has done its job.
+      document.querySelectorAll('.chk-pill.nudge').forEach((el) => el.classList.remove('nudge'));
+
+      // Both rows open: reveal what the two verdicts add up to.
+      const card = btn.closest('.pcard');
+      const both = card?.querySelectorAll('.chk.open').length === 2;
+      card?.querySelector('.chk-payoff')?.classList.toggle('show', !!both);
     });
   });
+
+  // First time the card is on screen, the first pill pulses twice to say "tap me".
+  const miniList = document.querySelector('.mini');
+  if (miniList && 'IntersectionObserver' in window) {
+    const nudger = new IntersectionObserver(
+      ([entry], obs) => {
+        if (!entry.isIntersecting) return;
+        const first = miniList.querySelector('.chk:not(.open) .chk-pill');
+        first?.classList.add('nudge');
+        first?.addEventListener('animationend', () => first.classList.remove('nudge'), { once: true });
+        obs.disconnect();
+      },
+      { threshold: 0.9 },
+    );
+    nudger.observe(miniList);
+  }
 
   const links = document.querySelectorAll<HTMLAnchorElement>('.nav nav a');
   const targets = [...links]
@@ -615,7 +642,53 @@ const faqs = [
     color: #fff;
   }
 
+  /* Discovery nudge: two soft pulses on the first pill, then it stops by itself. */
+  @media (prefers-reduced-motion: no-preference) {
+    .chk-pill.nudge {
+      animation: nudge 1.1s ease-out 2;
+    }
+  }
+  @keyframes nudge {
+    0% {
+      box-shadow:
+        0 1px 2px rgba(30, 40, 90, 0.08),
+        0 0 0 0 color-mix(in srgb, var(--color-haze) 45%, transparent);
+    }
+    100% {
+      box-shadow:
+        0 1px 2px rgba(30, 40, 90, 0.08),
+        0 0 0 12px transparent;
+    }
+  }
+
+  /* Payoff: appears only once both rows have been opened. */
+  .chk-payoff {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .chk-payoff p {
+    overflow: hidden;
+    visibility: hidden;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    transition: visibility 0.4s;
+  }
+  .chk-payoff.show {
+    grid-template-rows: 1fr;
+  }
+  .chk-payoff.show p {
+    visibility: visible;
+    padding-top: 12px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .chk-payoff {
+      transition: none;
+    }
     .chk,
     .chk-pill,
     .chk-idle,
@@ -828,12 +901,14 @@ const faqs = [
     gap: 24px;
     font-size: 13px;
     color: var(--color-ink-faint);
+    flex-wrap: wrap;
   }
   .foot b {
     color: var(--color-ink);
   }
   .foot-links a {
     color: var(--color-ink-soft);
+    white-space: nowrap;
   }
 
   /* Responsive */

@@ -46,12 +46,88 @@ const { id, dark = false } = Astro.props;
   input:focus {
     outline: none;
   }
+  /* Autofill: browsers paint a tinted, square background over the field. Cover it with the
+     pill's own white so the field stays seamless and rounded. Chrome, Safari and Edge: */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-ink);
+    caret-color: var(--color-ink);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 0 1000px #fff inset;
+    /* The tint is a background the browser re-applies; a huge delay keeps it from ever showing. */
+    transition: background-color 600000s 0s;
+  }
+  /* Firefox (separate rule: an unknown selector would invalidate the one above) */
+  input:autofill {
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: 0 0 0 1000px #fff inset;
+    border-radius: var(--radius-pill);
+  }
   .pill:focus-within {
     outline: 2px solid var(--color-haze);
     outline-offset: 2px;
   }
   .dark .pill:focus-within {
     outline-color: var(--color-sheen);
+  }
+  /* Phones: side by side, the button leaves room for ~12 characters of the email.
+     Stack them so the field gets the full width and a long address stays readable. */
+  @media (max-width: 480px) {
+    .pill {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .pill:focus-within {
+      outline: none;
+    }
+    .dark .pill {
+      box-shadow: none;
+    }
+    input[type='email'] {
+      background: #fff;
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-pill);
+      padding: 14px 20px;
+      font-size: var(--text-read);
+      transition: box-shadow 0.2s ease-out;
+    }
+    /* On the dark card the white field needs no edge at all. */
+    .dark input[type='email'] {
+      border: 0;
+    }
+    /* Focus is a diffuse glow (blur, no spread), not a line, so the field never reads as bordered. */
+    input[type='email']:focus,
+    input[type='email']:focus-visible {
+      outline: none;
+      box-shadow: 0 6px 28px -4px color-mix(in srgb, var(--color-haze) 55%, transparent);
+    }
+    .dark input[type='email']:focus,
+    .dark input[type='email']:focus-visible {
+      box-shadow: 0 6px 28px -4px rgba(255, 255, 255, 0.4);
+    }
+    /* Keep the glow when the browser has autofilled the field */
+    input[type='email']:-webkit-autofill:focus {
+      box-shadow:
+        0 0 0 1000px #fff inset,
+        0 6px 28px -4px color-mix(in srgb, var(--color-haze) 55%, transparent);
+    }
+    .dark input[type='email']:-webkit-autofill:focus {
+      box-shadow:
+        0 0 0 1000px #fff inset,
+        0 6px 28px -4px rgba(255, 255, 255, 0.4);
+    }
+    .pill .btn {
+      justify-content: center;
+      padding: 14px 20px;
+      font-size: var(--text-read);
+    }
   }
   .fine {
     margin-top: 10px;

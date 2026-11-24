@@ -30,6 +30,13 @@ const { label } = Astro.props;
     box-shadow: 0 30px 50px -24px rgba(10, 12, 30, 0.5);
     flex: none;
   }
+  /* 323px phones don't fit the content area of the narrowest phones (320px). Every phone
+     shrinks together, so they stay the same size as each other. */
+  @media (max-width: 359px) {
+    .phone {
+      --phone-scale: 1.45;
+    }
+  }
   .screen {
     height: 100%;
     padding: 12px 11px;

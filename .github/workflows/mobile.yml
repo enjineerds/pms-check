@@ -1,0 +1,31 @@
+name: mobile
+
+on:
+  pull_request:
+    paths: ['app/mobile/**', '.github/workflows/mobile.yml']
+  push:
+    branches: [main]
+    paths: ['app/mobile/**', '.github/workflows/mobile.yml']
+
+defaults:
+  run:
+    working-directory: app/mobile
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/mobile/package-lock.json
+      - uses: oven-sh/setup-bun@v2
+      - run: npm ci
+      # Expo generates this file on start and git ignores it, but tsc needs its types.
+      - run: echo '/// <reference types="expo/types" />' > expo-env.d.ts
+      - run: npx expo lint
+      - run: npx tsc --noEmit
+      - run: npx jest --ci
+      - run: bun scripts/check-fil-design.mjs

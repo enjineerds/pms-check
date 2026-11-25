@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Linking, Pressable, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { AppState, Linking, Pressable, View } from 'react-native';
+import { useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import { Card, Divider, GlassButton, GlassDisc, Header, Icon, type IconName, Screen, SecondaryButton, Text } from '@/ui';
 
@@ -15,10 +16,27 @@ const SETTINGS_STEPS = [
   ['Come back and scan again.'],
 ];
 
-// UI only: no permission is requested yet. "Not now" shows the camera-off state.
 export default function CameraAccess() {
-  const [off, setOff] = useState(false);
+  const [permission, request, refresh] = useCameraPermissions();
+  const [declined, setDeclined] = useState(false);
   const typeInstead = () => router.push('/check/add');
+  const granted = permission?.granted ?? false;
+
+  // The user may switch the camera on in Settings and come back.
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (s) => {
+      if (s === 'active') refresh();
+    });
+    return () => sub.remove();
+  }, [refresh]);
+
+  useEffect(() => {
+    if (granted) router.replace('/check/scan');
+  }, [granted]);
+
+  if (!permission || granted) return <Screen header={<Header title="Scan the quote" />} />;
+
+  const off = declined || (permission.status === 'denied' && !permission.canAskAgain);
 
   if (off) {
     return (
@@ -70,9 +88,15 @@ export default function CameraAccess() {
       header={<Header title="Scan the quote" subtitle="One quick thing first" />}
       footer={
         <>
-          <GlassButton label="Allow camera" onPress={() => router.replace('/check/scan')} />
+          <GlassButton
+            label="Allow camera"
+            onPress={async () => {
+              const res = await request();
+              if (!res.granted) setDeclined(true);
+            }}
+          />
           <SecondaryButton label="Type the lines instead" onPress={typeInstead} />
-          <Pressable accessibilityRole="button" onPress={() => setOff(true)} className="items-center py-0.5">
+          <Pressable accessibilityRole="button" onPress={() => router.back()} className="items-center py-0.5">
             <Text variant="small" weight="semibold" color="ink-soft">
               Not now
             </Text>

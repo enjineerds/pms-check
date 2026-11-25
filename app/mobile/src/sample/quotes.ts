@@ -114,10 +114,8 @@ const d = (
   origin: 'scanned',
 });
 
-export type ScanOutcome = 'ok' | 'mismatch' | 'unreadable';
-
-export const scannedDraft = (outcome: ScanOutcome): { lines: DraftLine[]; quotedTotal: Centavos } => ({
-  quotedTotal: peso(outcome === 'mismatch' ? 8_300 : 8_150),
+export const sampleScan = (): { lines: DraftLine[]; quotedTotal: Centavos } => ({
+  quotedTotal: peso(8_150),
   lines: [
     d('l1', 'Change oil + oil filter', 'oil-filter', 2450),
     d('l2', 'Tire rotation', 'tire-rotation', 600),

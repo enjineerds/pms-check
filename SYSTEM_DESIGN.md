@@ -350,7 +350,7 @@ sequenceDiagram
   U->>R: Looks right, check it
 ```
 
-**Capture.** A live camera screen gives V3-2 its frame guide, "Hold steady", and flash control. `expo-image-picker` covers "Choose a photo". The camera permission flow is V3-18 (ask) and V3-19 (denied, deep link to Settings). Both paths offer "Type the lines instead". This needs an Expo dev build, not Expo Go. The camera library is confirmed in the step 0 spike, because `react-native-vision-camera` 5.x brings its own native peers that must build on React Native 0.88.
+**Capture.** `expo-camera` renders a live preview under V3-2's custom frame guide, "Hold steady" chip, and torch toggle. The system picker from `expo-image-picker` covers "Choose a photo" and needs no photo-library permission. We use these instead of a native scanner UI because V3-2 is a custom screen, and both libraries run in Expo Go. The camera permission flow is V3-18 (ask) and V3-19 (denied, deep link to Settings). Both paths offer "Type the lines instead". `src/ocr/capture.ts` is the only module that creates or deletes quote images.
 
 **OCR engine, chosen by a spike.** The review found that `@react-native-ml-kit/text-recognition` runs Google ML Kit on both platforms, not Apple Vision on iOS. Its last release was 2025-09, and nobody has confirmed it on React Native 0.88 with the New Architecture. Step 0 compares candidates on the real quote photos:
 

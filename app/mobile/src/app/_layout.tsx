@@ -14,8 +14,10 @@ import {
   useFonts,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import { useCSSVariable } from 'uniwind';
+import { sweepCaptures } from '@/ocr/capture';
 
 SplashScreen.preventAutoHideAsync();
+sweepCaptures();
 
 export default function RootLayout() {
   const ground = useCSSVariable('--color-ground') as string;

@@ -1,33 +1,56 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { router } from 'expo-router';
-import type { ScanOutcome } from '@/sample/quotes';
-import { PAPER_ROWS, PAPER_TOTAL } from '@/sample/paper';
-import { cx, Header, Icon, QuotePaper, Screen, Text } from '@/ui';
-import { PhotoSheet } from '@/features/PhotoSheet';
-
-// Sample photos in the picker: #2 reads a total that does not match, #3 is blurry.
-const OUTCOMES: ScanOutcome[] = ['ok', 'mismatch', 'unreadable', 'ok', 'ok', 'ok'];
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router, useFocusEffect } from 'expo-router';
+import { pickFromLibrary, takeFromCamera } from '@/ocr/capture';
+import { setPendingImage } from '@/ocr/pending';
+import type { CapturedImage } from '@/ocr/types';
+import { cx, Header, Icon, Screen, Text } from '@/ui';
 
 export default function Scan() {
-  const [flash, setFlash] = useState(false);
-  const [photos, setPhotos] = useState(false);
-  const read = (o: ScanOutcome) => router.push({ pathname: '/check/reading', params: { outcome: o } });
+  const camera = useRef<CameraView>(null);
+  const [permission] = useCameraPermissions();
+  // Reached without access (a deep link, or access revoked in Settings): the permission screen owns that state.
+  useEffect(() => {
+    if (permission && !permission.granted) router.replace('/check/camera');
+  }, [permission]);
+  const [torch, setTorch] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  // One guard for both sources, so a double tap takes a single photo. A ref, because two taps can land before a re-render.
+  // After a hand-off it stays locked until scan is focused again: scan stays mounted under reading.
+  const inFlight = useRef(false);
+  const unlock = () => {
+    inFlight.current = false;
+    setBusy(false);
+  };
+  useFocusEffect(
+    useCallback(() => {
+      inFlight.current = false;
+      setBusy(false);
+    }, []),
+  );
+  const run = async (get: () => Promise<CapturedImage | null>) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    setFailed(false);
+    try {
+      const img = await get();
+      if (!img) return unlock();
+      setPendingImage(img);
+      router.push('/check/reading');
+    } catch {
+      setFailed(true);
+      unlock();
+    }
+  };
 
   return (
-    <Screen
-      header={<Header title="Scan the quote" subtitle="Fit the whole quote in the frame" />}
-      overlay={
-      <PhotoSheet
-        visible={photos}
-        onClose={() => setPhotos(false)}
-        onPick={(i) => {
-          setPhotos(false);
-          read(OUTCOMES[i]);
-        }}
-      />
-      }
-    >
+    <Screen header={<Header title="Scan the quote" subtitle="Fit the whole quote in the frame" />}>
       <View className="mt-1 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <View className="size-2 rounded-full bg-required" />
@@ -35,18 +58,40 @@ export default function Scan() {
             Hold steady…
           </Text>
         </View>
-        <Pressable accessibilityRole="button" onPress={() => setFlash((f) => !f)} className="h-9 flex-row items-center gap-1.5 rounded-pill bg-surface px-3.5 shadow-soft">
-          <Icon name="flash" size={14} stroke={2} />
-          <Text variant="small" weight="semibold">
-            Flash {flash ? 'on' : 'off'}
-          </Text>
-        </Pressable>
+        {unavailable ? null : (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ selected: torch }}
+            onPress={() => setTorch((t) => !t)}
+            className="h-9 flex-row items-center gap-1.5 rounded-pill bg-surface px-3.5 shadow-soft"
+          >
+            <Icon name="flash" size={14} stroke={2} />
+            <Text variant="small" weight="semibold">
+              Flash {torch ? 'on' : 'off'}
+            </Text>
+          </Pressable>
+        )}
       </View>
 
       <View className="mb-2 mt-4 flex-1">
-        <View className="absolute inset-3 overflow-hidden">
-          <QuotePaper rows={PAPER_ROWS} total={PAPER_TOTAL} />
-          <View className="-mt-2 flex-1 rounded-b-[14px] bg-surface shadow-soft" />
+        <View className="absolute inset-3 overflow-hidden rounded-[14px] bg-surface shadow-soft">
+          {unavailable ? (
+            <View className="flex-1 items-center justify-center gap-3 px-8">
+              <Icon name="camera-off" size={28} stroke={2} />
+              <Text variant="small" color="ink-soft" className="text-center">
+                The camera is not available here. Choose a photo of the quote, or type the lines in.
+              </Text>
+            </View>
+          ) : (
+            <CameraView
+              ref={camera}
+              style={{ flex: 1 }}
+              facing="back"
+              enableTorch={torch}
+              onCameraReady={() => setReady(true)}
+              onMountError={() => setUnavailable(true)}
+            />
+          )}
         </View>
         <Corner pos="tl" />
         <Corner pos="tr" />
@@ -55,13 +100,14 @@ export default function Scan() {
       </View>
 
       <View className="flex-row items-center justify-between px-3">
-        <SideButton icon="image" label="Photos" onPress={() => setPhotos(true)} />
+        <SideButton icon="image" label="Photos" onPress={() => run(pickFromLibrary)} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Take photo"
-          onPress={() => read('ok')}
-          onLongPress={() => router.push('/check/couldnt-read')}
-          className="size-21 items-center justify-center rounded-full bg-surface shadow-soft"
+          accessibilityState={{ disabled: busy || !ready }}
+          disabled={busy || !ready}
+          onPress={() => run(() => takeFromCamera(camera.current))}
+          className={cx('size-21 items-center justify-center rounded-full bg-surface shadow-soft', (busy || !ready) && 'opacity-50')}
         >
           <View className="size-16 overflow-hidden rounded-full shadow-glass">
             <View className="absolute inset-0 bg-linear-to-b/srgb from-gloss-top from-0% via-gloss-shutter via-60% to-gloss-bottom to-100%" />
@@ -69,10 +115,9 @@ export default function Scan() {
         </Pressable>
         <SideButton icon="lines" label="Type" onPress={() => router.push('/check/add')} />
       </View>
-      <Text variant="small" color="ink-soft" className="mb-2 mt-3 text-center">
-        Lay it flat and avoid glare from the lights.
+      <Text variant="small" color={failed ? 'skip' : 'ink-soft'} className="mb-2 mt-3 text-center">
+        {failed ? 'That did not work. Try again, or choose a photo.' : 'Lay it flat and avoid glare from the lights.'}
       </Text>
-
     </Screen>
   );
 }

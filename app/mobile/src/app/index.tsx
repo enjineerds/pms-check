@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
 import type { Car, Locale } from '@/core/types';
 import { duePointKm, nextPointKm, progressToNext } from '@/core/service';
+import { copyFor } from '@/i18n';
 import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
 import { SIX_FIGURE_ID } from '@/sample/quotes';
@@ -23,30 +24,6 @@ import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 let arrived = false;
 
 const RISE = { duration: 550, easing: Easing.bezier(0.16, 1, 0.3, 1) };
-
-// `nasuri` (checked) still needs a native read.
-const COPY = {
-  en: {
-    yourCars: 'Your cars',
-    due: (km: string) => `Your ${km} km service is due.`,
-    pms: 'That’s your PMS, the maker’s scheduled maintenance. Check the casa’s quote before you say yes to anything.',
-    inKm: (km: string) => `in ${km} km`,
-    afterThis: (km: string) => `After this: ${km} km`,
-    pastQuotes: 'Past quotes',
-    checked: (n: number) => `${n} checked`,
-    cta: 'Check a casa quote',
-  },
-  fil: {
-    yourCars: 'Mga kotse mo',
-    due: (km: string) => `Due na ang ${km} km service mo.`,
-    pms: 'Ito ang PMS mo, ang naka-iskedyul na maintenance ng gumawa. Suriin ang quote ng casa bago ka umoo sa kahit ano.',
-    inKm: (km: string) => `sa ${km} km`,
-    afterThis: (km: string) => `Susunod: ${km} km`,
-    pastQuotes: 'Mga lumang quote',
-    checked: (n: number) => `${n} nasuri`,
-    cta: 'Suriin ang quote ng casa',
-  },
-} satisfies Record<Locale, unknown>;
 
 export default function Home() {
   const language = useStore((s) => s.language);
@@ -84,7 +61,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
     opacity: rise.get() === 1 || panelH.get() > 0 ? 1 : 0,
     transform: [{ translateY: (1 - rise.get()) * panelH.get() }],
   }));
-  const t = COPY[language];
+  const t = copyFor(language).home;
 
   const model = findModel(car.modelId);
   const km = car.odometer.km;

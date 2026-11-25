@@ -73,7 +73,7 @@ Name the data first. Everything downstream (screens, verdicts, storage) reads fr
 type Brand<T, B> = T & { readonly __brand: B };
 
 type Centavos   = Brand<number, 'Centavos'>;   // integer, PHP x 100
-type Km         = Brand<number, 'Km'>;         // integer kilometres
+type Km         = Brand<number, 'Km'>;         // integer kilometers
 type ModelId    = Brand<string, 'ModelId'>;    // 'toyota-vios'
 type VariantId  = Brand<string, 'VariantId'>;  // 'toyota-vios-1.3-xle'
 type ServiceId  = Brand<string, 'ServiceId'>;  // 'engine-oil-filter'

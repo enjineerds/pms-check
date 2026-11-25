@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Brand from '../components/Brand.astro';
 import Phone from '../components/Phone.astro';
 import Screen from '../components/Screen.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
@@ -53,10 +54,7 @@ const faqs = [
   <header class="nav">
     <div class="wrap nav-in">
       <a class="brand" href="#top" aria-label="PMS Check home">
-        <span class="logo" aria-hidden="true">
-          <Icon name="check" size="12px" stroke={3.4} />
-        </span>
-        PMS Check
+        <Brand />
       </a>
       <nav aria-label="Primary">
         <a href="#how">How it works</a>
@@ -246,7 +244,7 @@ const faqs = [
 
   <footer>
     <div class="wrap foot">
-      <b>PMS Check</b>
+      <Brand size={28} />
       <p>Verdicts are checked against the manufacturer's schedule for your car. Figures shown on this page are sample data.</p>
       <p>© 2026 KowdStudio. All rights reserved.</p>
       <nav class="foot-links" aria-label="Legal">
@@ -349,20 +347,8 @@ const faqs = [
   }
   .brand {
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: var(--text-small);
     text-decoration: none;
-  }
-  .logo {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--color-ink);
-    color: var(--color-sheen);
-    display: grid;
-    place-items: center;
+    border-radius: 8px;
   }
   .nav nav {
     display: flex;
@@ -958,9 +944,7 @@ const faqs = [
     font-size: 13px;
     color: var(--color-ink-faint);
     flex-wrap: wrap;
-  }
-  .foot b {
-    color: var(--color-ink);
+    align-items: center;
   }
   .foot-links a {
     color: var(--color-ink-soft);

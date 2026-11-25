@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Brand from '../components/Brand.astro';
 ---
 
 <Base
@@ -9,10 +10,7 @@ import Base from '../layouts/Base.astro';
   <header class="nav">
     <div class="wrap nav-in">
       <a class="brand" href="/" aria-label="PMS Check home">
-        <span class="logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7" /></svg>
-        </span>
-        PMS Check
+        <Brand />
       </a>
       <a class="btn" href="/#join">Join the waitlist</a>
     </div>
@@ -65,7 +63,7 @@ import Base from '../layouts/Base.astro';
 
   <footer>
     <div class="wrap foot">
-      <b>PMS Check</b>
+      <Brand size={28} />
       <p>© 2026 KowdStudio. All rights reserved.</p>
       <nav class="foot-links" aria-label="Legal">
         <a href="/privacy/">Privacy policy</a>
@@ -90,20 +88,8 @@ import Base from '../layouts/Base.astro';
   }
   .brand {
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: var(--text-small);
     text-decoration: none;
-  }
-  .logo {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--color-ink);
-    color: var(--color-sheen);
-    display: grid;
-    place-items: center;
+    border-radius: 8px;
   }
   .legal {
     padding-block: 48px 72px;
@@ -147,9 +133,6 @@ import Base from '../layouts/Base.astro';
     gap: 16px;
     font-size: 13px;
     color: var(--color-ink-faint);
-  }
-  .foot b {
-    color: var(--color-ink);
   }
   .foot-links a {
     color: var(--color-ink-soft);

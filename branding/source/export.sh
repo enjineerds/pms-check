@@ -43,4 +43,5 @@ cp pms-check-icon-small.svg ../web/favicon.svg
 
 PUB="$REPO/landing-page/public"
 cp ../web/favicon.svg ../web/favicon.ico ../web/apple-touch-icon.png "$PUB/"
+mkdir -p "$PUB/brand" && cp pms-check-icon-small.svg "$PUB/brand/"
 echo "done"

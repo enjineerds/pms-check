@@ -46,7 +46,7 @@ The symbol in full colour always sits on the dark tile when the background is li
 
 - `app/mobile/assets/images/`: `icon.png` (opaque 1024), `splash-icon.png`, `favicon.png`, `android-icon-*.png`.
 - `app/mobile/app.json`: iOS uses `icon.png` (the default `expo.icon` bundle is no longer referenced), Android adaptive background `#14171B`.
-- `landing-page/public/`: `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, linked in `src/layouts/Base.astro`.
+- `landing-page/public/`: `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, linked in `src/layouts/Base.astro`. The site header and footer use `src/components/Brand.astro`: the small icon next to live "PMS Check" text (Plus Jakarta Sans 800) at the lockup proportions. Live text renders sharper on screen than the outlined lockup.
 
 ## Rebuilding
 

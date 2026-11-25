@@ -1,9 +1,101 @@
-:root {
-  --font-display:
-    Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-  --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+@import 'tailwindcss';
+@import 'uniwind';
+
+/* Source of truth: app/DESIGN.md (theme v3, Glossy White). */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --text-*: initial;
+  --font-*: initial;
+  --font-weight-*: initial;
+
+  --spacing: 4px;
+  --spacing-page: 16px;
+
+  --color-ground: #f1f3f8;
+  --color-surface: #ffffff;
+  --color-ink: #0a0b0f;
+  --color-ink-soft: #4b5160;
+  --color-ink-faint: #5f6575;
+  --color-line: #e1e5ee;
+  --color-accent: #ffc52e;
+  --color-accent-ink: #12161a;
+  --color-required: #0f8a5f;
+  --color-required-bg: #e3f5ec;
+  --color-optional: #a8620a;
+  --color-optional-bg: #fcefd8;
+  --color-skip: #cc2f27;
+  --color-skip-bg: #fce5e2;
+  --color-panel: #14171b;
+  --color-panel-ink: #f3f5f6;
+  --color-panel-soft: #a3aab1;
+  --color-panel-line: #2c3238;
+  --color-yes-bright: #3ddc97;
+  --color-ask-bright: #ffb547;
+  --color-no-bright: #ff6b5e;
+  --color-gloss-top: #050607;
+  --color-gloss-bottom: #6b6e75;
+  --color-sheen: #ffffff;
+  --color-haze: #3b4a8a;
+  --color-track: #e6e9f0;
+  --color-scrim: rgba(10, 11, 15, 0.45);
+
+  --color-gloss-mid: #17181c;
+  --color-gloss-disc: #3a3d44;
+  --color-gloss-shutter: #2a2c31;
+  --color-gloss-toast: #2a2f36;
+  --color-gloss-panel-mid: #1c1e22;
+  --color-gloss-panel-end: #4a4d54;
+  --color-glass-edge: rgba(255, 255, 255, 0.35);
+  --color-glass-rule: rgba(255, 255, 255, 0.14);
+  --color-glass-wash: rgba(255, 255, 255, 0.7);
+  --color-keypad: #d3d6dd;
+  --color-keypad-back: #adb2bc;
+  --color-blurry: #8a8f9b;
+  --color-photo-top: #f6f7fb;
+  --color-photo-bottom: #f0f3f8;
+
+  --radius-sm: 6px;
+  --radius-md: 24px;
+  --radius-xl: 36px;
+  --radius-pill: 999px;
+
+  --font-regular: 'PlusJakartaSans_400Regular';
+  --font-medium: 'PlusJakartaSans_500Medium';
+  --font-semibold: 'PlusJakartaSans_600SemiBold';
+  --font-bold: 'PlusJakartaSans_700Bold';
+  --font-extrabold: 'PlusJakartaSans_800ExtraBold';
+
+  --text-display: 34px;
+  --text-display--line-height: 38px;
+  --text-display--letter-spacing: -1.2px;
+  --text-title: 24px;
+  --text-title--line-height: 30px;
+  --text-title--letter-spacing: -0.5px;
+  --text-lead: 17px;
+  --text-lead--line-height: 24px;
+  --text-lead--letter-spacing: -0.1px;
+  --text-read: 16px;
+  --text-read--line-height: 24px;
+  --text-read--letter-spacing: 0px;
+  --text-body: 15px;
+  --text-body--line-height: 21px;
+  --text-body--letter-spacing: 0px;
+  --text-small: 13px;
+  --text-small--line-height: 18px;
+  --text-small--letter-spacing: 0px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--letter-spacing: 0px;
+
+  --shadow-soft: 0px 8px 28px rgba(40, 52, 96, 0.08);
+  --shadow-glass: 0px 10px 22px rgba(5, 6, 7, 0.28);
+  --shadow-toast: 0px 12px 30px rgba(5, 6, 7, 0.35);
+  --shadow-sheet: 0px -10px 40px rgba(20, 28, 60, 0.16);
+  --shadow-chip: 0px 2px 10px rgba(40, 52, 96, 0.08);
+  --shadow-segment: 0px 2px 8px rgba(40, 52, 96, 0.14);
+  --shadow-paper: 0px 12px 30px rgba(40, 52, 96, 0.16);
+  --shadow-panel: 0px -8px 30px rgba(40, 52, 96, 0.08);
+  --shadow-key: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }

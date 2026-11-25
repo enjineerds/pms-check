@@ -1,0 +1,48 @@
+import { View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { formatKm, groupDigits } from '@/core/money';
+import { byDecision, lineName, sum } from '@/core/quote';
+import type { VerdictKind } from '@/core/types';
+import { findModel, findVariantName } from '@/sample/catalog';
+import { currentCar, useQuote, useStore } from '@/store/store';
+import { AdvisorPanel, Header, LineRow, Screen, SecondaryButton, Text, VERDICT } from '@/ui';
+
+export default function Advisor() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const quote = useQuote(id);
+  const car = useStore(currentCar);
+  if (!quote) return null;
+
+  const accept = byDecision(quote.lines, 'accept');
+  const pending = byDecision(quote.lines, 'pending');
+  const decline = byDecision(quote.lines, 'decline');
+  const model = car ? findModel(car.modelId) : null;
+  const sub = model && car ? `${model.make} ${model.name} ${findVariantName(car.variantId)} · ${formatKm(quote.visit.odometerKm)}` : undefined;
+
+  return (
+    <Screen scroll header={<Header title="Show the advisor" subtitle={sub} />} footer={<SecondaryButton label="Back to my quote" onPress={() => router.back()} />}>
+      <Text variant="display" className="mt-1">
+        Please do only these for my {groupDigits(quote.visit.point.km)} km PMS.
+      </Text>
+      <View className="mt-5">
+        <AdvisorPanel lines={accept.map((l) => ({ id: l.id, name: lineName(l), price: l.price }))} total={sum(accept.map((l) => l.price))} />
+      </View>
+      <Block title="Show me first" kind="ask" lines={pending} />
+      <Block title="Not today, thank you" kind="no" lines={decline} />
+    </Screen>
+  );
+}
+
+function Block({ title, kind, lines }: { title: string; kind: VerdictKind; lines: Parameters<typeof lineName>[0][] }) {
+  if (lines.length === 0) return null;
+  return (
+    <View className="mt-5">
+      <Text variant="small" weight="bold" color={VERDICT[kind].color}>
+        {title}
+      </Text>
+      {lines.map((l) => (
+        <LineRow key={l.id} title={lineName(l)} price={l.price} kind={kind} />
+      ))}
+    </View>
+  );
+}

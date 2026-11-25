@@ -1,0 +1,33 @@
+// Each scenario is a URL plus the taps (by visible label) that reach one screen state.
+// Taps use the first text line of a pressable, which is how a person finds it too.
+// A `{ type }` step types into the focused field. `waitText` waits for a label before tapping.
+export const scenarios = [
+  { name: 'v3-00-language', url: '/' },
+  { name: 'v3-01-home', url: '/', taps: ['English'] },
+  { name: 'v3-18-allow-camera', url: '/', taps: ['English', 'Check a casa quote'] },
+  { name: 'v3-19-camera-off', url: '/', taps: ['English', 'Check a casa quote', 'Not now'] },
+  { name: 'v3-02-scan', url: '/', taps: ['English', 'Check a casa quote', 'Allow camera'] },
+  { name: 'v3-23-choose-photo', url: '/', taps: ['English', 'Check a casa quote', 'Allow camera', 'Photos'] },
+  { name: 'v3-03-check-lines', url: '/check/reading', waitText: 'Looks right, check it' },
+  { name: 'v3-12-edit-line', url: '/check/reading', waitText: 'Looks right, check it', taps: ['Cabin air filter'] },
+  { name: 'v3-03c-line-updated', url: '/check/reading', waitText: 'Looks right, check it', taps: ['Cabin air filter', 'Save'] },
+  { name: 'v3-04-result', url: '/check/reading', waitText: 'Looks right, check it', taps: ['Cabin air filter', 'Save', 'Looks right, check it'] },
+  { name: 'v3-05-item-detail', url: '/quote/q-bayan-10k/item/s5' },
+  { name: 'v3-06-advisor', url: '/quote/q-bayan-10k/advisor' },
+  { name: 'v3-21-report', url: '/quote/q-bayan-10k/report' },
+  { name: 'v3-04b-result-six-figure', url: '/quote/sample-60k' },
+  { name: 'v3-06b-advisor-six-figure', url: '/quote/sample-60k/advisor' },
+  { name: 'v3-07-couldnt-read', url: '/check/couldnt-read' },
+  { name: 'v3-13-type-line', url: '/check/add' },
+  { name: 'v3-13b-type-line-search', url: '/check/add', taps: [{ type: 'eng' }] },
+  { name: 'v3-14-add-price', url: '/check/add', taps: [{ type: 'eng' }, 'Engine flush'] },
+  { name: 'v3-16-past-quotes', url: '/quotes' },
+  { name: 'v3-16b-past-quotes-empty', url: '/quotes?empty=1' },
+  { name: 'v3-17-your-cars', url: '/cars' },
+  { name: 'v3-08-pick-model', url: '/car/model' },
+  { name: 'v3-09-variant', url: '/car/model', taps: ['Toyota Vios'] },
+  { name: 'v3-22-not-listed', url: '/car/not-listed' },
+  { name: 'v3-10-odometer', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0'] },
+  { name: 'v3-09b-look', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0', 'Continue'] },
+  { name: 'v3-11-car-saved', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0', 'Continue', 'Save my car'] },
+];

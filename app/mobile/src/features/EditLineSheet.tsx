@@ -1,0 +1,102 @@
+import { useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
+import type { DraftLine } from '@/core/types';
+import { formatPeso, peso } from '@/core/money';
+import { priceOf } from '@/core/quote';
+import { serviceByName } from '@/sample/catalog';
+import { GlassButton, Icon, Notice, Sheet, Text } from '@/ui';
+
+interface Props {
+  line: DraftLine | null;
+  onClose: () => void;
+  onSave: (patch: Partial<DraftLine>) => void;
+  onDelete: () => void;
+}
+
+export function EditLineSheet({ line, ...rest }: Props) {
+  return (
+    <Sheet visible={!!line} onClose={rest.onClose}>
+      {line ? <EditForm key={line.id} line={line} {...rest} /> : null}
+    </Sheet>
+  );
+}
+
+function EditForm({ line, onClose, onSave, onDelete }: Omit<Props, 'line'> & { line: DraftLine }) {
+  const [name, setName] = useState(line.rawText);
+  const [price, setPrice] = useState(() => {
+    const c = priceOf(line.price);
+    return c ? String(c / 100) : '';
+  });
+
+  const amount = parseFloat(price);
+  const valid = name.trim().length > 0 && amount > 0;
+  const known = serviceByName(name);
+
+  const save = () => {
+    if (!valid) return;
+    onSave({
+      rawText: name.trim(),
+      price: { kind: 'confirmed', value: peso(amount) },
+      match: known ? { kind: 'confirmed', serviceId: known.id } : { kind: 'none' },
+    });
+  };
+
+  return (
+    <>
+      <View className="mb-3 flex-row items-center justify-between">
+        <Text variant="title" className="!text-[20px] !leading-[26px]">
+          Fix this line
+        </Text>
+        <Pressable accessibilityRole="button" onPress={onClose}>
+          <Text variant="small" weight="semibold" color="ink-soft">
+            Cancel
+          </Text>
+        </Pressable>
+      </View>
+      <Text variant="small" weight="bold" className="mb-2 mt-3">
+        What the quote says
+      </Text>
+      <TextInput
+        value={name}
+        onChangeText={setName}
+        className="h-13 flex-row items-center gap-1.5 rounded-pill border-[1.5px] border-ink bg-surface px-5 font-medium text-[16px] text-ink [outline-width:0]"
+        placeholderTextColorClassName="accent-ink-faint"
+      />
+      <Text variant="small" weight="bold" className="mb-2 mt-3">
+        Price
+      </Text>
+      <View className="h-13 flex-row items-center gap-1.5 rounded-pill border-[1.5px] border-line bg-surface px-5">
+        <Text variant="body" weight="semibold">
+          ₱
+        </Text>
+        <TextInput
+          value={price}
+          onChangeText={(t) => setPrice(t.replace(/[^0-9.]/g, ''))}
+          keyboardType="decimal-pad"
+          placeholder="0"
+          placeholderTextColorClassName="accent-ink-faint"
+          className="h-full flex-1 font-medium text-[16px] text-ink [outline-width:0]"
+        />
+      </View>
+      <View className="mt-4">
+        {known ? (
+          <Notice tone="green">We know this one. We’ll check it against your Vios’s schedule.</Notice>
+        ) : (
+          <Notice tone="amber">We don’t have this one yet. We’ll still list it, and you can ask the advisor about it.</Notice>
+        )}
+      </View>
+      <GlassButton label="Save" disabled={!valid} onPress={save} className="mt-4" />
+      <Pressable accessibilityRole="button" onPress={onDelete} className="flex-row items-center justify-center gap-2 py-3.5">
+        <Icon name="trash" size={16} colorClassName="accent-skip" stroke={2} />
+        <Text variant="small" weight="bold" color="skip">
+          Delete this line
+        </Text>
+      </Pressable>
+    </>
+  );
+}
+
+export const priceLabel = (l: DraftLine) => {
+  const c = priceOf(l.price);
+  return c === null ? '—' : formatPeso(c);
+};

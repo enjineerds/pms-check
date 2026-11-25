@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
+import Animated, { type CSSAnimationProperties } from 'react-native-reanimated';
+import { withUniwind } from 'uniwind';
 import { release } from '@/ocr/capture';
 import { clearPendingImage, peekPendingImage } from '@/ocr/pending';
 import { readQuote } from '@/ocr/read';
@@ -10,7 +12,22 @@ import { PAPER_ROWS } from '@/sample/paper';
 import { useDraft } from '@/store/draft';
 import { Card, Divider, Header, QuotePaper, Screen, SecondaryButton, Text } from '@/ui';
 
+const StyledImage = withUniwind(Image);
 const SKELETON_ROWS = [0, 1, 2, 3];
+
+const SWEEP: CSSAnimationProperties = {
+  animationName: { from: { top: '0%' }, to: { top: '100%' } },
+  animationDuration: '1.6s',
+  animationTimingFunction: 'ease-in-out',
+  animationIterationCount: 'infinite',
+  animationDirection: 'alternate',
+};
+const PULSE: CSSAnimationProperties = {
+  animationName: { '0%': { opacity: 0.5 }, '50%': { opacity: 1 }, '100%': { opacity: 0.5 } },
+  animationDuration: '1.2s',
+  animationTimingFunction: 'ease-in-out',
+  animationIterationCount: 'infinite',
+};
 
 // Dev only: /check/reading?demo=1 reads a stand-in image, so the screens after it stay reachable on web.
 const DEMO: CapturedImage = { uri: '', width: 0, height: 0, source: 'library' };
@@ -50,12 +67,15 @@ export default function Reading() {
     <Screen header={<Header title="Reading your quote" subtitle="This takes a few seconds" />} footer={<SecondaryButton label="Cancel" onPress={() => router.back()} />}>
       <View className="h-32.5 overflow-hidden rounded-[28px] border-t-4 border-ink bg-surface shadow-soft">
         {img?.uri ? (
-          <Image source={{ uri: img.uri }} contentFit="cover" contentPosition="top" className="size-full" />
+          <StyledImage source={{ uri: img.uri }} contentFit="cover" contentPosition="top" className="size-full" />
         ) : (
           <View className="mx-3.5 mt-3.5">
             <QuotePaper rows={PAPER_ROWS.slice(0, 4)} compact tilt={0} />
           </View>
         )}
+        <Animated.View pointerEvents="none" style={[{ position: 'absolute', left: 0, right: 0, height: 3 }, SWEEP]}>
+          <View className="flex-1 bg-linear-to-r/srgb from-transparent via-ink to-transparent" />
+        </Animated.View>
       </View>
       <Text variant="display" className="mt-5 !text-[30px] !leading-[34px]">
         Reading the lines…
@@ -71,8 +91,10 @@ export default function Reading() {
               <View className="size-6.5 items-center justify-center rounded-full border-[1.5px] border-line">
                 {i === 0 ? <ActivityIndicator size="small" colorClassName="accent-ink-soft" className="absolute inset-0" /> : null}
               </View>
-              <View className="h-2.5 flex-1 rounded-[5px] bg-track" />
-              <View className="h-2.5 w-14 rounded-[5px] bg-track" />
+              <Animated.View style={[{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 }, PULSE]}>
+                <View className="h-2.5 flex-1 rounded-[5px] bg-track" />
+                <View className="h-2.5 w-14 rounded-[5px] bg-track" />
+              </Animated.View>
             </View>
           </View>
         ))}

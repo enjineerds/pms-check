@@ -22,7 +22,6 @@ export default function CameraAccess() {
   const typeInstead = () => router.push('/check/add');
   const granted = permission?.granted ?? false;
 
-  // The user may switch the camera on in Settings and come back.
   useEffect(() => {
     const sub = AppState.addEventListener('change', (s) => {
       if (s === 'active') refresh();

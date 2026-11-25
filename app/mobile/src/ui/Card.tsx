@@ -5,7 +5,6 @@ import { cx } from './cx';
 interface Props {
   children: ReactNode;
   onPress?: () => void;
-  /** Read by screen readers in place of the card's text, when that text alone is ambiguous. */
   accessibilityLabel?: string;
   className?: string;
   padded?: boolean;

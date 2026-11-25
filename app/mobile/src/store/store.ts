@@ -41,7 +41,7 @@ const subscribe = (l: () => void) => {
   return () => listeners.delete(l);
 };
 
-/** Select a stable reference from state. Never return a freshly built array or object. */
+/** Never return a freshly built array or object. */
 export const useStore = <T,>(select: (s: AppState) => T): T =>
   useSyncExternalStore(subscribe, () => select(state), () => select(state));
 
@@ -81,7 +81,6 @@ export function setDecision(quoteId: string, lineId: string, decision: Decision)
 
 export const useQuote = (id: string): Quote | undefined => useStore((s) => s.quotes.find((q) => q.id === id));
 
-/** The six-figure sample lives in the store so its decisions work, but Past quotes does not list it. */
 export const isListed = (q: Quote) => q.id !== SIX_FIGURE_ID;
 
 export const currentCar = (s: AppState): Car | undefined => s.cars.find((c) => c.isCurrent) ?? s.cars[0];

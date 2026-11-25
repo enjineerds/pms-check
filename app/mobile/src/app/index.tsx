@@ -1,6 +1,15 @@
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
-import Animated, { cubicBezier, useReducedMotion, type CSSAnimationProperties } from 'react-native-reanimated';
+import { Pressable, View, type LayoutChangeEvent } from 'react-native';
+import Animated, {
+  cubicBezier,
+  Easing,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withDelay,
+  withTiming,
+  type CSSAnimationProperties,
+} from 'react-native-reanimated';
 import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
@@ -12,7 +21,7 @@ import { findModel, findVariantName, TRANSMISSION_LABEL } from '@/sample/catalog
 import { currentCar, isListed, setLanguage, useStore } from '@/store/store';
 import { Card, CarImage, GlassButton, Icon, Segmented, Text } from '@/ui';
 
-// The car drives in and settles on its suspension. Once per launch: Home is the screen people keep returning to.
+const CAR_MS = 700;
 const ARRIVE: CSSAnimationProperties = {
   animationName: {
     from: { transform: [{ translateX: 32 }, { translateY: 0 }] },
@@ -20,12 +29,14 @@ const ARRIVE: CSSAnimationProperties = {
     '88%': { transform: [{ translateX: 0 }, { translateY: 1.5 }] },
     to: { transform: [{ translateX: 0 }, { translateY: 0 }] },
   },
-  animationDuration: '700ms',
+  animationDuration: `${CAR_MS}ms`,
   animationTimingFunction: cubicBezier(0.16, 1, 0.3, 1),
 };
 let arrived = false;
 
-// Filipino copy from the Doop frame "V3-1c · Home (Tagalog)". The "checked" count has no frame yet: `nasuri` needs a native read.
+const RISE = { duration: 550, easing: Easing.bezier(0.16, 1, 0.3, 1) };
+
+// `nasuri` (checked) still needs a native read.
 const COPY = {
   en: {
     yourCars: 'Your cars',
@@ -54,20 +65,37 @@ export default function Home() {
   const car = useStore(currentCar);
   if (!language) return <Redirect href="/language" />;
   if (!car) return <Redirect href="/car/model" />;
-  // A separate component, so a redirecting mount never spends the arrival.
+  // Separate component, so a redirecting mount never spends the arrival.
   return <Garage car={car} language={language} />;
 }
 
 function Garage({ car, language }: { car: Car; language: Locale }) {
   const insets = useSafeAreaInsets();
   const reduceMotion = useReducedMotion();
-  // Read once on mount, so a re-render mid-drive doesn't cut the animation.
+  // Read once, so a re-render mid-drive doesn't cut the animation.
   const [arriving] = useState(() => {
     const first = !arrived;
     arrived = true;
     return first && !reduceMotion;
   });
   const quotes = useStore((s) => s.quotes);
+
+  const rise = useSharedValue(arriving ? 0 : 1);
+  const panelH = useSharedValue(0);
+  const headerH = useSharedValue(0);
+  const onPanelLayout = (e: LayoutChangeEvent) => {
+    if (!arriving || panelH.get() > 0) return;
+    panelH.set(e.nativeEvent.layout.height);
+    rise.set(withDelay(CAR_MS, withTiming(1, RISE)));
+  };
+  // Centre the car on screen while the panel is below it.
+  const stageStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: ((1 - rise.get()) * (panelH.get() - headerH.get())) / 2 }],
+  }));
+  const panelStyle = useAnimatedStyle(() => ({
+    opacity: rise.get() === 1 || panelH.get() > 0 ? 1 : 0,
+    transform: [{ translateY: (1 - rise.get()) * panelH.get() }],
+  }));
   const t = COPY[language];
 
   const model = findModel(car.modelId);
@@ -79,12 +107,16 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   return (
     <View className="flex-1 bg-ground">
       <View className="absolute inset-0 bg-linear-to-b/srgb from-surface from-0% via-photo-top via-19% to-photo-bottom to-47%" />
-      <View className="flex-row items-start gap-2 px-4" style={{ paddingTop: insets.top + 12 }}>
+      <View
+        className="flex-row items-start gap-2 px-4"
+        style={{ paddingTop: insets.top + 12 }}
+        onLayout={(e) => headerH.set(e.nativeEvent.layout.height)}
+      >
         <View className="flex-1">
           <Text variant="lead" weight="bold">
             {model.make} {model.name} {findVariantName(car.variantId)}
           </Text>
-          {/* Wrapping pieces, so a narrow phone breaks between facts, never inside "10,240 km". */}
+          {/* Separate pieces, so narrow phones wrap between facts, never inside one. */}
           <View className="flex-row flex-wrap">
             {[`${car.year} · `, `${TRANSMISSION_LABEL[car.transmission]} · `, formatKm(km)].map((part) => (
               <Text key={part} variant="small" color="ink-faint">
@@ -97,7 +129,6 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
           <Pressable
             accessibilityRole="link"
             onPress={() => router.push('/cars')}
-            // The text link is ~18pt tall; reach the 44pt / 48dp minimum without moving the layout.
             hitSlop={{ top: 15, bottom: 6, left: 12, right: 12 }}
             className="flex-row items-center gap-1"
           >
@@ -123,14 +154,18 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
         </View>
       </View>
 
-      {/* Clipped: on shorter phones this area is under 230pt, and the photo's own backdrop would paint over the header. */}
-      <View className="flex-1 overflow-hidden">
+      {/* Clipped, so the photo's backdrop can't paint over the header on short phones. */}
+      <Animated.View className="flex-1 overflow-hidden" style={stageStyle}>
         <Animated.View className="flex-1 justify-center" style={arriving ? ARRIVE : undefined}>
           <CarImage style={car.bodyStyle} height={230} backdrop={false} />
         </Animated.View>
-      </View>
+      </Animated.View>
 
-      <View className="rounded-t-xl bg-surface px-4 pt-5.5 shadow-panel" style={{ paddingBottom: Math.max(insets.bottom, 12) + 8 }}>
+      <Animated.View
+        className="rounded-t-xl bg-surface px-4 pt-5.5 shadow-panel"
+        style={[{ paddingBottom: Math.max(insets.bottom, 12) + 8 }, panelStyle]}
+        onLayout={onPanelLayout}
+      >
         <Text variant="headline">
           {t.due(groupDigits(due))}
         </Text>
@@ -146,7 +181,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
               </Text>
             </View>
             <View className="mt-4">
-              <ServiceRoad progress={progressToNext(km)} animate={arriving} />
+              <ServiceRoad progress={progressToNext(km)} animate={arriving} delayMs={CAR_MS + 250} />
             </View>
             <Text variant="lead" weight="bold" className="mt-2.5">
               {t.afterThis(groupDigits(next))}
@@ -168,7 +203,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
               variant="lead"
               weight="bold"
               className="mt-4"
-              // Dev shortcut to the six-figure sample quote; never ships.
+              // Dev only.
               onLongPress={__DEV__ ? () => router.push(`/quote/${SIX_FIGURE_ID}`) : undefined}
             >
               {t.pastQuotes}
@@ -176,7 +211,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
           </Card>
         </View>
         <GlassButton label={t.cta} onPress={() => router.push('/check/camera')} />
-      </View>
+      </Animated.View>
     </View>
   );
 }

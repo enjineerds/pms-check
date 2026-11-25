@@ -6,7 +6,7 @@ import { findService } from '@/sample/catalog';
 
 const unknown: Verdict = { kind: 'ask', reason: { kind: 'unknown-item' }, source: null };
 
-/** Sample stand-in for the verdict engine: reads the catalog's stub verdict for a 10,000 km visit. */
+// Stub for the verdict engine.
 function toSaved(l: DraftLine): SavedLine | null {
   const price = priceOf(l.price);
   if (price === null || l.match.kind === 'fuzzy') return null;

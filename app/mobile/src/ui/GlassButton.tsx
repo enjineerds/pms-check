@@ -10,7 +10,6 @@ interface Props {
   className?: string;
 }
 
-/** The one black-glass action per screen. */
 export function GlassButton({ label, onPress, onLongPress, disabled, className }: Props) {
   return (
     <Pressable

@@ -9,7 +9,6 @@ interface Props {
   total: Centavos;
 }
 
-// Six-figure totals need a smaller size to stay on one line next to the label.
 const totalSize = (s: string) => (s.length > 7 ? 30 : 40);
 
 export function AdvisorPanel({ lines, total }: Props) {

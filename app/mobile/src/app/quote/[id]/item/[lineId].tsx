@@ -15,7 +15,7 @@ const DECISIONS: { value: Decision; label: string }[] = [
   { value: 'decline', label: 'Not today' },
 ];
 
-// Clipboard needs a native module that is not in the sample build, so native falls back to the share sheet.
+// No clipboard module in this build, so native falls back to the share sheet.
 async function copyText(text: string) {
   if (Platform.OS === 'web' && typeof navigator !== 'undefined' && navigator.clipboard) {
     await navigator.clipboard.writeText(text);
@@ -42,7 +42,6 @@ export default function ItemDetail() {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      // Sharing was dismissed.
     }
   };
 

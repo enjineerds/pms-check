@@ -14,7 +14,6 @@ interface Props {
   compact?: boolean;
 }
 
-/** A static stand-in for a photographed casa quote. */
 export function QuotePaper({ rows, total, tilt = -1.2, compact }: Props) {
   const cell = cx('!leading-3.5', compact ? '!text-[9px]' : '!text-[10.5px]');
   return (

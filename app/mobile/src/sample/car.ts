@@ -8,7 +8,7 @@ export const VIOS: Car = {
   transmission: 'cvt',
   deliveredOn: '2025-03' as YearMonth,
   bodyStyle: 'sedan',
-  odometer: { km: 10_240 as Km, readAt: new Date().toISOString() },
+  odometer: { km: 14_800 as Km, readAt: new Date().toISOString() },
   isCurrent: true,
   createdAt: '2025-03-20T09:00:00.000Z',
 };

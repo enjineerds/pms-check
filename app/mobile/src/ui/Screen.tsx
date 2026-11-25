@@ -6,17 +6,14 @@ interface Props {
   header?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
-  /** Rendered above everything, edge to edge. Sheets go here. */
   overlay?: ReactNode;
   scroll?: boolean;
-  /** Skip the bottom inset when a keypad sits flush below the footer. */
   flushBottom?: boolean;
 }
 
 export function Screen({ header, children, footer, overlay, scroll, flushBottom }: Props) {
   const insets = useSafeAreaInsets();
   const Body = scroll ? ScrollView : View;
-  // Without a footer the body is the last thing on screen, so it owns the bottom inset (Android nav bar, iOS home indicator).
   const bodyInset = footer ? undefined : { paddingBottom: insets.bottom };
   return (
     <View className="flex-1 bg-ground">

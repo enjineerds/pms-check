@@ -44,7 +44,6 @@ export default function CarSaved() {
       <View className="my-5">
         <CarImage style={car.bodyStyle} height={170} />
       </View>
-      {/* "Due now" only near or past the point; a fresh car is told what's next, calmly. */}
       <Notice tone={dueNow ? 'amber' : 'green'} icon="clock">
         <Text variant="small" weight="bold">
           {dueNow ? 'Service due now: ' : 'Next service: '}

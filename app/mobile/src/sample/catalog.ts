@@ -52,9 +52,7 @@ export interface CatalogService {
   id: ServiceId;
   name: string;
   category: string;
-  /** Sample price range in pesos, shown on the add-price screen. */
   range: [number, number];
-  /** Stub verdict for a 10,000 km visit. The real engine replaces this. */
   verdict: Verdict;
   note?: string;
   manual: string;

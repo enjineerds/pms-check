@@ -5,14 +5,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 interface Props {
   visible: boolean;
   onClose: () => void;
-  /** Fires once the slide-in finishes: the moment to focus a field, so the keyboard never rises mid-slide. */
   onOpen?: () => void;
   children: ReactNode;
 }
 
 const OFFSCREEN = 700;
 
-/** Slides in on mount. Closing is immediate, which keeps the open state in the parent only. */
 export function Sheet({ visible, onClose, onOpen, children }: Props) {
   return visible ? (
     <SheetBody onClose={onClose} onOpen={onOpen}>
@@ -33,8 +31,7 @@ function SheetBody({ onClose, onOpen, children }: Omit<Props, 'visible'>) {
   }, [t]);
 
   return (
-    // iOS keeps the window size when the keyboard opens, so pad the sheet up above it; Android resizes the window itself.
-    // The sheet sits in flow at the bottom (justify-end), since padding never moves an absolutely positioned child.
+    // iOS keeps the window size when the keyboard opens; Android resizes it.
     <KeyboardAvoidingView className="absolute inset-0 justify-end" pointerEvents="box-none" behavior={Platform.select({ ios: 'padding' })}>
       <Animated.View className="absolute inset-0 bg-scrim" style={{ opacity: t }}>
         <Pressable className="absolute inset-0" onPress={onClose} accessibilityLabel="Close" />

@@ -12,7 +12,6 @@ interface Snapshot {
 export interface DraftState extends Snapshot {
   quotedTotal: Centavos | null;
   shopName: string | null;
-  /** The user chose "Carry on anyway" for a total that does not match. */
   carriedOn: boolean;
   undo: Snapshot | null;
   toast: { text: string; id: number } | null;

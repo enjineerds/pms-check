@@ -7,7 +7,7 @@ import { Card, cx, Divider, GlassButton, GlossGradient, Header, Icon, Screen, Te
 
 export default function Quotes() {
   const all = useStore((s) => s.quotes);
-  // `?empty=1` previews the empty state without wiping the sample data.
+  // `?empty=1` previews the empty state.
   const { empty } = useLocalSearchParams<{ empty?: string }>();
   const quotes = empty ? [] : all.filter(isListed);
   const open = quotes.filter(isChecking);

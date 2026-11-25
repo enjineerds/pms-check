@@ -73,7 +73,6 @@ function EditForm({
         keyboardType="decimal-pad"
         placeholder="0"
         leading={
-          // Field's gap suits an icon; pull the currency sign closer to its digits.
           <Text variant="body" weight="semibold" className="-mr-1">
             ₱
           </Text>

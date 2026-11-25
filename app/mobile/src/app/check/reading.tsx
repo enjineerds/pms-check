@@ -29,7 +29,7 @@ const PULSE: CSSAnimationProperties = {
   animationIterationCount: 'infinite',
 };
 
-// Dev only: /check/reading?demo=1 reads a stand-in image, so the screens after it stay reachable on web.
+// Dev only: `?demo=1` reads a stand-in image so later screens are reachable on web.
 const DEMO: CapturedImage = { uri: '', width: 0, height: 0, source: 'library' };
 
 export default function Reading() {
@@ -45,7 +45,7 @@ export default function Reading() {
     }
     clearPendingImage(img);
     let live = true;
-    // Started once, so a dev double-mount reads and releases the image a single time.
+    // Guards against the dev double-mount reading the image twice.
     job.current ??= readQuote(img)
       .catch((): ReadResult => ({ kind: 'unreadable', reason: 'engine-error' }))
       .finally(() => release(img));

@@ -5,7 +5,7 @@ const StyledSvg = withUniwind(Svg, {
   stroke: { fromClassName: 'strokeClassName', styleProperty: 'accentColor' },
 });
 
-// Same family as landing-page/src/components/Icon.astro: 24px grid, round caps.
+// Matches landing-page/src/components/Icon.astro.
 const paths = {
   check: 'M5 12.5l4.5 4.5L19 7',
   question: 'M9.2 9.2a2.9 2.9 0 1 1 4.1 2.6c-.8.4-1.3 1.1-1.3 2v.4M12 17.6v.1',
@@ -40,7 +40,6 @@ export type IconName = keyof typeof paths;
 interface Props {
   name: IconName;
   size?: number;
-  /** An `accent-*` class from the theme, e.g. `accent-ink-soft`. */
   colorClassName?: string;
   stroke?: number;
 }

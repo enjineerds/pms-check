@@ -16,7 +16,7 @@ const SOURCES: Record<BodyStyle, number> = {
 interface Props {
   style: BodyStyle;
   height: number;
-  /** The photos carry their own studio backdrop, so the edges fade into the `photo-top` theme color. False when the screen already paints a matching backdrop. */
+  /** False when the screen already paints the `photo-top` backdrop. */
   backdrop?: boolean;
 }
 

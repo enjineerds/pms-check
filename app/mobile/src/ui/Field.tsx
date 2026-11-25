@@ -6,11 +6,9 @@ interface Props extends Omit<TextInputProps, 'className' | 'placeholderTextColor
   ref?: Ref<ComponentRef<typeof TextInput>>;
   leading?: ReactNode;
   trailing?: ReactNode;
-  /** Classes for the outer shell (margins, width), not the text. */
   className?: string;
 }
 
-// The one text field: a subtle line outline at rest, an ink outline while focused.
 export function Field({ ref, leading, trailing, className, multiline, onFocus, onBlur, ...input }: Props) {
   const [focused, setFocused] = useState(!!input.autoFocus);
   return (

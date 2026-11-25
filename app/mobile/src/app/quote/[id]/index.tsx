@@ -91,7 +91,6 @@ function Row({ line, first, onPress }: { line: SavedLine; first: boolean; onPres
 function Total({ kind, amount }: { kind: VerdictKind; amount: string }) {
   const dark = kind === 'no';
   const c = VERDICT[kind];
-  // Six-figure amounts need a smaller size to fit three tiles across.
   const size = amount.length > 7 ? 15 : 18;
   return (
     <View className={cx('h-28 flex-1 justify-between rounded-md bg-surface p-3', dark ? 'overflow-hidden shadow-toast' : 'shadow-soft')}>

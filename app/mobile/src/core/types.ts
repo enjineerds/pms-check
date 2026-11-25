@@ -1,4 +1,4 @@
-// Mirrors SYSTEM_DESIGN.md section 4. Money is integer centavos, ids are branded.
+// Mirrors SYSTEM_DESIGN.md §4. Money is integer centavos.
 export type Brand<T, B> = T & { readonly __brand: B };
 
 export type Centavos = Brand<number, 'Centavos'>;

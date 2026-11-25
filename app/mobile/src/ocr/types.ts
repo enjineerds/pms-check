@@ -1,6 +1,6 @@
 import type { Centavos, DraftLine } from '@/core/types';
 
-/** A quote photo on disk, owned by src/ocr/capture.ts until released. Never persisted, never uploaded. */
+/** Never persisted, never uploaded. */
 export interface CapturedImage {
   uri: string;
   width: number;

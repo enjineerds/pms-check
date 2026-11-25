@@ -10,7 +10,6 @@ import { cx, Header, Icon, Screen, Text } from '@/ui';
 export default function Scan() {
   const camera = useRef<CameraView>(null);
   const [permission] = useCameraPermissions();
-  // Reached without access (a deep link, or access revoked in Settings): the permission screen owns that state.
   useEffect(() => {
     if (permission && !permission.granted) router.replace('/check/camera');
   }, [permission]);
@@ -20,15 +19,13 @@ export default function Scan() {
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  // One guard for both sources, so a double tap takes a single photo. A ref, because two taps can land before a re-render.
-  // After a hand-off it stays locked until scan is focused again: scan stays mounted under reading.
+  // A ref, not state: two taps can land before a re-render.
   const inFlight = useRef(false);
   const unlock = () => {
     inFlight.current = false;
     setBusy(false);
   };
-  // Scan stays mounted under the screens it pushes, so the camera (and torch) would keep running behind them.
-  // Unmount the camera while unfocused: `active` would only pause it on iOS.
+  // Unmount while unfocused: `active` only pauses the camera on iOS.
   const [focused, setFocused] = useState(true);
   useFocusEffect(
     useCallback(() => {

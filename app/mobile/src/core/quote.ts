@@ -33,7 +33,6 @@ export const quotedSum = (q: Quote): Centavos => sum(q.lines.map((l) => l.price)
 
 export const isChecking = (q: Quote) => q.lines.some((l) => l.decision === 'pending');
 
-/** Sum of declined lines, shown as "Saved" once nothing is pending. */
 export const savedAmount = (q: Quote): Centavos => sum(byDecision(q.lines, 'decline').map((l) => l.price));
 
 export const decisionFor = (k: VerdictKind): Decision => (k === 'yes' ? 'accept' : k === 'no' ? 'decline' : 'pending');
@@ -42,7 +41,7 @@ export const lineName = (l: SavedLine): string =>
   l.match.kind === 'none' ? l.rawText : (findService(l.match.serviceId)?.name ?? l.rawText);
 
 
-/** `months: 0` marks a one-off job (an oil change), not a PMS point. */
+/** `months: 0` marks a one-off job, not a PMS point. */
 export const quoteTitle = (q: Quote): string =>
   q.visit.point.months === 0 ? 'Oil change' : `${groupDigits(q.visit.point.km)} km service`;
 

@@ -18,7 +18,6 @@ interface Props {
   children: ReactNode;
 }
 
-/** Children are Text nodes so a callout can mix bold and regular runs. */
 export function Notice({ tone, icon, children }: Props) {
   const t = TONES[tone];
   return (

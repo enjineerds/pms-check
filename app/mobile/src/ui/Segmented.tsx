@@ -7,7 +7,6 @@ interface Props<T extends string> {
   value: T;
   onChange: (v: T) => void;
   size?: 'md' | 'sm';
-  /** `equal` splits the track evenly. `content` sizes each segment to its label, for crowded sets ("Hatchback" among five). */
   widths?: 'equal' | 'content';
 }
 
@@ -23,7 +22,6 @@ export function Segmented<T extends string>({ options, value, onChange, size = '
             accessibilityRole="button"
             accessibilityState={{ selected: on }}
             onPress={() => onChange(o.value)}
-            // The small track is 36pt; extend the touch area to the 44pt / 48dp minimum.
             hitSlop={size === 'sm' ? { top: 6, bottom: 6 } : undefined}
             className={cx(
               'items-center justify-center rounded-pill',
@@ -32,7 +30,7 @@ export function Segmented<T extends string>({ options, value, onChange, size = '
             )}
           >
             {widths === 'content' ? (
-              // Sized by an invisible bold copy, so selecting a segment never shifts its neighbours.
+              // Invisible bold copy reserves the width, so selection never shifts neighbours.
               <Text variant={variant} weight="bold" numberOfLines={1} className="opacity-0" accessibilityElementsHidden importantForAccessibility="no">
                 {o.label}
               </Text>

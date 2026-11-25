@@ -5,7 +5,6 @@ import { priceLabel } from './EditLineSheet';
 
 type Mark = 'added' | 'updated' | undefined;
 
-/** A tinted row is a pill that carries its own edge, so the list drops the dividers around it. */
 export function rowTone(line: DraftLine, mark: Mark): 'green' | 'amber' | null {
   if (mark) return 'green';
   return line.price.kind === 'unsure' || line.match.kind === 'fuzzy' ? 'amber' : null;

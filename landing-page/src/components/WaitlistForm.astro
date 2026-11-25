@@ -201,12 +201,17 @@ const { id, dark = false } = Astro.props;
 </style>
 
 <script>
+  import { track } from '../lib/analytics';
   const ENDPOINT = import.meta.env.PUBLIC_WAITLIST_ENDPOINT as string | undefined;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   document.querySelectorAll<HTMLFormElement>('form[data-waitlist]').forEach((form) => {
     const status = form.parentElement!.querySelector<HTMLElement>('[data-status]')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    const where = form.closest('section')?.id || form.closest('section')?.dataset.section || 'unknown';
+    let attempts = 0;
+    let failures = 0;
 
     const show = (msg: string, error = false) => {
       status.textContent = msg;
@@ -235,7 +240,12 @@ const { id, dark = false } = Astro.props;
       if (data.get('company')) return;
 
       const email = data.get('email')?.toString().trim() ?? '';
-      if (!EMAIL_RE.test(email)) return show('Enter a valid email address.', true);
+      attempts++;
+      if (!EMAIL_RE.test(email)) {
+        failures++;
+        track('waitlist_error', { kind: 'invalid_email', attempt: attempts, failures, form: where });
+        return show('Enter a valid email address.', true);
+      }
 
       button.disabled = true;
       show('Joining…');
@@ -254,10 +264,19 @@ const { id, dark = false } = Astro.props;
           const result = await res.json().catch(() => null);
           if (result && result.ok === false) throw new Error(`Waitlist rejected: ${result.error}`);
         }
+        track('waitlist_joined', { attempt: attempts, failures, form: where });
         form.reset();
         showJoined();
       } catch (err) {
         console.error(err);
+        failures++;
+        track('waitlist_error', {
+          kind: 'submit_failed',
+          message: err instanceof Error ? err.message : String(err),
+          attempt: attempts,
+          failures,
+          form: where,
+        });
         show("Couldn't sign you up just now. Please try again in a moment.", true);
       } finally {
         button.disabled = false;

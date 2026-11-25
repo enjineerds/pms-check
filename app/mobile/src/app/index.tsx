@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Pressable, View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
-  cubicBezier,
   Easing,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withDelay,
   withTiming,
-  type CSSAnimationProperties,
 } from 'react-native-reanimated';
 import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,19 +18,8 @@ import { ServiceRoad } from '@/features/ServiceRoad';
 import { SIX_FIGURE_ID } from '@/sample/quotes';
 import { findModel, findVariantName, TRANSMISSION_LABEL } from '@/sample/catalog';
 import { currentCar, isListed, useStore } from '@/store/store';
-import { Card, CarImage, GlassButton, Icon, Text } from '@/ui';
+import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
-const CAR_MS = 700;
-const ARRIVE: CSSAnimationProperties = {
-  animationName: {
-    from: { transform: [{ translateX: 32 }, { translateY: 0 }] },
-    '78%': { transform: [{ translateX: 0 }, { translateY: 0 }] },
-    '88%': { transform: [{ translateX: 0 }, { translateY: 1.5 }] },
-    to: { transform: [{ translateX: 0 }, { translateY: 0 }] },
-  },
-  animationDuration: `${CAR_MS}ms`,
-  animationTimingFunction: cubicBezier(0.16, 1, 0.3, 1),
-};
 let arrived = false;
 
 const RISE = { duration: 550, easing: Easing.bezier(0.16, 1, 0.3, 1) };
@@ -87,7 +74,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   const onPanelLayout = (e: LayoutChangeEvent) => {
     if (!arriving || panelH.get() > 0) return;
     panelH.set(e.nativeEvent.layout.height);
-    rise.set(withDelay(CAR_MS, withTiming(1, RISE)));
+    rise.set(withDelay(CAR_ARRIVE_MS, withTiming(1, RISE)));
   };
   // Centre the car on screen while the panel is below it.
   const stageStyle = useAnimatedStyle(() => ({
@@ -144,9 +131,9 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
 
       {/* Clipped, so the car can’t paint over the header on short phones. */}
       <Animated.View className="flex-1 overflow-hidden" style={stageStyle}>
-        <Animated.View className="flex-1 justify-center" style={arriving ? ARRIVE : undefined}>
-          <CarImage style={car.bodyStyle} height={230} />
-        </Animated.View>
+        <View className="flex-1 justify-center">
+          <CarImage style={car.bodyStyle} height={230} motion={arriving ? 'arrive' : undefined} />
+        </View>
       </Animated.View>
 
       <Animated.View
@@ -169,7 +156,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
               </Text>
             </View>
             <View className="mt-4">
-              <ServiceRoad progress={progressToNext(km)} animate={arriving} delayMs={CAR_MS + 250} />
+              <ServiceRoad progress={progressToNext(km)} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
             </View>
             <Text variant="lead" weight="bold" className="mt-2.5">
               {t.afterThis(groupDigits(next))}

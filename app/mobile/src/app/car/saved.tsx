@@ -42,7 +42,7 @@ export default function CarSaved() {
         Next time, open the app and check a quote right away.
       </Text>
       <View className="my-5">
-        <CarImage style={car.bodyStyle} height={170} />
+        <CarImage style={car.bodyStyle} height={170} motion="arrive" delay={250} />
       </View>
       <Notice tone={dueNow ? 'amber' : 'green'} icon="clock">
         <Text variant="small" weight="bold">

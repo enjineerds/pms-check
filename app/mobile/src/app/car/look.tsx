@@ -1,17 +1,11 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import type { BodyStyle } from '@/core/types';
+import { BODY_STYLE_LABEL, BODY_STYLES } from '@/core/bodyStyle';
 import { findModel } from '@/sample/catalog';
 import { patchSetup, saveSetupAsCar, useStore } from '@/store/store';
 import { CarImage, GlassButton, Header, Screen, Segmented, Text } from '@/ui';
 
-const STYLES: { value: BodyStyle; label: string }[] = [
-  { value: 'sedan', label: 'Sedan' },
-  { value: 'hatchback', label: 'Hatchback' },
-  { value: 'suv', label: 'SUV' },
-  { value: 'mpv', label: 'MPV' },
-  { value: 'pickup', label: 'Pickup' },
-];
+const STYLES = BODY_STYLES.map((value) => ({ value, label: BODY_STYLE_LABEL[value] }));
 
 export default function CarLook() {
   const setup = useStore((s) => s.setup);
@@ -33,7 +27,7 @@ export default function CarLook() {
         What kind of car is your {model.name}?
       </Text>
       <View className="mt-6">
-        <CarImage style={setup.bodyStyle} height={190} />
+        <CarImage style={setup.bodyStyle} height={190} motion="swap" />
       </View>
       <Text variant="small" weight="bold" className="mb-2.5 mt-7">
         Body type

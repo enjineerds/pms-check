@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { applyKey } from '@/core/keypad';
-import { formatKm, groupDigits, KM_UNIT } from '@/core/money';
+import { formatKm, groupDigits } from '@/core/money';
 import { duePointKm } from '@/core/service';
 import { useCopy } from '@/i18n';
 import { patchSetup } from '@/store/store';
@@ -38,7 +38,7 @@ export default function Odometer() {
               {raw ? groupDigits(km) : '0'}
             </Text>
             <Text variant="body" weight="medium" color="ink-soft">
-              {KM_UNIT}
+              km
             </Text>
           </View>
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">

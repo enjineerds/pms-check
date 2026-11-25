@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import type { DraftLine } from '@/core/types';
 import { formatPeso, peso } from '@/core/money';
 import { priceOf } from '@/core/quote';
 import { serviceByName } from '@/sample/catalog';
-import { GlassButton, Icon, Notice, Sheet, Text } from '@/ui';
+import { Field, GlassButton, Icon, Notice, Sheet, Text } from '@/ui';
 
 interface Props {
   line: DraftLine | null;
@@ -56,28 +56,22 @@ function EditForm({ line, onClose, onSave, onDelete }: Omit<Props, 'line'> & { l
       <Text variant="small" weight="bold" className="mb-2 mt-3">
         What the quote says
       </Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        className="h-13 flex-row items-center gap-1.5 rounded-pill border-[1.5px] border-ink bg-surface px-5 font-medium text-[16px] text-ink [outline-width:0]"
-        placeholderTextColorClassName="accent-ink-faint"
-      />
+      <Field value={name} onChangeText={setName} />
       <Text variant="small" weight="bold" className="mb-2 mt-3">
         Price
       </Text>
-      <View className="h-13 flex-row items-center gap-1.5 rounded-pill border-[1.5px] border-line bg-surface px-5">
-        <Text variant="body" weight="semibold">
-          ₱
-        </Text>
-        <TextInput
-          value={price}
-          onChangeText={(t) => setPrice(t.replace(/[^0-9.]/g, ''))}
-          keyboardType="decimal-pad"
-          placeholder="0"
-          placeholderTextColorClassName="accent-ink-faint"
-          className="h-full flex-1 font-medium text-[16px] text-ink [outline-width:0]"
-        />
-      </View>
+      <Field
+        value={price}
+        onChangeText={(t) => setPrice(t.replace(/[^0-9.]/g, ''))}
+        keyboardType="decimal-pad"
+        placeholder="0"
+        leading={
+          // Field's gap suits an icon; pull the currency sign closer to its digits.
+          <Text variant="body" weight="semibold" className="-mr-1">
+            ₱
+          </Text>
+        }
+      />
       <View className="mt-4">
         {known ? (
           <Notice tone="green">We know this one. We’ll check it against your Vios’s schedule.</Notice>

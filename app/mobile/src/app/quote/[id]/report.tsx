@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { lineName, quoteTitle } from '@/core/quote';
 import { useQuote } from '@/store/store';
-import { GlassButton, Header, Notice, RadioRow, Screen, SecondaryButton, Text } from '@/ui';
+import { Field, GlassButton, Header, Notice, RadioRow, Screen, SecondaryButton, Text } from '@/ui';
 
 const REASONS = ['It is in my car’s schedule', 'The price range is off', 'This isn’t my car or variant', 'Something else'];
 
@@ -43,14 +43,7 @@ export default function Report() {
           <RadioRow key={r} label={r} selected={reason === i} onPress={() => setReason(i)} />
         ))}
       </View>
-      <TextInput
-        value={note}
-        onChangeText={setNote}
-        placeholder="Add a note (optional)"
-        placeholderTextColorClassName="accent-ink-faint"
-        multiline
-        className="mt-3 min-h-25 rounded-md bg-surface p-4 font-regular text-[15px] text-ink shadow-soft [outline-width:0] [text-align-vertical:top] web:resize-none web:[line-height:normal]"
-      />
+      <Field value={note} onChangeText={setNote} placeholder="Add a note (optional)" multiline className="mt-3" />
       <Text variant="caption" weight="regular" color="ink-soft" className="mt-3.5">
         We check every report against the manual before changing a verdict. Until then, confirm with the advisor.
       </Text>

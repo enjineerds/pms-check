@@ -27,10 +27,19 @@ export default function Scan() {
     inFlight.current = false;
     setBusy(false);
   };
+  // Scan stays mounted under the screens it pushes, so the camera (and torch) would keep running behind them.
+  // Unmount the camera while unfocused: `active` would only pause it on iOS.
+  const [focused, setFocused] = useState(true);
   useFocusEffect(
     useCallback(() => {
       inFlight.current = false;
       setBusy(false);
+      setFocused(true);
+      return () => {
+        setFocused(false);
+        setReady(false);
+        setTorch(false);
+      };
     }, []),
   );
   const run = async (get: () => Promise<CapturedImage | null>) => {
@@ -82,7 +91,7 @@ export default function Scan() {
                 The camera is not available here. Choose a photo of the quote, or type the lines in.
               </Text>
             </View>
-          ) : (
+          ) : focused ? (
             <CameraView
               ref={camera}
               style={{ flex: 1 }}
@@ -91,7 +100,7 @@ export default function Scan() {
               onCameraReady={() => setReady(true)}
               onMountError={() => setUnavailable(true)}
             />
-          )}
+          ) : null}
         </View>
         <Corner pos="tl" />
         <Corner pos="tr" />

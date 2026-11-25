@@ -17,6 +17,7 @@ export { AdvisorPanel } from './AdvisorPanel';
 export { Sheet } from './Sheet';
 export { Keypad } from './Keypad';
 export { CarImage } from './CarImage';
+export { Field } from './Field';
 export { SearchField } from './SearchField';
 export { QuotePaper, type PaperRow } from './QuotePaper';
 export { GlassDisc } from './GlassDisc';

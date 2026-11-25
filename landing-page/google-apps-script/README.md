@@ -18,6 +18,14 @@ The landing page POSTs each sign-up to a Google Apps Script web app, which adds 
 
 On the first sign-up the script creates a `Waitlist` tab with the columns Timestamp, Email, Source.
 
+## Email notifications
+
+Each new sign-up emails you: the address, the source, the time, and the running total, with a link to the sheet. Repeat sign-ups and bot submissions don't send anything.
+
+- **Turn it on:** in the Apps Script editor, choose `testNotify` in the function menu and click **Run**. Approve the new "Send email as you" permission. A test email arrives at the recipient below. Then redeploy (see below); the live web app won't send mail until you do.
+- **Recipient:** `NOTIFY_EMAIL` at the top of `Code.gs`. To change it without editing code, add a Script property `NOTIFY_EMAIL` (**Project Settings > Script properties**); it takes precedence.
+- **Limits:** a personal Google account can send about 100 emails a day from Apps Script (1,500 for Workspace). Past that, sign-ups are still saved; only the notification is skipped. Failures are logged under **Executions**.
+
 ## Changing the script later
 
 Editing `Code.gs` does nothing until you redeploy: **Deploy > Manage deployments > edit (pencil) > Version: New version > Deploy**. The URL stays the same.

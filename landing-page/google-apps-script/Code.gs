@@ -3,6 +3,8 @@
  *
  * Setup: see README.md in this folder. Paste this file into the Apps Script editor of a
  * Google Sheet (Extensions > Apps Script), then deploy it as a web app.
+ * Each new sign-up also emails a notification to NOTIFY_EMAIL (a NOTIFY_EMAIL Script property
+ * overrides it).
  */
 
 const SHEET_NAME = 'Waitlist';
@@ -23,6 +25,7 @@ function doPost(e) {
   const source = String(p.source || 'landing-page').slice(0, 60);
 
   // Two sign-ups at the same instant must not both pass the duplicate check.
+  let total = 0;
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
@@ -35,11 +38,44 @@ function doPost(e) {
       .findNext();
     // A repeat sign-up answers exactly like a new one, so the form can't be used
     // to find out whether an address is already on the list.
-    if (!existing) sheet.appendRow([new Date(), email, source]);
-    return respond({ ok: true });
+    if (!existing) {
+      sheet.appendRow([new Date(), email, source]);
+      total = sheet.getLastRow() - 1;
+    }
   } finally {
     lock.releaseLock();
   }
+
+  if (total) notify(email, source, total);
+  return respond({ ok: true });
+}
+
+// A failed notification must never fail the sign-up itself.
+function notify(email, source, total) {
+  try {
+    const to =
+      PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
+    const url = SpreadsheetApp.getActiveSpreadsheet().getUrl();
+    MailApp.sendEmail({
+      to: to,
+      subject: 'PMS Check waitlist: new sign-up (' + total + ' total)',
+      body: [
+        'Email: ' + email,
+        'Source: ' + source,
+        'Time: ' + new Date().toString(),
+        'Total on the waitlist: ' + total,
+        '',
+        'Sheet: ' + url,
+      ].join('\n'),
+    });
+  } catch (err) {
+    console.error('Waitlist notification failed: ' + err);
+  }
+}
+
+// Run once from the editor to approve the mail permission and send yourself a test.
+function testNotify() {
+  notify('test@example.com', 'manual-test', 0);
 }
 
 // Opening the web app URL in a browser answers with a health check.

@@ -16,15 +16,17 @@ interface Props {
 export function Screen({ header, children, footer, overlay, scroll, flushBottom }: Props) {
   const insets = useSafeAreaInsets();
   const Body = scroll ? ScrollView : View;
+  // Without a footer the body is the last thing on screen, so it owns the bottom inset (Android nav bar, iOS home indicator).
+  const bodyInset = footer ? undefined : { paddingBottom: insets.bottom };
   return (
     <View className="flex-1 bg-ground">
       <View className="absolute inset-0 bg-linear-to-b/srgb from-surface from-0% to-ground to-45%" />
       <View style={{ paddingTop: insets.top + 8 }}>{header}</View>
       <Body
         className="flex-1"
-        {...(scroll ? { contentContainerClassName: 'grow px-page pt-2', showsVerticalScrollIndicator: false } : {})}
+        {...(scroll ? { contentContainerClassName: 'grow px-page pt-2', contentContainerStyle: bodyInset, showsVerticalScrollIndicator: false } : {})}
       >
-        {scroll ? children : <View className="grow px-page pt-2">{children}</View>}
+        {scroll ? children : <View className="grow px-page pt-2" style={bodyInset}>{children}</View>}
       </Body>
       {footer ? (
         <View className="gap-3 px-page pt-2" style={{ paddingBottom: flushBottom ? 12 : Math.max(insets.bottom, 12) + 4 }}>

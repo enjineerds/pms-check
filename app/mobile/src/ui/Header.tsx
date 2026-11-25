@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { router } from 'expo-router';
+import { useCopy } from '@/i18n';
 import { Icon } from './Icon';
 import { Text } from './Text';
 
@@ -11,13 +12,14 @@ interface Props {
 }
 
 export function Header({ title, subtitle, onBack, noBack }: Props) {
+  const t = useCopy().common;
   const back = () => (onBack ? onBack() : router.canGoBack() ? router.back() : router.replace('/'));
   return (
     <View className="min-h-11 flex-row items-center gap-3 px-page">
       {noBack ? null : (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={t.back}
           onPress={back}
           className="size-10 items-center justify-center rounded-full bg-surface shadow-soft"
         >

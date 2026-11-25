@@ -4,6 +4,7 @@ import { formatKm, groupDigits } from '@/core/money';
 import { byDecision, lineName, sum } from '@/core/quote';
 import type { VerdictKind } from '@/core/types';
 import { findModel, findVariantName } from '@/sample/catalog';
+import { useCopy } from '@/i18n';
 import { currentCar, useQuote, useStore } from '@/store/store';
 import { AdvisorPanel, Header, LineRow, Screen, SecondaryButton, Text, VERDICT } from '@/ui';
 
@@ -11,6 +12,8 @@ export default function Advisor() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const quote = useQuote(id);
   const car = useStore(currentCar);
+  const copy = useCopy();
+  const t = copy.advisor;
   if (!quote) return null;
 
   const accept = byDecision(quote.lines, 'accept');
@@ -20,15 +23,15 @@ export default function Advisor() {
   const sub = model && car ? `${model.make} ${model.name} ${findVariantName(car.variantId)} · ${formatKm(quote.visit.odometerKm)}` : undefined;
 
   return (
-    <Screen scroll header={<Header title="Show the advisor" subtitle={sub} />} footer={<SecondaryButton label="Back to my quote" onPress={() => router.back()} />}>
+    <Screen scroll header={<Header title={t.title} subtitle={sub} />} footer={<SecondaryButton label={copy.common.backToQuote} onPress={() => router.back()} />}>
       <Text variant="display" className="mt-1">
-        Please do only these for my {groupDigits(quote.visit.point.km)} km PMS.
+        {t.onlyThese(groupDigits(quote.visit.point.km))}
       </Text>
       <View className="mt-5">
         <AdvisorPanel lines={accept.map((l) => ({ id: l.id, name: lineName(l), price: l.price }))} total={sum(accept.map((l) => l.price))} />
       </View>
-      <Block title="Show me first" kind="ask" lines={pending} />
-      <Block title="Not today, thank you" kind="no" lines={decline} />
+      <Block title={t.showFirst} kind="ask" lines={pending} />
+      <Block title={t.notToday} kind="no" lines={decline} />
     </Screen>
   );
 }

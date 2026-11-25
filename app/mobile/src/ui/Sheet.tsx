@@ -1,6 +1,7 @@
 import { useEffect, useEffectEvent, useState, type ReactNode } from 'react';
 import { Animated, KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useCopy } from '@/i18n';
 
 interface Props {
   visible: boolean;
@@ -21,6 +22,7 @@ export function Sheet({ visible, onClose, onOpen, children }: Props) {
 
 function SheetBody({ onClose, onOpen, children }: Omit<Props, 'visible'>) {
   const insets = useSafeAreaInsets();
+  const copy = useCopy().common;
   const [t] = useState(() => new Animated.Value(0));
 
   const opened = useEffectEvent(() => onOpen?.());
@@ -34,7 +36,7 @@ function SheetBody({ onClose, onOpen, children }: Omit<Props, 'visible'>) {
     // iOS keeps the window size when the keyboard opens; Android resizes it.
     <KeyboardAvoidingView className="absolute inset-0 justify-end" pointerEvents="box-none" behavior={Platform.select({ ios: 'padding' })}>
       <Animated.View className="absolute inset-0 bg-scrim" style={{ opacity: t }}>
-        <Pressable className="absolute inset-0" onPress={onClose} accessibilityLabel="Close" />
+        <Pressable className="absolute inset-0" onPress={onClose} accessibilityLabel={copy.close} />
       </Animated.View>
       <Animated.View
         className="rounded-t-xl bg-surface px-4 pt-2.5 shadow-sheet"

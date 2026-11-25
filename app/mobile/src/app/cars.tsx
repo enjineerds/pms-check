@@ -1,16 +1,18 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { formatKm } from '@/core/money';
+import { useCopy } from '@/i18n';
 import { findModel, findVariantName } from '@/sample/catalog';
 import { setCurrentCar, useStore } from '@/store/store';
 import { Card, cx, GlassDisc, Header, Icon, Screen, SecondaryButton, Text } from '@/ui';
 
 export default function Cars() {
   const cars = useStore((s) => s.cars);
+  const t = useCopy().cars;
   return (
     <Screen
-      header={<Header title="Your cars" subtitle={`${cars.length} saved on this phone`} />}
-      footer={<SecondaryButton label="Add another car" onPress={() => router.push('/car/model')} />}
+      header={<Header title={t.title} subtitle={t.saved(cars.length)} />}
+      footer={<SecondaryButton label={t.add} onPress={() => router.push('/car/model')} />}
     >
       <View className="gap-3">
         {cars.map((c) => {
@@ -30,13 +32,13 @@ export default function Cars() {
                   {m.make} {m.name}
                 </Text>
                 <Text variant="small" color="ink-soft">
-                  {findVariantName(c.variantId) || 'Variant not listed'} · {formatKm(c.odometer.km)}
+                  {findVariantName(c.variantId) || t.variantNotListed} · {formatKm(c.odometer.km)}
                 </Text>
               </View>
               {c.isCurrent ? (
                 <View className="rounded-pill bg-required-bg px-3 py-[5px]">
                   <Text variant="caption" weight="bold" color="required">
-                    Current
+                    {t.current}
                   </Text>
                 </View>
               ) : null}
@@ -45,7 +47,7 @@ export default function Cars() {
         })}
       </View>
       <Text variant="small" color="ink-soft" className="mx-1 mt-4">
-        Each car keeps its own service schedule and its own past quotes.
+        {t.note}
       </Text>
     </Screen>
   );

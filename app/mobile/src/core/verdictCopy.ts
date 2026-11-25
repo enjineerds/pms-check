@@ -1,46 +1,45 @@
-import type { SavedLine, Verdict, VerdictKind } from './types';
+import type { Copy } from '@/i18n/en';
+import type { SavedLine, Verdict } from './types';
 import { formatKm } from './money';
 import { findService } from '@/sample/catalog';
 
-export const VERDICT_WORD: Record<VerdictKind, string> = { yes: 'Say yes', ask: 'Ask first', no: 'Say no' };
+type VerdictCopy = Copy['verdict'];
 
-export const GROUP_TITLE: Record<VerdictKind, string> = { yes: 'Say yes', ask: 'Ask first', no: 'Say no' };
-
-export function reasonShort(v: Verdict): string {
+export function reasonShort(v: Verdict, t: VerdictCopy): string {
   switch (v.reason.kind) {
     case 'due-now':
-      return "All in Toyota's schedule";
+      return t.reason.dueNow;
     case 'other-visit':
-      return v.reason.nextKm ? `Due at ${formatKm(v.reason.nextKm)}` : 'Was due earlier';
+      return v.reason.nextKm ? t.reason.dueAt(formatKm(v.reason.nextKm)) : t.reason.wasDue;
     case 'wear-item':
-      return 'Check the wear';
+      return t.reason.wear;
     case 'not-in-your-schedule':
-      return 'Not in your schedule';
+      return t.reason.notInYours;
     case 'approximate-schedule':
-      return 'Schedule is approximate';
+      return t.reason.approximate;
     case 'not-in-schedule':
-      return 'Not in the schedule';
+      return t.reason.notInSchedule;
     case 'unknown-item':
-      return "We don't know this one";
+      return t.reason.unknown;
   }
 }
 
-export function lineNote(l: SavedLine): string | undefined {
-  if (l.match.kind === 'none') return 'Not in our list. Ask what it is.';
+export function lineNote(l: SavedLine, t: VerdictCopy): string | undefined {
+  if (l.match.kind === 'none') return t.unlisted;
   return l.verdict.kind === 'yes' ? undefined : findService(l.match.serviceId)?.note;
 }
 
-export function itemHeadline(v: Verdict, model: string): string {
-  if (v.kind === 'yes') return `In your ${model}'s schedule. Say yes.`;
-  if (v.kind === 'no') return `Not in your ${model}'s schedule. You can say no.`;
-  if (v.reason.kind === 'other-visit') return `Not due yet. Ask first.`;
-  if (v.reason.kind === 'wear-item') return 'Only if it is worn. Ask first.';
-  return 'Not sure about this one. Ask first.';
+export function itemHeadline(v: Verdict, model: string, t: VerdictCopy): string {
+  if (v.kind === 'yes') return t.headline.yes(model);
+  if (v.kind === 'no') return t.headline.no(model);
+  if (v.reason.kind === 'other-visit') return t.headline.notDue;
+  if (v.reason.kind === 'wear-item') return t.headline.wear;
+  return t.headline.unsure;
 }
 
-export function sayThis(v: Verdict, name: string, km: number): string {
+export function sayThis(v: Verdict, name: string, km: number, t: VerdictCopy): string {
   const n = name.toLowerCase();
-  if (v.kind === 'yes') return `Go ahead with the ${n}.`;
-  if (v.kind === 'no') return `Just the items in the manufacturer's ${formatKm(km)} PMS, please. No ${n}.`;
-  return `Can you show me why the ${n} is needed now?`;
+  if (v.kind === 'yes') return t.say.yes(n);
+  if (v.kind === 'no') return t.say.no(n, formatKm(km));
+  return t.say.ask(n);
 }

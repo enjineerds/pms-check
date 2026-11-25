@@ -2,21 +2,14 @@ import { useEffect, useState } from 'react';
 import { AppState, Linking, Pressable, View } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
+import { useCopy } from '@/i18n';
 import { Card, Divider, GlassButton, GlassDisc, Header, Icon, type IconName, Screen, SecondaryButton, Text } from '@/ui';
 
-const STEPS: { icon: IconName; title: string; body: string }[] = [
-  { icon: 'expand', title: 'Hold the quote in view', body: 'We read each line and price for you.' },
-  { icon: 'check', title: 'You check the lines', body: 'Fix anything we misread before we compare.' },
-  { icon: 'lines', title: 'Prefer not to?', body: 'You can type the lines in instead.' },
-];
-
-const SETTINGS_STEPS = [
-  ['Tap ', 'Open settings', ' below.'],
-  ['Switch ', 'Camera', ' on for this app.'],
-  ['Come back and scan again.'],
-];
+const STEP_ICONS: IconName[] = ['expand', 'check', 'lines'];
 
 export default function CameraAccess() {
+  const copy = useCopy();
+  const t = copy.camera;
   const [permission, request, refresh] = useCameraPermissions();
   const [declined, setDeclined] = useState(false);
   const typeInstead = () => router.push('/check/add');
@@ -33,18 +26,18 @@ export default function CameraAccess() {
     if (granted) router.replace('/check/scan');
   }, [granted]);
 
-  if (!permission || granted) return <Screen header={<Header title="Scan the quote" />} />;
+  if (!permission || granted) return <Screen header={<Header title={copy.check.scanTitle} />} />;
 
   const off = declined || (permission.status === 'denied' && !permission.canAskAgain);
 
   if (off) {
     return (
       <Screen
-        header={<Header title="Scan the quote" subtitle="Camera access is off" />}
+        header={<Header title={copy.check.scanTitle} subtitle={t.offSubtitle} />}
         footer={
           <>
-            <GlassButton label="Open settings" onPress={() => Linking.openSettings().catch(() => {})} />
-            <SecondaryButton label="Type the lines instead" onPress={typeInstead} />
+            <GlassButton label={t.openSettings} onPress={() => Linking.openSettings().catch(() => {})} />
+            <SecondaryButton label={copy.common.typeInstead} onPress={typeInstead} />
           </>
         }
       >
@@ -52,13 +45,13 @@ export default function CameraAccess() {
           <Icon name="camera-off" size={28} stroke={2} />
         </View>
         <Text variant="headline" className="mt-5">
-          The camera is off.
+          {t.offHeadline}
         </Text>
         <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
-          To scan a quote, turn the camera on in Settings. Or type the lines in, which takes about a minute.
+          {t.offBody}
         </Text>
         <Card className="mt-5 !rounded-[28px] !py-1">
-          {SETTINGS_STEPS.map((parts, i) => (
+          {t.settingsSteps.map((parts, i) => (
             <View key={i}>
               {i > 0 ? <Divider /> : null}
               <View className="flex-row items-center gap-3 py-3.5">
@@ -84,20 +77,20 @@ export default function CameraAccess() {
 
   return (
     <Screen
-      header={<Header title="Scan the quote" subtitle="One quick thing first" />}
+      header={<Header title={copy.check.scanTitle} subtitle={t.askSubtitle} />}
       footer={
         <>
           <GlassButton
-            label="Allow camera"
+            label={t.allow}
             onPress={async () => {
               const res = await request();
               if (!res.granted) setDeclined(true);
             }}
           />
-          <SecondaryButton label="Type the lines instead" onPress={typeInstead} />
+          <SecondaryButton label={copy.common.typeInstead} onPress={typeInstead} />
           <Pressable accessibilityRole="button" onPress={() => router.back()} className="items-center py-0.5">
             <Text variant="small" weight="semibold" color="ink-soft">
-              Not now
+              {t.notNow}
             </Text>
           </Pressable>
         </>
@@ -107,18 +100,18 @@ export default function CameraAccess() {
         <Icon name="camera" size={28} colorClassName="accent-panel-ink" stroke={2} />
       </GlassDisc>
       <Text variant="headline" className="mt-5">
-        Allow the camera to read your quote.
+        {t.askHeadline}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
-        Your phone will ask once. Here is what happens next.
+        {t.askBody}
       </Text>
       <Card className="mt-5 !rounded-[28px] !py-1">
-        {STEPS.map((s, i) => (
+        {t.steps.map((s, i) => (
           <View key={s.title}>
             {i > 0 ? <Divider /> : null}
             <View className="flex-row items-center gap-3 py-3.5">
               <View className="size-8 items-center justify-center rounded-full bg-required-bg">
-                <Icon name={s.icon} size={16} colorClassName="accent-required" stroke={2.2} />
+                <Icon name={STEP_ICONS[i]} size={16} colorClassName="accent-required" stroke={2.2} />
               </View>
               <View className="flex-1">
                 <Text variant="small" weight="bold">

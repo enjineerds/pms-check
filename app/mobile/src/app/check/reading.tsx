@@ -8,7 +8,8 @@ import { release } from '@/ocr/capture';
 import { clearPendingImage, peekPendingImage } from '@/ocr/pending';
 import { readQuote } from '@/ocr/read';
 import type { CapturedImage, ReadResult } from '@/ocr/types';
-import { PAPER_ROWS } from '@/sample/paper';
+import { useCopy } from '@/i18n';
+import { PAPER_HEAD, PAPER_ROWS } from '@/sample/paper';
 import { useDraft } from '@/store/draft';
 import { Card, Divider, Header, QuotePaper, Screen, SecondaryButton, Text } from '@/ui';
 
@@ -35,6 +36,8 @@ const DEMO: CapturedImage = { uri: '', width: 0, height: 0, source: 'library' };
 export default function Reading() {
   const { demo } = useLocalSearchParams<{ demo?: string }>();
   const { dispatch } = useDraft();
+  const copy = useCopy();
+  const t = copy.reading;
   const [img] = useState(() => peekPendingImage() ?? (__DEV__ && demo ? DEMO : null));
   const job = useRef<Promise<ReadResult> | null>(null);
 
@@ -64,13 +67,13 @@ export default function Reading() {
   }, [img, dispatch]);
 
   return (
-    <Screen header={<Header title="Reading your quote" subtitle="This takes a few seconds" />} footer={<SecondaryButton label="Cancel" onPress={() => router.back()} />}>
+    <Screen header={<Header title={t.title} subtitle={t.subtitle} />} footer={<SecondaryButton label={copy.common.cancel} onPress={() => router.back()} />}>
       <View className="h-32.5 overflow-hidden rounded-[28px] border-t-4 border-ink bg-surface shadow-soft">
         {img?.uri ? (
           <StyledImage source={{ uri: img.uri }} contentFit="cover" contentPosition="top" className="size-full" />
         ) : (
           <View className="mx-3.5 mt-3.5">
-            <QuotePaper rows={PAPER_ROWS.slice(0, 4)} compact tilt={0} />
+            <QuotePaper head={PAPER_HEAD} rows={PAPER_ROWS.slice(0, 4)} compact tilt={0} />
           </View>
         )}
         <Animated.View pointerEvents="none" style={[{ position: 'absolute', left: 0, right: 0, height: 3 }, SWEEP]}>
@@ -78,10 +81,10 @@ export default function Reading() {
         </Animated.View>
       </View>
       <Text variant="headline" className="mt-5">
-        Reading the lines…
+        {t.headline}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-1.5 !text-[14px]">
-        Keep the quote with you. Nothing is saved yet.
+        {t.body}
       </Text>
       <Card className="mt-4 !rounded-[28px] !py-1">
         {SKELETON_ROWS.map((i) => (

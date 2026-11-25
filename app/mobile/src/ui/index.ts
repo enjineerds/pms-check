@@ -19,7 +19,7 @@ export { Keypad } from './Keypad';
 export { CAR_ARRIVE_MS, CarImage } from './CarImage';
 export { Field } from './Field';
 export { SearchField } from './SearchField';
-export { QuotePaper, type PaperRow } from './QuotePaper';
+export { QuotePaper, type PaperHead, type PaperRow } from './QuotePaper';
 export { GlassDisc } from './GlassDisc';
 export { Gradient, GlossGradient } from './Gradient';
 export { cx } from './cx';

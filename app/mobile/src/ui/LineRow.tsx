@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import type { Centavos, VerdictKind } from '@/core/types';
 import { formatPeso } from '@/core/money';
-import { VERDICT_WORD } from '@/core/verdictCopy';
+import { useCopy } from '@/i18n';
 import { Text } from './Text';
 import { VerdictDisc } from './VerdictDisc';
 import { VERDICT } from './verdict';
@@ -15,6 +15,7 @@ interface Props {
 }
 
 export function LineRow({ title, price, kind, note, onPress }: Props) {
+  const t = useCopy().verdict;
   return (
     <Pressable accessibilityRole="button" onPress={onPress} className="flex-row items-center gap-3 py-3">
       <VerdictDisc kind={kind} />
@@ -31,7 +32,7 @@ export function LineRow({ title, price, kind, note, onPress }: Props) {
           {formatPeso(price)}
         </Text>
         <Text variant="caption" weight="bold" color={VERDICT[kind].color}>
-          {VERDICT_WORD[kind]}
+          {t.word[kind]}
         </Text>
       </View>
     </Pressable>

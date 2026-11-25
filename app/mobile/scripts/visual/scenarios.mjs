@@ -29,4 +29,13 @@ export const scenarios = [
   { name: 'v3-10-odometer', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0'] },
   { name: 'v3-09b-look', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0', 'Continue'] },
   { name: 'v3-11-car-saved', url: '/car/model', taps: ['Toyota Vios', 'Continue', '1', '0', '2', '4', '0', 'Continue', 'Save my car'] },
+  // Language lives in memory, so Filipino screens are reached by taps from the picker, never by URL.
+  { name: 'fil-01-home', url: '/', taps: ['Filipino'] },
+  { name: 'fil-18-allow-camera', url: '/', taps: ['Filipino', 'Suriin ang quote ng casa'] },
+  { name: 'fil-19-camera-off', url: '/', taps: ['Filipino', 'Suriin ang quote ng casa', 'Payagan ang camera'] },
+  { name: 'fil-16-past-quotes', url: '/', taps: ['Filipino', 'Mga lumang quote'] },
+  { name: 'fil-04-result', url: '/', taps: ['Filipino', 'Mga lumang quote', '10,000 km service'] },
+  { name: 'fil-05-item-detail', url: '/', taps: ['Filipino', 'Mga lumang quote', '10,000 km service', 'Engine flush'] },
+  { name: 'fil-06-advisor', url: '/', taps: ['Filipino', 'Mga lumang quote', '10,000 km service', 'Ipakita sa advisor'] },
+  { name: 'fil-17-your-cars', url: '/', taps: ['Filipino', 'Mga kotse mo'] },
 ];

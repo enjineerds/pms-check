@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { useCSSVariable } from 'uniwind';
+import { useCopy } from '@/i18n';
 import { Gradient } from './Gradient';
 import { Text } from './Text';
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function Toast({ message, onUndo }: Props) {
+  const t = useCopy().common;
   const [from, to] = useCSSVariable(['--color-panel', '--color-gloss-toast']) as [string, string];
   return (
     <View className="h-11 flex-row items-center overflow-hidden rounded-pill pl-4 pr-1.5 shadow-toast">
@@ -19,7 +21,7 @@ export function Toast({ message, onUndo }: Props) {
       {onUndo ? (
         <Pressable accessibilityRole="button" onPress={onUndo} className="h-8 justify-center rounded-pill bg-panel-line px-3.5">
           <Text variant="small" weight="bold" color="panel-ink">
-            Undo
+            {t.undo}
           </Text>
         </Pressable>
       ) : null}

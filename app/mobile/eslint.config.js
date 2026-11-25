@@ -22,6 +22,10 @@ module.exports = defineConfig([
           ],
         },
       ],
+      'react/jsx-no-literals': [
+        'error',
+        { noStrings: true, ignoreProps: true, allowedStrings: ['·', ' · ', '₱', '\n', 'km'] },
+      ],
       'no-restricted-syntax': [
         'error',
         {

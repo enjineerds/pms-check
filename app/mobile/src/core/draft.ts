@@ -1,3 +1,4 @@
+import type { Copy } from '@/i18n/en';
 import type { Centavos, DraftLine } from './types';
 import { formatPeso } from './money';
 import { priceOf } from './quote';
@@ -14,8 +15,12 @@ export interface DraftState extends Snapshot {
   shopName: string | null;
   carriedOn: boolean;
   undo: Snapshot | null;
-  toast: { text: string; id: number } | null;
+  toast: DraftToast | null;
 }
+
+export type DraftToast =
+  | { kind: 'added'; name: string; price: Centavos | null; id: number }
+  | { kind: 'updated' | 'deleted'; id: number };
 
 export type DraftAction =
   | { type: 'scanned'; lines: DraftLine[]; quotedTotal: Centavos | null; shopName: string | null }
@@ -39,16 +44,26 @@ export const initialDraft: DraftState = {
 };
 
 const snap = (s: DraftState): Snapshot => ({ lines: s.lines, edited: s.edited, marks: s.marks });
-const toast = (s: DraftState, text: string) => ({ text, id: (s.toast?.id ?? 0) + 1 });
+const nextId = (s: DraftState) => (s.toast?.id ?? 0) + 1;
+
+export function toastText(toast: DraftToast, t: Copy['lines']): string {
+  switch (toast.kind) {
+    case 'added':
+      return toast.price ? `${t.toastAdded(toast.name)} · ${formatPeso(toast.price)}` : t.toastAdded(toast.name);
+    case 'updated':
+      return t.toastUpdated;
+    case 'deleted':
+      return t.toastDeleted;
+  }
+}
 
 export function draftReducer(s: DraftState, a: DraftAction): DraftState {
   switch (a.type) {
     case 'scanned':
       return { ...initialDraft, lines: a.lines, quotedTotal: a.quotedTotal, shopName: a.shopName };
     case 'add': {
-      const price = priceOf(a.line.price);
-      const text = `${a.line.rawText} added${price ? ` · ${formatPeso(price)}` : ''}`;
-      return { ...s, lines: [...s.lines, a.line], edited: true, marks: { [a.line.id]: 'added' }, undo: snap(s), toast: toast(s, text) };
+      const toast: DraftToast = { kind: 'added', name: a.line.rawText, price: priceOf(a.line.price), id: nextId(s) };
+      return { ...s, lines: [...s.lines, a.line], edited: true, marks: { [a.line.id]: 'added' }, undo: snap(s), toast };
     }
     case 'update':
       return {
@@ -57,10 +72,10 @@ export function draftReducer(s: DraftState, a: DraftAction): DraftState {
         edited: true,
         marks: { [a.id]: 'updated' },
         undo: snap(s),
-        toast: toast(s, 'Line updated'),
+        toast: { kind: 'updated', id: nextId(s) },
       };
     case 'delete':
-      return { ...s, lines: s.lines.filter((l) => l.id !== a.id), edited: true, marks: {}, undo: snap(s), toast: toast(s, 'Line deleted') };
+      return { ...s, lines: s.lines.filter((l) => l.id !== a.id), edited: true, marks: {}, undo: snap(s), toast: { kind: 'deleted', id: nextId(s) } };
     case 'undo':
       return s.undo ? { ...s, ...s.undo, undo: null, toast: null } : s;
     case 'dismissToast':

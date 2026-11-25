@@ -1,44 +1,43 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
+import { useCopy } from '@/i18n';
 import { Card, Divider, GlassButton, Header, Icon, type IconName, Screen, SecondaryButton, Text } from '@/ui';
 
-const TIPS: { icon: IconName; title: string; body: string }[] = [
-  { icon: 'sun', title: 'Tilt away from the lights', body: 'Glare on glossy paper hides the prices. Try the flash off.' },
-  { icon: 'expand', title: 'Fit all four corners', body: 'Lay the quote flat and keep the whole page in view.' },
-  { icon: 'clock', title: 'Hold still for a second', body: 'A steady phone gives a sharp photo.' },
-];
+const TIP_ICONS: IconName[] = ['sun', 'expand', 'clock'];
 
 export default function CouldntRead() {
+  const copy = useCopy();
+  const t = copy.couldntRead;
   return (
     <Screen
-      header={<Header title="Scan the quote" subtitle="That one didn’t work" />}
+      header={<Header title={copy.check.scanTitle} subtitle={t.subtitle} />}
       footer={
         <>
-          <GlassButton label="Scan again" onPress={() => router.replace('/check/scan')} />
-          <SecondaryButton label="Type the lines instead" onPress={() => router.push('/check/add')} />
+          <GlassButton label={t.again} onPress={() => router.replace('/check/scan')} />
+          <SecondaryButton label={copy.common.typeInstead} onPress={() => router.push('/check/add')} />
         </>
       }
     >
       <Text variant="headline" className="mt-1">
-        We couldn’t read that clearly.
+        {t.headline}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
-        Nothing was saved. A new photo usually fixes it.
+        {t.body}
       </Text>
       <Card className="mt-5 !rounded-[28px] !py-1">
-        {TIPS.map((t, i) => (
-          <View key={t.title}>
+        {t.tips.map((tip, i) => (
+          <View key={tip.title}>
             {i > 0 ? <Divider /> : null}
             <View className="flex-row items-center gap-3 py-3.5">
               <View className="size-9 items-center justify-center rounded-full bg-optional-bg">
-                <Icon name={t.icon} size={18} colorClassName="accent-optional" stroke={2} />
+                <Icon name={TIP_ICONS[i]} size={18} colorClassName="accent-optional" stroke={2} />
               </View>
               <View className="flex-1">
                 <Text variant="small" weight="bold">
-                  {t.title}
+                  {tip.title}
                 </Text>
                 <Text variant="small" color="ink-soft">
-                  {t.body}
+                  {tip.body}
                 </Text>
               </View>
             </View>

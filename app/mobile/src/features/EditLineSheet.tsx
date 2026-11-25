@@ -3,6 +3,7 @@ import { Pressable, View, type TextInput } from 'react-native';
 import type { DraftLine } from '@/core/types';
 import { formatPeso, peso } from '@/core/money';
 import { priceOf } from '@/core/quote';
+import { useCopy } from '@/i18n';
 import { serviceByName } from '@/sample/catalog';
 import { Field, GlassButton, Icon, Notice, Sheet, Text } from '@/ui';
 
@@ -29,6 +30,8 @@ function EditForm({
   onSave,
   onDelete,
 }: Omit<Props, 'line'> & { line: DraftLine; nameInput: RefObject<ComponentRef<typeof TextInput> | null> }) {
+  const copy = useCopy();
+  const t = copy.editLine;
   const [name, setName] = useState(line.rawText);
   const [price, setPrice] = useState(() => {
     const c = priceOf(line.price);
@@ -52,20 +55,20 @@ function EditForm({
     <>
       <View className="mb-3 flex-row items-center justify-between">
         <Text variant="title" className="!text-[20px] !leading-[26px]">
-          Fix this line
+          {t.title}
         </Text>
         <Pressable accessibilityRole="button" onPress={onClose}>
           <Text variant="small" weight="semibold" color="ink-soft">
-            Cancel
+            {copy.common.cancel}
           </Text>
         </Pressable>
       </View>
       <Text variant="small" weight="bold" className="mb-2 mt-3">
-        What the quote says
+        {t.quoteSays}
       </Text>
       <Field ref={nameInput} value={name} onChangeText={setName} />
       <Text variant="small" weight="bold" className="mb-2 mt-3">
-        Price
+        {t.price}
       </Text>
       <Field
         value={price}
@@ -80,16 +83,16 @@ function EditForm({
       />
       <View className="mt-4">
         {known ? (
-          <Notice tone="green">We know this one. We’ll check it against your Vios’s schedule.</Notice>
+          <Notice tone="green">{t.known}</Notice>
         ) : (
-          <Notice tone="amber">We don’t have this one yet. We’ll still list it, and you can ask the advisor about it.</Notice>
+          <Notice tone="amber">{t.unknown}</Notice>
         )}
       </View>
-      <GlassButton label="Save" disabled={!valid} onPress={save} className="mt-4" />
+      <GlassButton label={t.save} disabled={!valid} onPress={save} className="mt-4" />
       <Pressable accessibilityRole="button" onPress={onDelete} className="flex-row items-center justify-center gap-2 py-3.5">
         <Icon name="trash" size={16} colorClassName="accent-skip" stroke={2} />
         <Text variant="small" weight="bold" color="skip">
-          Delete this line
+          {t.delete}
         </Text>
       </Pressable>
     </>

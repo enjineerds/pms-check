@@ -5,14 +5,16 @@ import { cx } from './cx';
 interface Props {
   children: ReactNode;
   onPress?: () => void;
+  /** Read by screen readers in place of the card's text, when that text alone is ambiguous. */
+  accessibilityLabel?: string;
   className?: string;
   padded?: boolean;
 }
 
-export function Card({ children, onPress, className, padded = true }: Props) {
+export function Card({ children, onPress, accessibilityLabel, className, padded = true }: Props) {
   const classes = cx('rounded-md bg-surface shadow-soft', padded && 'px-4 py-2', className);
   return onPress ? (
-    <Pressable accessibilityRole="button" onPress={onPress} className={cx(classes, 'active:opacity-85')}>
+    <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} onPress={onPress} className={cx(classes, 'active:opacity-85')}>
       {children}
     </Pressable>
   ) : (

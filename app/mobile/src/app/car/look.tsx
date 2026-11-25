@@ -38,7 +38,7 @@ export default function CarLook() {
       <Text variant="small" weight="bold" className="mb-2.5 mt-7">
         Body type
       </Text>
-      <Segmented size="sm" value={setup.bodyStyle} onChange={(b) => patchSetup({ bodyStyle: b })} options={STYLES} />
+      <Segmented size="sm" widths="content" value={setup.bodyStyle} onChange={(b) => patchSetup({ bodyStyle: b })} options={STYLES} />
       <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
         Picked from your model. Change it if it’s wrong.
       </Text>

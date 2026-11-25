@@ -7,9 +7,12 @@ interface Props<T extends string> {
   value: T;
   onChange: (v: T) => void;
   size?: 'md' | 'sm';
+  /** `equal` splits the track evenly. `content` sizes each segment to its label, for crowded sets ("Hatchback" among five). */
+  widths?: 'equal' | 'content';
 }
 
-export function Segmented<T extends string>({ options, value, onChange, size = 'md' }: Props<T>) {
+export function Segmented<T extends string>({ options, value, onChange, size = 'md', widths = 'equal' }: Props<T>) {
+  const variant = size === 'sm' ? 'caption' : 'body';
   return (
     <View className={cx('flex-row rounded-pill bg-track', size === 'sm' ? 'h-9 p-[3px]' : 'h-13 p-1')}>
       {options.map((o) => {
@@ -20,9 +23,27 @@ export function Segmented<T extends string>({ options, value, onChange, size = '
             accessibilityRole="button"
             accessibilityState={{ selected: on }}
             onPress={() => onChange(o.value)}
-            className={cx('flex-1 items-center justify-center rounded-pill', on && 'bg-surface shadow-segment')}
+            // The small track is 36pt; extend the touch area to the 44pt / 48dp minimum.
+            hitSlop={size === 'sm' ? { top: 6, bottom: 6 } : undefined}
+            className={cx(
+              'items-center justify-center rounded-pill',
+              widths === 'equal' ? 'flex-1' : 'grow basis-auto px-2',
+              on && 'bg-surface shadow-segment',
+            )}
           >
-            <Text variant={size === 'sm' ? 'caption' : 'body'} weight={on ? 'bold' : 'medium'} color={on ? 'ink' : 'ink-soft'}>
+            {widths === 'content' ? (
+              // Sized by an invisible bold copy, so selecting a segment never shifts its neighbours.
+              <Text variant={variant} weight="bold" numberOfLines={1} className="opacity-0" accessibilityElementsHidden importantForAccessibility="no">
+                {o.label}
+              </Text>
+            ) : null}
+            <Text
+              variant={variant}
+              weight={on ? 'bold' : 'medium'}
+              color={on ? 'ink' : 'ink-soft'}
+              numberOfLines={1}
+              className={widths === 'content' ? 'absolute' : undefined}
+            >
               {o.label}
             </Text>
           </Pressable>

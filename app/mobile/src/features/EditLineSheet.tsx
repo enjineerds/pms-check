@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { useRef, useState, type ComponentRef, type RefObject } from 'react';
+import { Pressable, View, type TextInput } from 'react-native';
 import type { DraftLine } from '@/core/types';
 import { formatPeso, peso } from '@/core/money';
 import { priceOf } from '@/core/quote';
@@ -14,14 +14,21 @@ interface Props {
 }
 
 export function EditLineSheet({ line, ...rest }: Props) {
+  const nameInput = useRef<ComponentRef<typeof TextInput>>(null);
   return (
-    <Sheet visible={!!line} onClose={rest.onClose}>
-      {line ? <EditForm key={line.id} line={line} {...rest} /> : null}
+    <Sheet visible={!!line} onClose={rest.onClose} onOpen={() => nameInput.current?.focus()}>
+      {line ? <EditForm key={line.id} line={line} nameInput={nameInput} {...rest} /> : null}
     </Sheet>
   );
 }
 
-function EditForm({ line, onClose, onSave, onDelete }: Omit<Props, 'line'> & { line: DraftLine }) {
+function EditForm({
+  line,
+  nameInput,
+  onClose,
+  onSave,
+  onDelete,
+}: Omit<Props, 'line'> & { line: DraftLine; nameInput: RefObject<ComponentRef<typeof TextInput> | null> }) {
   const [name, setName] = useState(line.rawText);
   const [price, setPrice] = useState(() => {
     const c = priceOf(line.price);
@@ -56,7 +63,7 @@ function EditForm({ line, onClose, onSave, onDelete }: Omit<Props, 'line'> & { l
       <Text variant="small" weight="bold" className="mb-2 mt-3">
         What the quote says
       </Text>
-      <Field value={name} onChangeText={setName} />
+      <Field ref={nameInput} value={name} onChangeText={setName} />
       <Text variant="small" weight="bold" className="mb-2 mt-3">
         Price
       </Text>

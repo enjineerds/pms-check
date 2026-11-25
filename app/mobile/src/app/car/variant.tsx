@@ -26,7 +26,7 @@ export default function PickVariant() {
         />
       }
     >
-      <Text variant="display" className="!text-[30px] !leading-[34px]">
+      <Text variant="headline">
         Which {model.name} is yours?
       </Text>
       <Label>Variant</Label>

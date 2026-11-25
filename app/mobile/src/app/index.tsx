@@ -64,7 +64,7 @@ export default function Home() {
       </View>
 
       <View className="rounded-t-xl bg-surface px-4 pt-5.5 shadow-panel" style={{ paddingBottom: Math.max(insets.bottom, 12) + 8 }}>
-        <Text variant="display" className="!text-[30px] !leading-[34px]">
+        <Text variant="headline">
           Your {groupDigits(due)} km service is due.
         </Text>
         <Text variant="small" weight="regular" color="ink-soft" className="mt-2 !text-[14px] !leading-5">

@@ -19,7 +19,7 @@ export default function Report() {
   if (sent) {
     return (
       <Screen header={<Header title="Report a mistake" subtitle={subtitle} />} footer={<SecondaryButton label="Back to my quote" onPress={() => router.back()} />}>
-        <Text variant="display" className="mt-1 !text-[30px] !leading-[34px]">
+        <Text variant="headline" className="mt-1">
           Thank you.
         </Text>
         <View className="mt-5">
@@ -35,7 +35,7 @@ export default function Report() {
       header={<Header title="Report a mistake" subtitle={subtitle} />}
       footer={<GlassButton label="Send report" disabled={reason === null} onPress={() => setSent(true)} />}
     >
-      <Text variant="display" className="mt-1 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-1">
         What looks wrong?
       </Text>
       <View className="mt-5 gap-2.5">

@@ -2,11 +2,12 @@ import { Text as RNText, type TextProps } from 'react-native';
 import { cx } from './cx';
 
 export type Weight = 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold';
-export type Variant = 'display' | 'title' | 'lead' | 'read' | 'body' | 'small' | 'caption';
+export type Variant = 'display' | 'headline' | 'title' | 'lead' | 'read' | 'body' | 'small' | 'caption';
 export type TextColor = 'ink' | 'ink-soft' | 'ink-faint' | 'panel-ink' | 'panel-soft' | 'required' | 'optional' | 'skip';
 
 const VARIANT: Record<Variant, { size: string; weight: Weight }> = {
   display: { size: 'text-display', weight: 'extrabold' },
+  headline: { size: 'text-headline', weight: 'extrabold' },
   title: { size: 'text-title', weight: 'bold' },
   lead: { size: 'text-lead', weight: 'medium' },
   read: { size: 'text-read', weight: 'regular' },

@@ -27,7 +27,7 @@ export default function VariantNotListed() {
       <View className="size-16 items-center justify-center rounded-full bg-optional-bg">
         <Icon name="warning" size={28} colorClassName="accent-optional" stroke={2} />
       </View>
-      <Text variant="display" className="mt-5 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-5">
         We don’t have your exact variant yet.
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">

@@ -57,7 +57,7 @@ export default function ItemDetail() {
         </>
       }
     >
-      <Text variant="display" className="mt-1 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-1">
         {itemHeadline(line.verdict, model)}
       </Text>
 

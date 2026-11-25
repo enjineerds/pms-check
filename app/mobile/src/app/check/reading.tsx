@@ -77,7 +77,7 @@ export default function Reading() {
           <View className="flex-1 bg-linear-to-r/srgb from-transparent via-ink to-transparent" />
         </Animated.View>
       </View>
-      <Text variant="display" className="mt-5 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-5">
         Reading the lines…
       </Text>
       <Text variant="small" color="ink-soft" className="mt-1.5 !text-[14px]">

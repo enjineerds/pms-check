@@ -52,7 +52,7 @@ export default function CameraAccess() {
         <View className="size-16 items-center justify-center rounded-full bg-surface shadow-soft">
           <Icon name="camera-off" size={28} stroke={2} />
         </View>
-        <Text variant="display" className="mt-5 !text-[30px] !leading-[34px]">
+        <Text variant="headline" className="mt-5">
           The camera is off.
         </Text>
         <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
@@ -107,7 +107,7 @@ export default function CameraAccess() {
       <GlassDisc>
         <Icon name="camera" size={28} colorClassName="accent-panel-ink" stroke={2} />
       </GlassDisc>
-      <Text variant="display" className="mt-5 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-5">
         Allow the camera to read your quote.
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">

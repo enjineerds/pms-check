@@ -68,8 +68,12 @@
   --font-extrabold: 'PlusJakartaSans_800ExtraBold';
 
   --text-display: 34px;
-  --text-display--line-height: 38px;
+  /* Plus Jakarta Sans needs 1.26em for ascender + descender: tighter leading clips g, y, p on Android. */
+  --text-display--line-height: 44px;
   --text-display--letter-spacing: -1.2px;
+  --text-headline: 30px;
+  --text-headline--line-height: 38px;
+  --text-headline--letter-spacing: -1.2px;
   --text-title: 24px;
   --text-title--line-height: 30px;
   --text-title--letter-spacing: -0.5px;

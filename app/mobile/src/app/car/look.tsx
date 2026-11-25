@@ -29,7 +29,7 @@ export default function CarLook() {
         />
       }
     >
-      <Text variant="display" className="!text-[30px] !leading-[34px]">
+      <Text variant="headline">
         What kind of car is your {model.name}?
       </Text>
       <View className="mt-6">

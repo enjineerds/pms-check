@@ -21,7 +21,7 @@ export default function PickModel() {
 
   return (
     <Screen scroll header={<Header title="Pick your car" subtitle="Step 1 of 4" />}>
-      <Text variant="display" className="!text-[30px] !leading-[34px]">
+      <Text variant="headline">
         Which car do you drive?
       </Text>
       <View className="mt-4">

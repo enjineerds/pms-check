@@ -10,7 +10,7 @@ interface Props extends Omit<TextInputProps, 'className' | 'placeholderTextColor
   className?: string;
 }
 
-// The one text field: no outline at rest, an ink outline only while focused.
+// The one text field: a subtle line outline at rest, an ink outline while focused.
 export function Field({ ref, leading, trailing, className, multiline, onFocus, onBlur, ...input }: Props) {
   const [focused, setFocused] = useState(!!input.autoFocus);
   return (
@@ -18,7 +18,7 @@ export function Field({ ref, leading, trailing, className, multiline, onFocus, o
       className={cx(
         'flex-row border-[1.5px] bg-surface shadow-soft',
         multiline ? 'min-h-25 rounded-md' : 'h-13 items-center gap-2.5 rounded-pill px-4.5',
-        focused ? 'border-ink' : 'border-transparent',
+        focused ? 'border-ink' : 'border-line',
         className,
       )}
     >

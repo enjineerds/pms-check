@@ -27,7 +27,7 @@ export default function Odometer() {
             />
           }
         >
-          <Text variant="display" className="!text-[30px] !leading-[34px]">
+          <Text variant="headline">
             What does your odometer say?
           </Text>
           <View className="mt-5 h-18 flex-row items-center justify-between rounded-pill border-[1.5px] border-ink bg-surface px-6">

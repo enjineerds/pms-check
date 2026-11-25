@@ -19,7 +19,7 @@ export default function CouldntRead() {
         </>
       }
     >
-      <Text variant="display" className="mt-1 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-1">
         We couldn’t read that clearly.
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">

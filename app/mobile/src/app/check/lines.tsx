@@ -81,7 +81,7 @@ export default function Lines() {
         </>
       }
     >
-      <Text variant="display" className="mt-1 !text-[30px] !leading-[34px]">
+      <Text variant="headline" className="mt-1">
         {lines.length === 0 ? 'No lines yet.' : `We found ${lines.length} ${lines.length === 1 ? 'line' : 'lines'}.`}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-1.5 !text-[14px] !leading-5">

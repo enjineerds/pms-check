@@ -11,10 +11,75 @@ export type YearMonth = Brand<string, 'YearMonth'>;
 export type Locale = 'en' | 'fil';
 export type BodyStyle = 'sedan' | 'hatchback' | 'suv' | 'mpv' | 'pickup';
 export type Transmission = 'manual' | 'cvt' | 'at';
+export type Localized = Record<Locale, string>;
+export type YearRange = { from: number; to: number };
 
 export interface ServicePoint {
   km: Km;
   months: number;
+}
+
+export interface SourceRef {
+  title: string;
+  page?: string;
+}
+
+export interface ScheduleBinding {
+  years: YearRange;
+  transmission: Transmission;
+  scheduleId: ScheduleId;
+}
+
+export interface Variant {
+  id: VariantId;
+  label: string;
+  years: YearRange;
+  schedules: ScheduleBinding[];
+}
+
+export interface CarModel {
+  id: ModelId;
+  make: string;
+  name: string;
+  defaultBodyStyle: BodyStyle;
+  years: YearRange;
+  variants: Variant[];
+  fallbackScheduleId: ScheduleId;
+}
+
+/** Only an `upsell` can ever be told *Say no* (SYSTEM_DESIGN §5.3 row 7). */
+export type ServiceKind = 'scheduled' | 'wear' | 'upsell';
+
+export interface ServiceItem {
+  id: ServiceId;
+  kind: ServiceKind;
+  name: Localized;
+  category: Localized;
+  aliases: string[];
+  priceRange?: { min: Centavos; max: Centavos };
+  whyOffered?: Localized;
+  sayYesOnlyIf?: Localized;
+}
+
+export interface ScheduledItem {
+  serviceId: ServiceId;
+  action: 'replace' | 'inspect' | 'clean' | 'adjust';
+  /** Indexes into `Schedule.points`. */
+  dueAt: number[];
+}
+
+export interface Schedule {
+  id: ScheduleId;
+  source: SourceRef;
+  points: ServicePoint[];
+  items: ScheduledItem[];
+}
+
+export interface CatalogBundle {
+  version: string;
+  models: CarModel[];
+  services: ServiceItem[];
+  schedules: Schedule[];
 }
 
 export interface Car {
@@ -60,10 +125,6 @@ export type VerdictReason =
   | { kind: 'approximate-schedule' }
   | { kind: 'not-in-schedule' }
   | { kind: 'unknown-item' };
-
-export interface SourceRef {
-  title: string;
-}
 
 export interface Verdict {
   kind: VerdictKind;

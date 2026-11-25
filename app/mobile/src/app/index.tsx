@@ -142,10 +142,10 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
         </View>
       </View>
 
-      {/* Clipped, so the photo's backdrop can't paint over the header on short phones. */}
+      {/* Clipped, so the car can’t paint over the header on short phones. */}
       <Animated.View className="flex-1 overflow-hidden" style={stageStyle}>
         <Animated.View className="flex-1 justify-center" style={arriving ? ARRIVE : undefined}>
-          <CarImage style={car.bodyStyle} height={230} backdrop={false} />
+          <CarImage style={car.bodyStyle} height={230} />
         </Animated.View>
       </Animated.View>
 

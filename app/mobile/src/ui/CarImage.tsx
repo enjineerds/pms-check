@@ -16,20 +16,12 @@ const SOURCES: Record<BodyStyle, number> = {
 interface Props {
   style: BodyStyle;
   height: number;
-  /** False when the screen already paints the `photo-top` backdrop. */
-  backdrop?: boolean;
 }
 
-export function CarImage({ style, height, backdrop = true }: Props) {
-  const image = <StyledImage source={SOURCES[style]} contentFit="cover" className="absolute inset-0" transition={150} accessibilityLabel={`${style} car`} />;
-  if (!backdrop) return <View className="w-full" style={{ height }}>{image}</View>;
+export function CarImage({ style, height }: Props) {
   return (
     <View className="w-full" style={{ height }}>
-      {image}
-      <View className="absolute inset-x-0 top-0 h-7 bg-linear-to-b/srgb from-photo-top to-photo-top/0" pointerEvents="none" />
-      <View className="absolute inset-x-0 bottom-0 h-7 bg-linear-to-b/srgb from-photo-top/0 to-photo-top" pointerEvents="none" />
-      <View className="absolute inset-y-0 left-0 w-7 bg-linear-to-r/srgb from-photo-top to-photo-top/0" pointerEvents="none" />
-      <View className="absolute inset-y-0 right-0 w-7 bg-linear-to-r/srgb from-photo-top/0 to-photo-top" pointerEvents="none" />
+      <StyledImage source={SOURCES[style]} contentFit="contain" className="absolute inset-0" transition={150} accessibilityLabel={`${style} car`} />
     </View>
   );
 }

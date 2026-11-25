@@ -15,11 +15,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
 import type { Car, Locale } from '@/core/types';
 import { duePointKm, nextPointKm, progressToNext } from '@/core/service';
+import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
 import { SIX_FIGURE_ID } from '@/sample/quotes';
 import { findModel, findVariantName, TRANSMISSION_LABEL } from '@/sample/catalog';
-import { currentCar, isListed, setLanguage, useStore } from '@/store/store';
-import { Card, CarImage, GlassButton, Icon, Segmented, Text } from '@/ui';
+import { currentCar, isListed, useStore } from '@/store/store';
+import { Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
 const CAR_MS = 700;
 const ARRIVE: CSSAnimationProperties = {
@@ -125,7 +126,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
             ))}
           </View>
         </View>
-        <View className="items-end gap-2.5">
+        <View className="items-end gap-4">
           <Pressable
             accessibilityRole="link"
             onPress={() => router.push('/cars')}
@@ -137,20 +138,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
             </Text>
             <Icon name="chevron-right" size={14} />
           </Pressable>
-          <View className="flex-row items-center gap-1.5 rounded-pill bg-glass-wash pl-2.5">
-            <Icon name="globe" size={16} colorClassName="accent-ink-soft" stroke={2} />
-            <View className="w-[150px]">
-              <Segmented
-                size="sm"
-                value={language}
-                onChange={setLanguage}
-                options={[
-                  { value: 'en', label: 'English' },
-                  { value: 'fil', label: 'Filipino' },
-                ]}
-              />
-            </View>
-          </View>
+          <LanguageToggle value={language} />
         </View>
       </View>
 

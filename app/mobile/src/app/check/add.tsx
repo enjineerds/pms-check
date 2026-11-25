@@ -7,6 +7,7 @@ import { applyKey } from '@/core/keypad';
 import { formatPeso, groupDigits, peso } from '@/core/money';
 import type { DraftLine, ServiceId } from '@/core/types';
 import { SERVICES, serviceByName, findService } from '@/sample/catalog';
+import { useCopy } from '@/i18n';
 import { useDraft } from '@/store/draft';
 import { Card, Divider, GlassButton, Header, Icon, Keypad, Screen, SearchField, Text } from '@/ui';
 
@@ -31,6 +32,7 @@ const KEYPAD_OUT = SlideOutDown.duration(220).easing(Easing.in(Easing.quad));
 
 export default function AddLine() {
   const { draft, dispatch } = useDraft();
+  const t = useCopy().addLine;
   const [q, setQ] = useState('');
   const [item, setItem] = useState<Item | null>(null);
   const [raw, setRaw] = useState('');
@@ -74,12 +76,12 @@ export default function AddLine() {
     <View className="flex-1">
       <Screen
         flushBottom={!!item}
-        header={<Header title="Add a line" subtitle={item ? 'How much was it?' : 'Pick one or type your own'} onBack={item ? change : undefined} />}
+        header={<Header title={t.title} subtitle={item ? t.howMuch : t.pick} onBack={item ? change : undefined} />}
         footer={
           item ? (
             <Animated.View style={footerStyle}>
               <Animated.View entering={rise(140)}>
-                <GlassButton label="Add to my quote" disabled={!(parseFloat(raw) > 0)} onPress={() => add(item)} />
+                <GlassButton label={t.add} disabled={!(parseFloat(raw) > 0)} onPress={() => add(item)} />
               </Animated.View>
             </Animated.View>
           ) : undefined
@@ -97,6 +99,7 @@ export default function AddLine() {
 }
 
 function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange: () => void }) {
+  const t = useCopy().addLine;
   const service = item.serviceId ? findService(item.serviceId) : undefined;
   const [whole, frac] = raw.split('.');
   return (
@@ -105,7 +108,7 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
         <Card className="flex-row items-center !py-3.5">
           <View className="flex-1">
             <Text variant="caption" weight="regular" color="ink-soft">
-              Item
+              {t.item}
             </Text>
             <Text variant="lead" weight="bold">
               {item.name}
@@ -113,14 +116,14 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
           </View>
           <Pressable accessibilityRole="button" onPress={onChange} hitSlop={12} className="active:opacity-60">
             <Text variant="small" weight="bold" color="ink-soft">
-              Change
+              {t.change}
             </Text>
           </Pressable>
         </Card>
       </Animated.View>
       <Animated.View entering={rise(60)}>
         <Text variant="small" weight="bold" className="mb-2.5 mt-5">
-          How much did the casa quote?
+          {t.quotedQuestion}
         </Text>
         <View className="h-20 flex-row items-center gap-2.5 rounded-pill border-[1.5px] border-ink bg-surface px-6 shadow-soft">
           <Text weight="bold" color="ink-soft" className="!text-[40px] !leading-[48px] !tracking-[-0.8px]">
@@ -134,7 +137,7 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
       {service ? (
         <Animated.View entering={rise(110)}>
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
-            Sample range for this item: {formatPeso(peso(service.range[0]))} to {formatPeso(peso(service.range[1]))}.
+            {t.range(formatPeso(peso(service.range[0])), formatPeso(peso(service.range[1])))}
           </Text>
         </Animated.View>
       ) : null}
@@ -143,13 +146,14 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
 }
 
 function PickStep({ q, setQ, onPick, animate }: { q: string; setQ: (v: string) => void; onPick: (item: Item) => void; animate: boolean }) {
+  const t = useCopy().addLine;
   const query = q.trim();
   const results = (query ? SERVICES.filter((s) => s.name.toLowerCase().includes(query.toLowerCase())) : SERVICES.slice(0, 6)).slice(0, 3);
   const asTyped = query && !serviceByName(query);
   // The first visit already has the stack push; only a return from the price step needs its own entrance.
   return (
     <Animated.View entering={animate ? FadeIn.duration(220) : undefined}>
-      <SearchField value={q} onChangeText={setQ} placeholder="What did the casa quote?" autoFocus />
+      <SearchField value={q} onChangeText={setQ} placeholder={t.search} autoFocus />
       <Card padded={false} className="mt-3.5 !rounded-[28px] px-4">
         {results.map((s, i) => (
           <View key={s.id}>
@@ -187,10 +191,10 @@ function PickStep({ q, setQ, onPick, animate }: { q: string; setQ: (v: string) =
               </View>
               <View className="flex-1">
                 <Text variant="body" weight="bold">
-                  Add “{query}” as typed
+                  {t.asTyped(query)}
                 </Text>
                 <Text variant="small" color="ink-soft">
-                  Not in our list. We’ll still add it.
+                  {t.notListed}
                 </Text>
               </View>
             </Pressable>

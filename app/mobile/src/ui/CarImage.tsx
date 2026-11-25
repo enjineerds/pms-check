@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import Animated, { Easing, FadeIn, FadeOut, Keyframe, LayoutAnimationConfig, ReduceMotion, useReducedMotion } from 'react-native-reanimated';
 import { Image } from 'expo-image';
 import { withUniwind } from 'uniwind';
-import { BODY_STYLE_LABEL } from '@/core/bodyStyle';
+import { useCopy } from '@/i18n';
 import type { BodyStyle } from '@/core/types';
 
 const StyledImage = withUniwind(Image);
@@ -59,9 +59,10 @@ interface Props {
 
 export function CarImage({ style, height, motion, delay = 0 }: Props) {
   const reduceMotion = useReducedMotion();
+  const t = useCopy().bodyStyle;
   const { body, shadow } = SOURCES[style];
   const shadowImage = <StyledImage source={shadow} contentFit="contain" className="absolute inset-0" transition={150} accessible={false} />;
-  const bodyImage = <StyledImage source={body} contentFit="contain" className="absolute inset-0" transition={150} accessibilityLabel={BODY_STYLE_LABEL[style]} />;
+  const bodyImage = <StyledImage source={body} contentFit="contain" className="absolute inset-0" transition={150} accessibilityLabel={t[style]} />;
 
   if (!motion) {
     return (

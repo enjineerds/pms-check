@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import type { DraftLine } from '@/core/types';
+import { useCopy } from '@/i18n';
 import { cx, Icon, Text } from '@/ui';
 import { priceLabel } from './EditLineSheet';
 
@@ -17,14 +18,15 @@ interface Props {
 }
 
 export function DraftRow({ line, mark, onPress }: Props) {
+  const t = useCopy().lines;
   const unsure = line.price.kind === 'unsure';
   const fuzzy = line.match.kind === 'fuzzy';
-  const note = mark === 'added' ? 'Just added' : mark === 'updated' ? 'Updated' : unsure ? `The price is smudged. Is it ${priceLabel(line)}?` : fuzzy ? 'Is this the right item?' : undefined;
+  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? t.smudged(priceLabel(line)) : fuzzy ? t.rightItem : undefined;
   const tone = rowTone(line, mark);
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Edit ${line.rawText}`}
+      accessibilityLabel={t.edit(line.rawText)}
       onPress={onPress}
       className={cx('min-h-12 flex-row items-center gap-2.5 rounded-[18px] px-3 py-2', tone === 'amber' && 'bg-optional-bg', tone === 'green' && 'bg-required-bg')}
     >

@@ -10,5 +10,7 @@ export function formatPeso(c: Centavos): string {
   return `₱${group(whole)}${cents ? `.${String(cents).padStart(2, '0')}` : ''}`;
 }
 
-export const formatKm = (km: Km | number): string => `${group(km)} km`;
+export const KM_UNIT = 'km';
+
+export const formatKm = (km: Km | number): string => `${group(km)} ${KM_UNIT}`;
 export const groupDigits = group;

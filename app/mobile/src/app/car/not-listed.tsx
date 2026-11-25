@@ -1,26 +1,29 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { findModel } from '@/sample/catalog';
+import { useCopy } from '@/i18n';
 import { patchSetup, useStore } from '@/store/store';
 import { Card, Divider, GlassButton, Header, Icon, Screen, SecondaryButton, Text } from '@/ui';
 
 export default function VariantNotListed() {
   const modelId = useStore((s) => s.setup.modelId);
   const model = findModel(modelId);
+  const copy = useCopy();
+  const t = copy.carNotListed;
   const family = `${model.name} ${model.variants[0].name.split(' ')[0]}`;
   return (
     <Screen
-      header={<Header title="Pick your car" subtitle={`Step 2 of 4 · ${model.make} ${model.name}`} />}
+      header={<Header title={copy.car.title} subtitle={copy.car.stepOf(2, `${model.make} ${model.name}`)} />}
       footer={
         <>
           <GlassButton
-            label={`Use the ${family} schedule`}
+            label={t.useSchedule(family)}
             onPress={() => {
               patchSetup({ variantId: null });
               router.push('/car/odometer');
             }}
           />
-          <SecondaryButton label="Pick another variant" onPress={() => router.back()} />
+          <SecondaryButton label={t.pickAnother} onPress={() => router.back()} />
         </>
       }
     >
@@ -28,15 +31,15 @@ export default function VariantNotListed() {
         <Icon name="warning" size={28} colorClassName="accent-optional" stroke={2} />
       </View>
       <Text variant="headline" className="mt-5">
-        We don’t have your exact variant yet.
+        {t.headline}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
-        We can still check your quote against the {family} schedule. Some items may differ for your car.
+        {t.body(family)}
       </Text>
       <Card className="mt-5 !rounded-[28px] !py-1">
-        <Point icon="check" title="Most items will match" body={`Oil, filters and brakes are the same across the ${family} range.`} />
+        <Point icon="check" title={t.matchTitle} body={t.matchBody(family)} />
         <Divider />
-        <Point icon="question" title="Ask the advisor about the rest" body="If a verdict looks odd, ask to see their schedule for your variant." />
+        <Point icon="question" title={t.askTitle} body={t.askBody} />
       </Card>
     </Screen>
   );

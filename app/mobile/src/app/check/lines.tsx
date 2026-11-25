@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
+import { toastText } from '@/core/draft';
 import { draftToQuote } from '@/core/saveDraft';
 import { formatPeso } from '@/core/money';
 import type { Centavos } from '@/core/types';
 import { draftTotal, isResolved } from '@/core/quote';
 import { DraftRow, rowTone } from '@/features/DraftRow';
 import { EditLineSheet } from '@/features/EditLineSheet';
+import { useCopy } from '@/i18n';
 import { addQuote, currentCar, useStore } from '@/store/store';
 import { useDraft } from '@/store/draft';
 import { Card, Divider, GlassButton, Header, Notice, Screen, SecondaryButton, Text, Toast } from '@/ui';
 
 export default function Lines() {
   const { draft, dispatch } = useDraft();
+  const t = useCopy().lines;
   const car = useStore(currentCar);
   const [editId, setEditId] = useState<string | null>(null);
   const { lines, quotedTotal, edited, marks, toast, carriedOn } = draft;
@@ -38,11 +41,7 @@ export default function Lines() {
     router.push(`/quote/${q.id}`);
   };
 
-  const subtitle = !edited
-    ? 'Tap a line to fix it. Amber needs a quick look.'
-    : matches
-      ? `The lines add up to ${formatPeso(total)}. That matches your quote.`
-      : `Total now ${formatPeso(total)}.`;
+  const subtitle = !edited ? t.tapToFix : matches ? t.matchesNow(formatPeso(total)) : t.totalNow(formatPeso(total));
 
   const goAdd = () => router.push('/check/add');
 
@@ -63,29 +62,29 @@ export default function Lines() {
           }}
         />
       }
-      header={<Header title="Check the lines" subtitle="Scanned just now" />}
+      header={<Header title={t.title} subtitle={t.subtitle} />}
       footer={
         <>
-          {toast ? <Toast message={toast.text} onUndo={draft.undo ? () => dispatch({ type: 'undo' }) : undefined} /> : null}
+          {toast ? <Toast message={toastText(toast, t)} onUndo={draft.undo ? () => dispatch({ type: 'undo' }) : undefined} /> : null}
           {mismatch ? (
             <>
-              <GlassButton label="Add a missing line" onPress={goAdd} />
-              <SecondaryButton label="Carry on anyway" onPress={() => dispatch({ type: 'carryOn' })} />
+              <GlassButton label={t.addMissing} onPress={goAdd} />
+              <SecondaryButton label={t.carryOn} onPress={() => dispatch({ type: 'carryOn' })} />
             </>
           ) : (
             <>
-              <GlassButton label="Looks right, check it" disabled={lines.length === 0} onPress={check} />
-              <SecondaryButton label="Add a missing line" onPress={goAdd} />
+              <GlassButton label={t.looksRight} disabled={lines.length === 0} onPress={check} />
+              <SecondaryButton label={t.addMissing} onPress={goAdd} />
             </>
           )}
         </>
       }
     >
       <Text variant="headline" className="mt-1">
-        {lines.length === 0 ? 'No lines yet.' : `We found ${lines.length} ${lines.length === 1 ? 'line' : 'lines'}.`}
+        {lines.length === 0 ? t.none : t.found(lines.length)}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-1.5 !text-[14px] !leading-5">
-        {lines.length === 0 ? 'Add what the casa quoted, one line at a time.' : subtitle}
+        {lines.length === 0 ? t.noneBody : subtitle}
       </Text>
       {lines.length > 0 ? (
         <Card padded={false} className="mt-4 !rounded-[28px] p-2">
@@ -106,16 +105,16 @@ export default function Lines() {
           {matches ? (
             <Notice tone="green">
               <Text variant="small" weight="bold">
-                The lines add up to {formatPeso(total)}.{' '}
+                {t.addsUp(formatPeso(total))}
               </Text>
-              That matches the total on your quote.
+              {t.matches}
             </Notice>
           ) : mismatch ? (
             <Notice tone="amber">
               <Text variant="small" weight="bold">
-                The lines add up to {formatPeso(total)}, but the quote says {formatPeso(quotedTotal)}.{' '}
+                {t.addsUpBut(formatPeso(total), formatPeso(quotedTotal))}
               </Text>
-              A {formatPeso(Math.abs(quotedTotal - total) as Centavos)} line may be missing.
+              {t.missing(formatPeso(Math.abs(quotedTotal - total) as Centavos))}
             </Notice>
           ) : null}
         </View>

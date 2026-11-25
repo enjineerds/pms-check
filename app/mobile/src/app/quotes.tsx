@@ -2,31 +2,34 @@ import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
 import { formatDay, isChecking, quoteTitle, savedAmount, sum } from '@/core/quote';
+import { useCopy } from '@/i18n';
 import { isListed, useStore } from '@/store/store';
 import { Card, cx, Divider, GlassButton, GlossGradient, Header, Icon, Screen, Text } from '@/ui';
 
 export default function Quotes() {
   const all = useStore((s) => s.quotes);
+  const copy = useCopy();
+  const t = copy.quotes;
   // `?empty=1` previews the empty state.
   const { empty } = useLocalSearchParams<{ empty?: string }>();
   const quotes = empty ? [] : all.filter(isListed);
   const open = quotes.filter(isChecking);
   const done = quotes.filter((q) => !isChecking(q));
   const saved = sum(done.map(savedAmount));
-  const cta = <GlassButton label="Check a casa quote" onPress={() => router.push('/check/camera')} />;
+  const cta = <GlassButton label={copy.common.checkQuote} onPress={() => router.push('/check/camera')} />;
 
   if (quotes.length === 0) {
     return (
-      <Screen header={<Header title="Past quotes" subtitle="Nothing here yet" />} footer={cta}>
+      <Screen header={<Header title={t.title} subtitle={t.empty} />} footer={cta}>
         <View className="flex-1 items-center justify-center">
           <View className="size-18 items-center justify-center rounded-full bg-surface shadow-soft">
             <Icon name="receipt" size={26} stroke={2} />
           </View>
           <Text variant="title" className="mt-5">
-            No quotes checked yet.
+            {t.noneTitle}
           </Text>
           <Text variant="small" color="ink-soft" className="mt-2 max-w-[260px] text-center">
-            Check your first casa quote and it shows up here, with what you saved.
+            {t.noneBody}
           </Text>
         </View>
       </Screen>
@@ -36,19 +39,19 @@ export default function Quotes() {
   return (
     <Screen
       scroll
-      header={<Header title="Past quotes" subtitle={`${done.length} checked, ${open.length} open`} />}
+      header={<Header title={t.title} subtitle={t.counts(done.length, open.length)} />}
       footer={cta}
     >
       <View className="gap-1 overflow-hidden rounded-[32px] p-5 shadow-toast">
         <GlossGradient />
         <Text variant="small" weight="semibold" color="panel-ink">
-          You’ve saved
+          {t.savedLead}
         </Text>
         <Text weight="extrabold" color="panel-ink" className="!text-[38px] !leading-[46px] !tracking-[-1px]">
           {formatPeso(saved)}
         </Text>
         <Text variant="small" color="panel-ink">
-          by saying no to upsells that weren’t in the schedule.
+          {t.savedTail}
         </Text>
       </View>
       <Card padded={false} className="mt-4 !rounded-[28px] px-4">
@@ -63,20 +66,20 @@ export default function Quotes() {
                 </View>
                 <View className="flex-1">
                   <Text variant="body" weight="bold" numberOfLines={2}>
-                    {quoteTitle(q)}
+                    {quoteTitle(q, copy.quote)}
                   </Text>
                   <Text variant="small" color="ink-faint">
-                    {q.shopName} · {formatDay(q.createdAt)}
+                    {q.shopName} · {formatDay(q.createdAt, copy.quote)}
                   </Text>
                 </View>
                 {checking ? (
                   <Text variant="small" weight="bold" color="optional">
-                    Checking
+                    {t.checking}
                   </Text>
                 ) : (
                   <View className="items-end">
                     <Text variant="caption" color="required">
-                      Saved
+                      {t.saved}
                     </Text>
                     <Text variant="body" weight="bold" color="required">
                       {formatPeso(savedAmount(q))}

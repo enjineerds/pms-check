@@ -46,7 +46,6 @@ export const MODELS: CatalogModel[] = [
 
 export const findModel = (id: ModelId | null) => MODELS.find((m) => m.id === id) ?? MODELS[0];
 
-export const TRANSMISSION_LABEL: Record<Transmission, string> = { manual: 'Manual', cvt: 'CVT', at: 'Automatic' };
 
 export interface CatalogService {
   id: ServiceId;

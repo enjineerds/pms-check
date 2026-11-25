@@ -17,7 +17,7 @@ import { copyFor } from '@/i18n';
 import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
 import { SIX_FIGURE_ID } from '@/sample/quotes';
-import { findModel, findVariantName, TRANSMISSION_LABEL } from '@/sample/catalog';
+import { findModel, findVariantName } from '@/sample/catalog';
 import { currentCar, isListed, useStore } from '@/store/store';
 import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
@@ -61,7 +61,8 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
     opacity: rise.get() === 1 || panelH.get() > 0 ? 1 : 0,
     transform: [{ translateY: (1 - rise.get()) * panelH.get() }],
   }));
-  const t = copyFor(language).home;
+  const copy = copyFor(language);
+  const t = copy.home;
 
   const model = findModel(car.modelId);
   const km = car.odometer.km;
@@ -83,7 +84,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
           </Text>
           {/* Separate pieces, so narrow phones wrap between facts, never inside one. */}
           <View className="flex-row flex-wrap">
-            {[`${car.year} · `, `${TRANSMISSION_LABEL[car.transmission]} · `, formatKm(km)].map((part) => (
+            {[`${car.year} · `, `${copy.transmission[car.transmission]} · `, formatKm(km)].map((part) => (
               <Text key={part} variant="small" color="ink-faint">
                 {part}
               </Text>

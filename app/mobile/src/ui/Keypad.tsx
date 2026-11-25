@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useCopy } from '@/i18n';
 import { Icon } from './Icon';
 import { Text } from './Text';
 import { cx } from './cx';
@@ -12,6 +13,7 @@ interface Props {
 
 export function Keypad({ onKey }: Props) {
   const insets = useSafeAreaInsets();
+  const t = useCopy().common;
   return (
     <View className="gap-2 bg-keypad px-1.5 pt-2" style={{ paddingBottom: Math.max(insets.bottom, 8) }}>
       {ROWS.map((row, i) => (
@@ -20,7 +22,7 @@ export function Keypad({ onKey }: Props) {
             <Pressable
               key={k}
               accessibilityRole="button"
-              accessibilityLabel={k === 'back' ? 'Delete' : k}
+              accessibilityLabel={k === 'back' ? t.deleteKey : k}
               onPress={() => onKey(k)}
               className={cx('h-11.5 flex-1 items-center justify-center rounded-[7px] shadow-key active:opacity-60', k === 'back' ? 'bg-keypad-back' : 'bg-surface')}
             >

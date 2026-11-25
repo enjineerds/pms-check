@@ -2,8 +2,9 @@ import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
 import { formatDay, lineName, quoteTitle, quotedSum, totalsByVerdict } from '@/core/quote';
-import { GROUP_TITLE, lineNote, reasonShort, VERDICT_WORD } from '@/core/verdictCopy';
+import { lineNote, reasonShort } from '@/core/verdictCopy';
 import type { SavedLine, VerdictKind } from '@/core/types';
+import { useCopy } from '@/i18n';
 import { useQuote } from '@/store/store';
 import { Card, cx, Divider, GlassButton, GlossGradient, Header, Icon, LineRow, Screen, Text, VERDICT } from '@/ui';
 
@@ -12,7 +13,9 @@ const KINDS: VerdictKind[] = ['yes', 'ask', 'no'];
 export default function Result() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const quote = useQuote(id);
-  if (!quote) return <Screen header={<Header title="Quote not found" />} />;
+  const copy = useCopy();
+  const t = copy.result;
+  if (!quote) return <Screen header={<Header title={t.notFound} />} />;
 
   const totals = totalsByVerdict(quote.lines);
   const quoted = quote.quotedTotal ?? quotedSum(quote);
@@ -21,13 +24,13 @@ export default function Result() {
   return (
     <Screen
       scroll
-      header={<Header title={quoteTitle(quote)} subtitle={`${quote.shopName ?? 'Quote'} · ${formatDay(quote.createdAt)}`} />}
+      header={<Header title={quoteTitle(quote, copy.quote)} subtitle={`${quote.shopName ?? t.quote} · ${formatDay(quote.createdAt, copy.quote)}`} />}
     >
       <Text variant="display" className="mt-1">
-        {totals.no > 0 ? `Say no to ${formatPeso(totals.no)} of this quote.` : 'Everything here is in the schedule.'}
+        {totals.no > 0 ? t.sayNo(formatPeso(totals.no)) : t.allIn}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px]">
-        The casa quoted {formatPeso(quoted)} for your Vios.
+        {t.quoted(formatPeso(quoted))}
       </Text>
 
       <View className="mt-4 flex-row gap-2.5">
@@ -37,22 +40,22 @@ export default function Result() {
       </View>
       <Text variant="small" color="ink-soft" className="mt-3 !text-[12.5px]">
         <Text variant="small" weight="bold" color="optional" className="!text-[12.5px]">
-          Ask first
-        </Text>{' '}
-        means reasonable, but not required yet. Ask to see it.
+          {copy.verdict.word.ask}
+        </Text>
+        {t.askMeans}
       </Text>
 
-      <GlassButton label="Show this to the advisor" onPress={() => router.push(`/quote/${id}/advisor`)} className="mt-4" />
+      <GlassButton label={t.showAdvisor} onPress={() => router.push(`/quote/${id}/advisor`)} className="mt-4" />
 
       <Card padded={false} className="mt-4 !rounded-[28px] px-4 py-3">
         {groups.map((g, gi) => (
           <View key={g.kind} className={gi > 0 ? 'mt-2' : undefined}>
             <View className="flex-row items-center justify-between pt-1.5">
               <Text variant="caption" weight="bold" color={VERDICT[g.kind].color}>
-                {GROUP_TITLE[g.kind]}
+                {copy.verdict.word[g.kind]}
               </Text>
               <Text variant="caption" weight="regular" color="ink-soft">
-                {reasonShort(g.lines[0].verdict)}
+                {reasonShort(g.lines[0].verdict, copy.verdict)}
               </Text>
             </View>
             {g.lines.map((l, i) => (
@@ -64,7 +67,7 @@ export default function Result() {
 
       <View className="mb-2 mt-5 items-center">
         <Text variant="caption" weight="regular" color="ink-soft">
-          Source: {quote.lines[0]?.verdict.source?.title.replace(', ', ' · ') ?? 'Vios owner’s manual · 2025'}
+          {t.source(quote.lines[0]?.verdict.source?.title.replace(', ', ' · ') ?? t.defaultSource)}
         </Text>
         <Text
           variant="caption"
@@ -72,7 +75,7 @@ export default function Result() {
           className="mt-2 underline"
           onPress={() => router.push(`/quote/${id}/report`)}
         >
-          Report a mistake
+          {copy.common.reportMistake}
         </Text>
       </View>
     </Screen>
@@ -80,15 +83,17 @@ export default function Result() {
 }
 
 function Row({ line, first, onPress }: { line: SavedLine; first: boolean; onPress: () => void }) {
+  const t = useCopy().verdict;
   return (
     <View>
       {first ? null : <Divider />}
-      <LineRow title={lineName(line)} price={line.price} kind={line.verdict.kind} note={lineNote(line)} onPress={onPress} />
+      <LineRow title={lineName(line)} price={line.price} kind={line.verdict.kind} note={lineNote(line, t)} onPress={onPress} />
     </View>
   );
 }
 
 function Total({ kind, amount }: { kind: VerdictKind; amount: string }) {
+  const t = useCopy().verdict;
   const dark = kind === 'no';
   const c = VERDICT[kind];
   const size = amount.length > 7 ? 15 : 18;
@@ -103,7 +108,7 @@ function Total({ kind, amount }: { kind: VerdictKind; amount: string }) {
           {amount}
         </Text>
         <Text variant="small" weight="medium" color={dark ? 'panel-ink' : 'ink'}>
-          {VERDICT_WORD[kind]}
+          {t.word[kind]}
         </Text>
       </View>
     </View>

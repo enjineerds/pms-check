@@ -5,9 +5,12 @@ import { router, useFocusEffect } from 'expo-router';
 import { pickFromLibrary, takeFromCamera } from '@/ocr/capture';
 import { setPendingImage } from '@/ocr/pending';
 import type { CapturedImage } from '@/ocr/types';
+import { useCopy } from '@/i18n';
 import { cx, Header, Icon, Screen, Text } from '@/ui';
 
 export default function Scan() {
+  const copy = useCopy();
+  const t = copy.scan;
   const camera = useRef<CameraView>(null);
   const [permission] = useCameraPermissions();
   useEffect(() => {
@@ -56,24 +59,24 @@ export default function Scan() {
   };
 
   return (
-    <Screen header={<Header title="Scan the quote" subtitle="Fit the whole quote in the frame" />}>
+    <Screen header={<Header title={copy.check.scanTitle} subtitle={t.subtitle} />}>
       <View className="mt-1 flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <View className="size-2 rounded-full bg-required" />
           <Text variant="small" weight="medium">
-            Hold steady…
+            {t.holdSteady}
           </Text>
         </View>
         {unavailable ? null : (
           <Pressable
             accessibilityRole="button"
             accessibilityState={{ selected: torch }}
-            onPress={() => setTorch((t) => !t)}
+            onPress={() => setTorch((on) => !on)}
             className="h-9 flex-row items-center gap-1.5 rounded-pill bg-surface px-3.5 shadow-soft"
           >
             <Icon name="flash" size={14} stroke={2} />
             <Text variant="small" weight="semibold">
-              Flash {torch ? 'on' : 'off'}
+              {torch ? t.flashOn : t.flashOff}
             </Text>
           </Pressable>
         )}
@@ -85,7 +88,7 @@ export default function Scan() {
             <View className="flex-1 items-center justify-center gap-3 px-8">
               <Icon name="camera-off" size={28} stroke={2} />
               <Text variant="small" color="ink-soft" className="text-center">
-                The camera is not available here. Choose a photo of the quote, or type the lines in.
+                {t.unavailable}
               </Text>
             </View>
           ) : focused ? (
@@ -106,10 +109,10 @@ export default function Scan() {
       </View>
 
       <View className="flex-row items-center justify-between px-3">
-        <SideButton icon="image" label="Photos" onPress={() => run(pickFromLibrary)} />
+        <SideButton icon="image" label={t.photos} onPress={() => run(pickFromLibrary)} />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Take photo"
+          accessibilityLabel={t.shutter}
           accessibilityState={{ disabled: busy || !ready }}
           disabled={busy || !ready}
           onPress={() => run(() => takeFromCamera(camera.current))}
@@ -119,10 +122,10 @@ export default function Scan() {
             <View className="absolute inset-0 bg-linear-to-b/srgb from-gloss-top from-0% via-gloss-shutter via-60% to-gloss-bottom to-100%" />
           </View>
         </Pressable>
-        <SideButton icon="lines" label="Type" onPress={() => router.push('/check/add')} />
+        <SideButton icon="lines" label={t.type} onPress={() => router.push('/check/add')} />
       </View>
       <Text variant="small" color={failed ? 'skip' : 'ink-soft'} className="mb-2 mt-3 text-center">
-        {failed ? 'That did not work. Try again, or choose a photo.' : 'Lay it flat and avoid glare from the lights.'}
+        {failed ? t.failed : t.hint}
       </Text>
     </Screen>
   );

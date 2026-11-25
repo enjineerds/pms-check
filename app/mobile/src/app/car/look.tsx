@@ -1,21 +1,23 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import { BODY_STYLE_LABEL, BODY_STYLES } from '@/core/bodyStyle';
+import { BODY_STYLES } from '@/core/bodyStyle';
+import { useCopy } from '@/i18n';
 import { findModel } from '@/sample/catalog';
 import { patchSetup, saveSetupAsCar, useStore } from '@/store/store';
 import { CarImage, GlassButton, Header, Screen, Segmented, Text } from '@/ui';
 
-const STYLES = BODY_STYLES.map((value) => ({ value, label: BODY_STYLE_LABEL[value] }));
-
 export default function CarLook() {
   const setup = useStore((s) => s.setup);
   const model = findModel(setup.modelId);
+  const copy = useCopy();
+  const t = copy.carLook;
+  const styles = BODY_STYLES.map((value) => ({ value, label: copy.bodyStyle[value] }));
   return (
     <Screen
-      header={<Header title="Pick your car" subtitle={`Step 4 of 4 · ${model.make} ${model.name}`} />}
+      header={<Header title={copy.car.title} subtitle={copy.car.stepOf(4, `${model.make} ${model.name}`)} />}
       footer={
         <GlassButton
-          label="Save my car"
+          label={t.save}
           onPress={() => {
             saveSetupAsCar();
             router.replace('/car/saved');
@@ -24,17 +26,17 @@ export default function CarLook() {
       }
     >
       <Text variant="headline">
-        What kind of car is your {model.name}?
+        {t.question(model.name)}
       </Text>
       <View className="mt-6">
         <CarImage style={setup.bodyStyle} height={190} motion="swap" />
       </View>
       <Text variant="small" weight="bold" className="mb-2.5 mt-7">
-        Body type
+        {t.bodyType}
       </Text>
-      <Segmented size="sm" widths="content" value={setup.bodyStyle} onChange={(b) => patchSetup({ bodyStyle: b })} options={STYLES} />
+      <Segmented size="sm" widths="content" value={setup.bodyStyle} onChange={(b) => patchSetup({ bodyStyle: b })} options={styles} />
       <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
-        Picked from your model. Change it if it’s wrong.
+        {t.hint}
       </Text>
     </Screen>
   );

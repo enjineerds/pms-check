@@ -1,6 +1,7 @@
 import type { Centavos, Decision, DraftLine, LinePrice, Quote, SavedLine, VerdictKind } from './types';
 import { groupDigits } from './money';
 import { findService } from '@/sample/catalog';
+import type { Copy } from '@/i18n/en';
 
 export const priceOf = (p: LinePrice): Centavos | null => {
   switch (p.kind) {
@@ -42,12 +43,10 @@ export const lineName = (l: SavedLine): string =>
 
 
 /** `months: 0` marks a one-off job, not a PMS point. */
-export const quoteTitle = (q: Quote): string =>
-  q.visit.point.months === 0 ? 'Oil change' : `${groupDigits(q.visit.point.km)} km service`;
+export const quoteTitle = (q: Quote, t: Copy['quote']): string =>
+  q.visit.point.months === 0 ? t.oilChange : t.service(groupDigits(q.visit.point.km));
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-export function formatDay(iso: string, now = new Date()): string {
+export function formatDay(iso: string, t: Copy['quote'], now = new Date()): string {
   const d = new Date(iso);
-  return d.toDateString() === now.toDateString() ? 'Today' : `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return d.toDateString() === now.toDateString() ? t.today : `${d.getDate()} ${t.months[d.getMonth()]}`;
 }

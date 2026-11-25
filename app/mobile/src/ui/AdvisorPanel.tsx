@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import type { Centavos } from '@/core/types';
 import { formatPeso } from '@/core/money';
+import { useCopy } from '@/i18n';
 import { GlossGradient } from './Gradient';
 import { Text } from './Text';
 
@@ -12,6 +13,7 @@ interface Props {
 const totalSize = (s: string) => (s.length > 7 ? 30 : 40);
 
 export function AdvisorPanel({ lines, total }: Props) {
+  const copy = useCopy().advisor;
   const t = formatPeso(total);
   return (
     <View className="overflow-hidden rounded-[32px] px-5 pb-4.5 pt-1.5 shadow-toast">
@@ -28,7 +30,7 @@ export function AdvisorPanel({ lines, total }: Props) {
       ))}
       <View className="flex-row items-center justify-between gap-3 pt-5">
         <Text variant="body" color="panel-soft" className="flex-1">
-          I will pay
+          {copy.willPay}
         </Text>
         <Text weight="extrabold" color="panel-ink" className="!tracking-[-1px]" style={{ fontSize: totalSize(t), lineHeight: totalSize(t) + 6 }}>
           {t}

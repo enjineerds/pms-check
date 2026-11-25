@@ -209,6 +209,14 @@ section {
   }
 }
 
+/* Scroll-triggered sequences: everything inside [data-reveal] holds on its first frame
+   (animation fill keeps it hidden) until the block scrolls into frame and gets .in-view.
+   The authored delays then run from that moment, not from page load. */
+.js [data-reveal]:not(.in-view),
+.js [data-reveal]:not(.in-view) * {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

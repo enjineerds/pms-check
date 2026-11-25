@@ -79,7 +79,7 @@ const faqs = [
           </p>
           <WaitlistForm id="hero" />
         </div>
-        <div class="hero-visual">
+        <div class="hero-visual" data-reveal>
           <Phone label="PMS Check result for a 10,000 km quote of ₱14,000: ₱3,400 to say yes, ₱1,800 to ask first, ₱8,800 to say no."><Screen kind="verdict" intro /></Phone>
           <div class="chip chip-no"><span class="ic-no"><Icon name="x" size="12px" stroke={3.4} /></span><div><small>Say no</small><b>₱8,800</b></div></div>
           <div class="chip chip-yes"><span class="ic-yes"><Icon name="check" size="12px" stroke={3.4} /></span><div><small>Say yes</small><b>₱3,400</b></div></div>
@@ -273,6 +273,27 @@ const faqs = [
       card?.querySelector('.chk-payoff')?.classList.toggle('show', !!both);
     });
   });
+
+  // Play each [data-reveal] sequence once, when it scrolls into frame. On desktop the hero
+  // is above the fold, so it starts at load as before; on mobile the phone sits below the
+  // form and would otherwise finish before anyone scrolled to it.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window) {
+    const revealer = new IntersectionObserver(
+      (entries, obs) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add('in-view');
+          obs.unobserve(e.target);
+        }
+      },
+      // A third of the phone showing, clear of the bottom edge, reads as "arrived".
+      { threshold: 0.3, rootMargin: '0px 0px -8% 0px' },
+    );
+    reveals.forEach((el) => revealer.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add('in-view'));
+  }
 
   // First time the card is on screen, the first pill pulses twice to say "tap me".
   const miniList = document.querySelector('.mini');
@@ -475,7 +496,7 @@ const faqs = [
     padding: 5px 10px;
     box-shadow: var(--shadow-soft);
   }
-  /* Load-in, one authored sequence: the phone rises, its lines are checked and the totals
+  /* Reveal, one authored sequence (starts when the block scrolls into frame, see [data-reveal]): the phone rises, its lines are checked and the totals
      land (see Screen.astro), then the two price chips drop in and begin their idle float. */
   @media (prefers-reduced-motion: no-preference) {
     .hero-visual :global(.phone) {

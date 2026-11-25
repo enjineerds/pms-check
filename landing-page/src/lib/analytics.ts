@@ -6,6 +6,8 @@ const HOST = (import.meta.env.PUBLIC_POSTHOG_HOST as string | undefined) || 'htt
 let ready = false;
 
 export function initAnalytics() {
+  // No tracking during local development (`astro dev`).
+  if (import.meta.env.DEV) return;
   if (ready || !KEY) return;
   posthog.init(KEY, {
     api_host: HOST,

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pms-check.kowdstudio.workers.dev/sitemap.xml

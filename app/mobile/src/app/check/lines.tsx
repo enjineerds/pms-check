@@ -5,7 +5,7 @@ import { toastText } from '@/core/draft';
 import { draftToQuote } from '@/core/saveDraft';
 import { formatPeso } from '@/core/money';
 import type { Centavos } from '@/core/types';
-import { draftTotal, isResolved } from '@/core/quote';
+import { draftTotal, isResolved, totalCheck } from '@/core/quote';
 import { DraftRow, rowTone } from '@/features/DraftRow';
 import { EditLineSheet } from '@/features/EditLineSheet';
 import { useCopy } from '@/i18n';
@@ -27,8 +27,10 @@ export default function Lines() {
   }, [toast, dispatch]);
 
   const total = draftTotal(lines);
-  const matches = quotedTotal !== null && total === quotedTotal;
-  const mismatch = !edited && !carriedOn && quotedTotal !== null && !matches && lines.length > 0;
+  const sums = totalCheck([total], quotedTotal);
+  const matches = sums.kind === 'match';
+  const gap = sums.kind === 'mismatch' ? sums.missing : null;
+  const mismatch = !edited && !carriedOn && gap !== null && lines.length > 0;
   const editing = lines.find((l) => l.id === editId) ?? null;
 
   const check = () => {
@@ -114,7 +116,7 @@ export default function Lines() {
               <Text variant="small" weight="bold">
                 {t.addsUpBut(formatPeso(total), formatPeso(quotedTotal))}
               </Text>
-              {t.missing(formatPeso(Math.abs(quotedTotal - total) as Centavos))}
+              {t.missing(formatPeso(Math.abs(gap ?? 0) as Centavos))}
             </Notice>
           ) : null}
         </View>

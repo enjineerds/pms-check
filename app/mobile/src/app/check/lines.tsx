@@ -5,7 +5,7 @@ import { draftToQuote } from '@/core/saveDraft';
 import { formatPeso } from '@/core/money';
 import type { Centavos } from '@/core/types';
 import { draftTotal, isResolved } from '@/core/quote';
-import { DraftRow } from '@/features/DraftRow';
+import { DraftRow, rowTone } from '@/features/DraftRow';
 import { EditLineSheet } from '@/features/EditLineSheet';
 import { addQuote, currentCar, useStore } from '@/store/store';
 import { useDraft } from '@/store/draft';
@@ -89,12 +89,16 @@ export default function Lines() {
       </Text>
       {lines.length > 0 ? (
         <Card padded={false} className="mt-4 !rounded-[28px] p-2">
-          {lines.map((l, i) => (
-            <View key={l.id}>
-              {i > 0 ? <Divider /> : null}
-              <DraftRow line={l} mark={marks[l.id]} onPress={() => setEditId(l.id)} />
-            </View>
-          ))}
+          {lines.map((l, i) => {
+            const prev = lines[i - 1];
+            const plain = prev && !rowTone(prev, marks[prev.id]) && !rowTone(l, marks[l.id]);
+            return (
+              <View key={l.id}>
+                {plain ? <Divider className="mx-3" /> : i > 0 ? <View className="h-1" /> : null}
+                <DraftRow line={l} mark={marks[l.id]} onPress={() => setEditId(l.id)} />
+              </View>
+            );
+          })}
         </Card>
       ) : null}
       {!edited && quotedTotal !== null && lines.length > 0 ? (

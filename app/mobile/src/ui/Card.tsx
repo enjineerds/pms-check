@@ -22,4 +22,4 @@ export function Card({ children, onPress, className, padded = true }: Props) {
 
 export const Tile = Card;
 
-export const Divider = () => <View className="h-px bg-line" />;
+export const Divider = ({ className }: { className?: string }) => <View className={cx('h-px bg-line', className)} />;

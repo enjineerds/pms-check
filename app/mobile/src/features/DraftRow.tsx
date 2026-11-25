@@ -5,6 +5,12 @@ import { priceLabel } from './EditLineSheet';
 
 type Mark = 'added' | 'updated' | undefined;
 
+/** A tinted row is a pill that carries its own edge, so the list drops the dividers around it. */
+export function rowTone(line: DraftLine, mark: Mark): 'green' | 'amber' | null {
+  if (mark) return 'green';
+  return line.price.kind === 'unsure' || line.match.kind === 'fuzzy' ? 'amber' : null;
+}
+
 interface Props {
   line: DraftLine;
   mark: Mark;
@@ -15,7 +21,7 @@ export function DraftRow({ line, mark, onPress }: Props) {
   const unsure = line.price.kind === 'unsure';
   const fuzzy = line.match.kind === 'fuzzy';
   const note = mark === 'added' ? 'Just added' : mark === 'updated' ? 'Updated' : unsure ? `The price is smudged. Is it ${priceLabel(line)}?` : fuzzy ? 'Is this the right item?' : undefined;
-  const tone = mark ? 'green' : unsure || fuzzy ? 'amber' : null;
+  const tone = rowTone(line, mark);
   return (
     <Pressable
       accessibilityRole="button"

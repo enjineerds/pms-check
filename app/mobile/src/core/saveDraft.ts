@@ -1,31 +1,34 @@
-import type { Car, Km, DraftLine, Quote, SavedLine, ScheduleId, Verdict, Centavos } from './types';
+import type { Car, CatalogBundle, Centavos, Conditions, DraftLine, Km, Quote, SavedLine } from './types';
 import type { DraftState } from './draft';
 import { decisionFor, priceOf } from './quote';
-import { duePointKm } from './service';
-import { findService } from '@/sample/catalog';
+import { ageMonths, cadence, nextPoint, reachedPoint, resolveSchedule } from './schedule';
+import { verdict } from './verdict';
 
-const unknown: Verdict = { kind: 'ask', reason: { kind: 'unknown-item' }, source: null };
-
-// Stub for the verdict engine.
-function toSaved(l: DraftLine): SavedLine | null {
-  const price = priceOf(l.price);
-  if (price === null || l.match.kind === 'fuzzy') return null;
-  const verdict = l.match.kind === 'none' ? unknown : (findService(l.match.serviceId)?.verdict ?? unknown);
-  return { id: l.id, rawText: l.rawText, match: l.match, price, verdict, decision: decisionFor(verdict.kind) };
-}
-
-export function draftToQuote(d: DraftState, car: Car): Quote {
+export function draftToQuote(d: DraftState, car: Car, catalog: CatalogBundle, now: Date, conditions: Conditions = 'severe'): Quote {
+  const { schedule, usedFallback } = resolveSchedule(car, catalog);
   const km = car.odometer.km;
+  const months = ageMonths(car.deliveredOn, now);
+  const every = cadence(schedule, conditions);
+  const reached = reachedPoint(km, months, every);
+  const at = { km, months };
+
+  const toSaved = (l: DraftLine): SavedLine | null => {
+    const price = priceOf(l.price);
+    if (price === null || l.match.kind === 'fuzzy') return null;
+    const v = verdict({ match: l.match }, schedule, at, conditions, usedFallback, catalog);
+    return { id: l.id, rawText: l.rawText, match: l.match, price, verdict: v, decision: decisionFor(v.kind) };
+  };
+
   return {
-    id: `q-${Date.now()}`,
+    id: `q-${now.getTime()}`,
     carId: car.id,
     shopName: d.shopName,
-    visit: { point: { km: duePointKm(km) as Km, months: 12 }, odometerKm: km },
-    scheduleId: 'toyota-vios-1.3-cvt-2025' as ScheduleId,
-    usedFallbackSchedule: car.variantId === null,
-    catalogVersion: 'sample-1',
+    visit: { point: reached.point ?? nextPoint(km, months, every).point, odometerKm: km as Km },
+    scheduleId: schedule.id,
+    usedFallbackSchedule: usedFallback,
+    catalogVersion: catalog.version,
     quotedTotal: d.quotedTotal as Centavos | null,
     lines: d.lines.map(toSaved).filter((x): x is SavedLine => x !== null),
-    createdAt: new Date().toISOString(),
+    createdAt: now.toISOString(),
   };
 }

@@ -9,4 +9,6 @@ const COPY: Record<Locale, Copy> = { en, fil };
 
 export const copyFor = (locale: Locale): Copy => COPY[locale];
 
-export const useCopy = (): Copy => COPY[useStore((s) => s.language) ?? 'en'];
+export const useLocale = (): Locale => useStore((s) => s.language) ?? 'en';
+
+export const useCopy = (): Copy => COPY[useLocale()];

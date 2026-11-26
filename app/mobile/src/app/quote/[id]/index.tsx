@@ -2,10 +2,11 @@ import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
 import { formatDay, lineName, quoteTitle, quotedSum, totalsByVerdict } from '@/core/quote';
-import { lineNote, reasonShort } from '@/core/verdictCopy';
+import { lineNote, reasonShort, resultHeadline } from '@/core/verdictCopy';
 import type { SavedLine, VerdictKind } from '@/core/types';
-import { useCopy } from '@/i18n';
-import { useQuote } from '@/store/store';
+import { useCopy, useLocale } from '@/i18n';
+import { findModel } from '@/catalog';
+import { useQuote, useStore } from '@/store/store';
 import { Card, cx, Divider, GlassButton, GlossGradient, Header, Icon, LineRow, Screen, Text, VERDICT } from '@/ui';
 
 const KINDS: VerdictKind[] = ['yes', 'ask', 'no'];
@@ -13,6 +14,8 @@ const KINDS: VerdictKind[] = ['yes', 'ask', 'no'];
 export default function Result() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const quote = useQuote(id);
+  const car = useStore((s) => s.cars.find((c) => c.id === quote?.carId));
+  const model = findModel(car?.modelId ?? null);
   const copy = useCopy();
   const t = copy.result;
   if (!quote) return <Screen header={<Header title={t.notFound} />} />;
@@ -27,10 +30,10 @@ export default function Result() {
       header={<Header title={quoteTitle(quote, copy.quote)} subtitle={`${quote.shopName ?? t.quote} · ${formatDay(quote.createdAt, copy.quote)}`} />}
     >
       <Text variant="display" className="mt-1">
-        {totals.no > 0 ? t.sayNo(formatPeso(totals.no)) : t.allIn}
+        {resultHeadline(totals, t)}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px]">
-        {t.quoted(formatPeso(quoted))}
+        {t.quoted(formatPeso(quoted), model?.name ?? copy.item.yourCar)}
       </Text>
 
       <View className="mt-4 flex-row gap-2.5">
@@ -55,7 +58,7 @@ export default function Result() {
                 {copy.verdict.word[g.kind]}
               </Text>
               <Text variant="caption" weight="regular" color="ink-soft">
-                {reasonShort(g.lines[0].verdict, copy.verdict)}
+                {reasonShort(g.lines[0].verdict, copy.verdict, model?.make ?? '')}
               </Text>
             </View>
             {g.lines.map((l, i) => (
@@ -84,10 +87,11 @@ export default function Result() {
 
 function Row({ line, first, onPress }: { line: SavedLine; first: boolean; onPress: () => void }) {
   const t = useCopy().verdict;
+  const locale = useLocale();
   return (
     <View>
       {first ? null : <Divider />}
-      <LineRow title={lineName(line)} price={line.price} kind={line.verdict.kind} note={lineNote(line, t)} onPress={onPress} />
+      <LineRow title={lineName(line, locale)} price={line.price} kind={line.verdict.kind} note={lineNote(line, t)} onPress={onPress} />
     </View>
   );
 }

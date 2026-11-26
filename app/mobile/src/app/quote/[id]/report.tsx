@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { lineName, quoteTitle } from '@/core/quote';
-import { useCopy } from '@/i18n';
+import { useCopy, useLocale } from '@/i18n';
 import { useQuote } from '@/store/store';
 import { Field, GlassButton, Header, Notice, RadioRow, Screen, SecondaryButton, Text } from '@/ui';
 
@@ -10,12 +10,13 @@ export default function Report() {
   const { id, lineId } = useLocalSearchParams<{ id: string; lineId?: string }>();
   const quote = useQuote(id);
   const copy = useCopy();
+  const locale = useLocale();
   const t = copy.report;
   const [reason, setReason] = useState<number | null>(null);
   const [note, setNote] = useState('');
   const [sent, setSent] = useState(false);
   const line = quote?.lines.find((l) => l.id === lineId);
-  const subtitle = quote ? `${line ? lineName(line) : t.thisQuote} · ${quoteTitle(quote, copy.quote)}` : undefined;
+  const subtitle = quote ? `${line ? lineName(line, locale) : t.thisQuote} · ${quoteTitle(quote, copy.quote)}` : undefined;
 
   if (sent) {
     return (

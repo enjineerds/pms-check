@@ -10,6 +10,7 @@ const norm = (s) =>
     .replace(/[’']/g, "'")
     .replace(/(\u0000|₱?\d(?:[\d,.]*\d)?)( km)?/g, '#')
     .replace(/\b(Vios 1\.3|Toyota Vios|Vios|Toyota)\b('s)?/g, '#')
+    .replace(/#'s\b/g, '#')
     .replace(/#( ?[·,]? ?#)+/g, '#')
     .replace(/\s+/g, ' ')
     .trim();

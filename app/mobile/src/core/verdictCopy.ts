@@ -1,19 +1,18 @@
 import type { Copy } from '@/i18n/en';
-import type { Milestone, SavedLine, Verdict } from './types';
-import { formatKm } from './money';
-import { findService } from '@/sample/catalog';
+import type { Centavos, ItemRule, Milestone, SavedLine, ServiceKind, Verdict, VerdictKind } from './types';
+import { formatKm, formatPeso } from './money';
 
 type VerdictCopy = Copy['verdict'];
 
 const when = (m: Milestone, t: VerdictCopy) => ('km' in m ? formatKm(m.km) : t.reason.ageMonths(m.months));
 
-export function reasonShort(v: Verdict, t: VerdictCopy): string {
+export function reasonShort(v: Verdict, t: VerdictCopy, make: string): string {
   switch (v.reason.kind) {
     case 'due-now':
-      return t.reason.dueNow;
+      return t.reason.dueNow(make);
     case 'other-visit':
-      if (v.reason.next) return t.reason.dueAt(when(v.reason.next, t));
-      return v.reason.last ? t.reason.wasDueAt(when(v.reason.last, t)) : t.reason.wasDue;
+      if (v.reason.last) return t.reason.wasDueAt(when(v.reason.last, t));
+      return v.reason.next ? t.reason.dueAt(when(v.reason.next, t)) : t.reason.wasDue;
     case 'wear-item':
       return t.reason.wear;
     case 'not-in-your-schedule':
@@ -27,10 +26,8 @@ export function reasonShort(v: Verdict, t: VerdictCopy): string {
   }
 }
 
-export function lineNote(l: SavedLine, t: VerdictCopy): string | undefined {
-  if (l.match.kind === 'none') return t.unlisted;
-  return l.verdict.kind === 'yes' ? undefined : findService(l.match.serviceId)?.note;
-}
+export const lineNote = (l: SavedLine, t: VerdictCopy): string | undefined =>
+  l.match.kind === 'none' ? t.unlisted : undefined;
 
 export function itemHeadline(v: Verdict, model: string, t: VerdictCopy): string {
   if (v.kind === 'yes') return t.headline.yes(model);
@@ -46,3 +43,30 @@ export function sayThis(v: Verdict, name: string, km: number, t: VerdictCopy): s
   if (v.kind === 'no') return t.say.no(n, formatKm(km));
   return t.say.ask(n);
 }
+
+const interval = (p: { km: number | null; months: number | null }, t: Copy['item'], v: VerdictCopy): string => {
+  const parts = [p.km === null ? null : formatKm(p.km), p.months === null ? null : v.reason.ageMonths(p.months)].filter(
+    (x) => x !== null,
+  );
+  return parts.length === 2 ? t.either(parts[0], parts[1]) : parts[0];
+};
+
+/** "What the manual says", read off the transcribed rule so it can never disagree with the verdict. */
+export function manualSays(
+  kind: ServiceKind,
+  rule: ItemRule | undefined,
+  make: string,
+  t: Copy['item'],
+  v: VerdictCopy,
+): string | undefined {
+  if (kind === 'upsell') return t.notListed(make);
+  if (kind === 'wear') return t.wearPart;
+  if (!rule) return undefined;
+  const every = rule.every ? interval(rule.every, t, v) : null;
+  const first = rule.at[0];
+  if (first && every) return t.listsAtThen(make, interval(first, t, v), every);
+  return t.listsEvery(make, every ?? interval(first, t, v));
+}
+
+export const resultHeadline = (totals: Record<VerdictKind, Centavos>, t: Copy['result']): string =>
+  totals.no > 0 ? t.sayNo(formatPeso(totals.no)) : totals.ask > 0 ? t.askFirst(formatPeso(totals.ask)) : t.allIn;

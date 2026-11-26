@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import type { BodyStyle, Car, Decision, Km, Locale, ModelId, Quote, Transmission, VariantId, YearMonth } from '@/core/types';
-import { VIOS } from '@/sample/car';
+import { CITY } from '@/sample/car';
 import { BAYAN_60K, INITIAL_QUOTES, SIX_FIGURE_ID } from '@/sample/quotes';
 
 export interface CarSetup {
@@ -28,7 +28,7 @@ const EMPTY_SETUP: CarSetup = {
   km: 0,
 };
 
-let state: AppState = { language: null, cars: [VIOS], quotes: [...INITIAL_QUOTES, BAYAN_60K], setup: EMPTY_SETUP };
+let state: AppState = { language: null, cars: [CITY], quotes: [...INITIAL_QUOTES, BAYAN_60K], setup: EMPTY_SETUP };
 const listeners = new Set<() => void>();
 
 function set(patch: Partial<AppState>) {

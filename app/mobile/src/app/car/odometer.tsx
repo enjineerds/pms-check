@@ -3,9 +3,11 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { applyKey } from '@/core/keypad';
 import { formatKm, groupDigits } from '@/core/money';
-import { duePointKm } from '@/core/service';
+import { serviceFor } from '@/core/schedule';
+import type { Km } from '@/core/types';
+import { CATALOG } from '@/catalog';
 import { useCopy } from '@/i18n';
-import { patchSetup } from '@/store/store';
+import { patchSetup, useStore } from '@/store/store';
 import { GlassButton, Header, Keypad, Notice, Screen, Text } from '@/ui';
 
 export default function Odometer() {
@@ -13,6 +15,10 @@ export default function Odometer() {
   const t = copy.carOdometer;
   const [raw, setRaw] = useState('');
   const km = Number(raw);
+  const setup = useStore((s) => s.setup);
+  const modelId = setup.modelId;
+  // Age is unknown until the delivery-month step exists (SYSTEM_DESIGN §11.2), so only the km clock counts here.
+  const due = modelId && km > 0 ? serviceFor({ ...setup, modelId }, km as Km, 0, CATALOG).due.km : null;
   return (
     <>
       <View className="flex-1">
@@ -44,12 +50,12 @@ export default function Odometer() {
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
             {t.hint}
           </Text>
-          {km > 0 ? (
+          {due !== null ? (
             <View className="mt-4">
               <Notice tone="green">
                 {t.nextLead}
                 <Text variant="small" weight="bold">
-                  {formatKm(duePointKm(km))}
+                  {formatKm(due)}
                 </Text>
                 {t.nextTail}
               </Notice>

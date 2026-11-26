@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { useCopy } from '@/i18n';
-import { findModel } from '@/sample/catalog';
+import { modelFor, transmissionsOf } from '@/catalog';
 import { patchSetup, useStore } from '@/store/store';
 import { Chip, GlassButton, Header, RadioRow, Screen, Segmented, Text } from '@/ui';
 
@@ -9,9 +9,9 @@ export default function PickVariant() {
   const setup = useStore((s) => s.setup);
   const copy = useCopy();
   const t = copy.carVariant;
-  const model = findModel(setup.modelId);
+  const model = modelFor(setup.modelId);
   const selected = setup.variantId ?? model.variants[Math.min(1, model.variants.length - 1)].id;
-  const latest = model.years[1];
+  const latest = model.years.to;
   const years = [0, 1, 2, 3, 4].map((i) => latest - i);
   const older = setup.year < latest - 4;
 
@@ -35,7 +35,7 @@ export default function PickVariant() {
       <Label>{t.variant}</Label>
       <View className="gap-2.5">
         {model.variants.map((v) => (
-          <RadioRow key={v.id} label={v.name} selected={v.id === selected} onPress={() => patchSetup({ variantId: v.id })} />
+          <RadioRow key={v.id} label={v.label} selected={v.id === selected} onPress={() => patchSetup({ variantId: v.id })} />
         ))}
       </View>
       <View className="mt-2.5 flex-row flex-wrap">
@@ -57,7 +57,7 @@ export default function PickVariant() {
       <Segmented
         value={setup.transmission}
         onChange={(t) => patchSetup({ transmission: t })}
-        options={model.transmissions.map((value) => ({ value, label: copy.transmission[value] }))}
+        options={transmissionsOf(model).map((value) => ({ value, label: copy.transmission[value] }))}
       />
     </Screen>
   );

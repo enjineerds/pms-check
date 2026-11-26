@@ -6,8 +6,8 @@ import { router } from 'expo-router';
 import { applyKey } from '@/core/keypad';
 import { formatPeso, groupDigits, peso } from '@/core/money';
 import type { DraftLine, ServiceId } from '@/core/types';
-import { SERVICES, serviceByName, findService } from '@/sample/catalog';
-import { useCopy } from '@/i18n';
+import { CATALOG, findService, searchServices, serviceByName } from '@/catalog';
+import { useCopy, useLocale } from '@/i18n';
 import { useDraft } from '@/store/draft';
 import { Card, Divider, GlassButton, Header, Icon, Keypad, Screen, SearchField, Text } from '@/ui';
 
@@ -134,10 +134,10 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
           </Text>
         </View>
       </Animated.View>
-      {service ? (
+      {service?.priceRange ? (
         <Animated.View entering={rise(110)}>
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
-            {t.range(formatPeso(peso(service.range[0])), formatPeso(peso(service.range[1])))}
+            {t.range(formatPeso(service.priceRange.min), formatPeso(service.priceRange.max))}
           </Text>
         </Animated.View>
       ) : null}
@@ -147,8 +147,9 @@ function PriceStep({ item, raw, onChange }: { item: Item; raw: string; onChange:
 
 function PickStep({ q, setQ, onPick, animate }: { q: string; setQ: (v: string) => void; onPick: (item: Item) => void; animate: boolean }) {
   const t = useCopy().addLine;
+  const locale = useLocale();
   const query = q.trim();
-  const results = (query ? SERVICES.filter((s) => s.name.toLowerCase().includes(query.toLowerCase())) : SERVICES.slice(0, 6)).slice(0, 3);
+  const results = (query ? searchServices(query, locale) : CATALOG.services).slice(0, 3);
   const asTyped = query && !serviceByName(query);
   // The first visit already has the stack push; only a return from the price step needs its own entrance.
   return (
@@ -160,15 +161,15 @@ function PickStep({ q, setQ, onPick, animate }: { q: string; setQ: (v: string) =
             {i > 0 ? <Divider /> : null}
             <Pressable
               accessibilityRole="button"
-              onPress={() => onPick({ name: s.name, serviceId: s.id })}
+              onPress={() => onPick({ name: s.name[locale], serviceId: s.id })}
               className="flex-row items-center gap-3 py-3.5 active:opacity-60"
             >
               <View className="flex-1">
                 <Text variant="body" weight="bold">
-                  {s.name}
+                  {s.name[locale]}
                 </Text>
                 <Text variant="small" color="ink-soft">
-                  {s.category}
+                  {s.category[locale]}
                 </Text>
               </View>
               <View className="size-8 items-center justify-center rounded-full border-[1.5px] border-line">

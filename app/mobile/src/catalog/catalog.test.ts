@@ -1,7 +1,7 @@
 import { verdict } from '@/core/verdict';
 import type { Conditions, Km, Schedule, ServiceId, Verdict } from '@/core/types';
 import { CITY_CVT, CITY_MT } from './hondaCity';
-import { CATALOG } from './index';
+import { CATALOG, searchServices, serviceByName } from './index';
 
 describe('catalog integrity, SYSTEM_DESIGN §9', () => {
   const service = (id: ServiceId) => CATALOG.services.find((s) => s.id === id);
@@ -90,5 +90,20 @@ describe('Honda City golden verdicts, from the manual table on pp. 404–406', (
     expect(kind(CITY_CVT, 'engine-flush', 10_000, 6)).toBe('no');
     expect(kind(CITY_CVT, 'injector-cleaning', 10_000, 6)).toBe('no');
     expect(judge(CITY_CVT, 'brake-pads', 10_000, 6).reason).toEqual({ kind: 'wear-item' });
+  });
+});
+
+describe('finding services by what the owner types', () => {
+  it('finds a service by its name in either language, or by a quote alias, ignoring case', () => {
+    expect(serviceByName('Engine oil')?.id).toBe('engine-oil');
+    expect(serviceByName('langis ng makina')?.id).toBe('engine-oil');
+    expect(serviceByName('change oil')?.id).toBe('engine-oil');
+    expect(serviceByName('underwash')).toBeUndefined();
+  });
+
+  it('searches names and aliases, showing names in the owner’s language', () => {
+    expect(searchServices('flush', 'en').map((s) => s.id)).toEqual(['engine-flush']);
+    expect(searchServices('preno', 'fil').map((s) => s.id)).toContain('brake-inspection');
+    expect(searchServices('dust and pollen', 'en').map((s) => s.id)).toEqual(['cabin-filter']);
   });
 });

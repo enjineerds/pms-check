@@ -2,13 +2,13 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { BODY_STYLES } from '@/core/bodyStyle';
 import { useCopy } from '@/i18n';
-import { findModel } from '@/sample/catalog';
+import { modelFor } from '@/catalog';
 import { patchSetup, saveSetupAsCar, useStore } from '@/store/store';
 import { CarImage, GlassButton, Header, Screen, Segmented, Text } from '@/ui';
 
 export default function CarLook() {
   const setup = useStore((s) => s.setup);
-  const model = findModel(setup.modelId);
+  const model = modelFor(setup.modelId);
   const copy = useCopy();
   const t = copy.carLook;
   const styles = BODY_STYLES.map((value) => ({ value, label: copy.bodyStyle[value] }));

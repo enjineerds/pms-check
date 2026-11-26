@@ -4,7 +4,7 @@ import type { DraftLine } from '@/core/types';
 import { formatPeso, peso } from '@/core/money';
 import { priceOf } from '@/core/quote';
 import { useCopy } from '@/i18n';
-import { serviceByName } from '@/sample/catalog';
+import { serviceByName } from '@/catalog';
 import { Field, GlassButton, Icon, Notice, Sheet, Text } from '@/ui';
 
 interface Props {

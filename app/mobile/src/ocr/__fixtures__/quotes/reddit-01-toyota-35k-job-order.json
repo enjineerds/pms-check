@@ -1,0 +1,64 @@
+{
+  "image": "reddit/reddit-01-toyota-35k-job-order.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1w4y103/ano_po_kaya_pwede_iparemove_dito_sa_pms_quotation/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "35,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "TGFS SP/C2 5W-30 1L",
+      "price": 2330.46
+    },
+    {
+      "text": "35,000 KM CHECK-UP",
+      "price": 1350.0
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, OIL FILTER",
+      "price": 456.44
+    },
+    {
+      "text": "TOYOTA GENUINE GASOLINE ENGINE FLUSH",
+      "price": 702.44
+    },
+    {
+      "text": "BLUCHEM FUEL SYSTEM CLEANER",
+      "price": 740.54
+    },
+    {
+      "text": "BLUCHEM CARBON X ROYALE",
+      "price": 1468.3
+    },
+    {
+      "text": "X1R ENGINE TREATMENT",
+      "price": 979.29
+    },
+    {
+      "text": "BRAKE CLEANER PM",
+      "price": 87.5
+    },
+    {
+      "text": "WORKSHOP MATERIALS",
+      "price": 276.79
+    },
+    {
+      "text": "PERFORM BATTERY CHECK",
+      "price": 110.71
+    },
+    {
+      "text": "TOYOTA GENUINE BACTAKLENZ (7ML)",
+      "price": 937.71
+    }
+  ],
+  "total": 10649.39,
+  "notes": [
+    "Low resolution (761 x 370); digits are legible but small.",
+    "Line prices are before 12% VAT; they add up to the 9,508.38 subtotal."
+  ]
+}

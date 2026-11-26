@@ -1,0 +1,66 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-xpander-service-menu-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wklnsa/are_all_of_these_necessary_for_the_20k_pms_xpander/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Mitsubishi",
+  "model": "Xpander",
+  "service": "Age (months) 16th Mileage (x1,000km) 20",
+  "lines": [
+    {
+      "text": "Basic PMS Labor Charge",
+      "price": 2200.0
+    },
+    {
+      "text": "Engine Oil - Fully Synthetic",
+      "price": 3280.0
+    },
+    {
+      "text": "Oil Filter with Gasket",
+      "price": 674.24
+    },
+    {
+      "text": "ENGINE TREATMENT",
+      "price": 1487.02
+    },
+    {
+      "text": "DECARBONISER",
+      "price": 1800
+    },
+    {
+      "text": "AC Cabin Filter",
+      "price": 1312.64
+    },
+    {
+      "text": "Brake Cleaner",
+      "price": 255.36
+    },
+    {
+      "text": "Brake Paste",
+      "price": 197.0
+    },
+    {
+      "text": "Radiator Cap Sticker",
+      "price": 10.0
+    },
+    {
+      "text": "Windshield Washer",
+      "price": 365.12
+    },
+    {
+      "text": "5 1in 1 Car Clean Set",
+      "price": 65.0
+    },
+    {
+      "text": "Miscellaneous",
+      "price": 600.0
+    }
+  ],
+  "total": 12246.38,
+  "notes": [
+    "A dealer service menu filled in for one visit: an SRP column, a QTY column, and a right column priced only for this visit.",
+    "Engine Oil - Mineral (424.99 x 4) and six rows (brake fluid, ATF, two AT gaskets, coolant, spark plugs) have an SRP but a shaded or blank right cell, so they are not part of this visit.",
+    "Descriptions sit about half a row above their prices because the printed rows are skewed.",
+    "One price is printed '1800' without a separator or decimals."
+  ]
+}

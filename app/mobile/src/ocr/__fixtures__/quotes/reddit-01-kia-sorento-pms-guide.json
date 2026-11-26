@@ -1,0 +1,61 @@
+{
+  "image": "reddit/reddit-01-kia-sorento-pms-guide.png",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1y01ku5/taga_ba_1st_pms_on_kia_sorento_hybrid_sa_casa/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Kia",
+  "model": "Sorento",
+  "service": "6 Kilometer MINOR PMS",
+  "lines": [
+    {
+      "text": "Oil Filter",
+      "price": 703.24
+    },
+    {
+      "text": "Engine Oil (Fully Synthetic)",
+      "price": 4339.94
+    },
+    {
+      "text": "FILTER-AIR CLEANER",
+      "price": 1252.04
+    },
+    {
+      "text": "FILTER ASSY-AIR",
+      "price": 1729.94
+    },
+    {
+      "text": "A/C Foam Cleaner*",
+      "price": 1144.82
+    },
+    {
+      "text": "Antibac Spray*",
+      "price": 789.53
+    },
+    {
+      "text": "Drain Plug washer",
+      "price": 30.22
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 218.4
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 262.49
+    },
+    {
+      "text": "MISC",
+      "price": 499.0
+    },
+    {
+      "text": "LABOR COST",
+      "price": 1350.0
+    }
+  ],
+  "total": 12319.62,
+  "notes": [
+    "A spreadsheet guide with an SRP column and a 6,000 km 'MINOR PMS' column; only the right column is this visit's price.",
+    "Eight rows (fuel pump filter, transmission fluid, coolant, brake fluid, spark plugs, HSG belt, two gaskets) show an SRP but a greyed-out 6K cell, so they are not part of this visit.",
+    "PARTS COST 10,470.62 and LABOR TIME STANDARD 1.60 are summary rows, not lines."
+  ]
+}

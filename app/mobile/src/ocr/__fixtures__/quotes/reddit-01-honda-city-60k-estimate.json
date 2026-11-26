@@ -1,0 +1,157 @@
+{
+  "image": "reddit/reddit-01-honda-city-60k-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1w9tbi3/help_me_assess_tong_quotation_for_pms_if/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Honda",
+  "model": "City",
+  "service": "Carry out 60,000 km Service",
+  "lines": [
+    {
+      "text": "Clean Engine throttle body",
+      "price": 1650.0
+    },
+    {
+      "text": "Flush, replace and bleed brake fluid",
+      "price": 1375.0
+    },
+    {
+      "text": "Flush, replace and bleed coolant",
+      "price": 1650.0
+    },
+    {
+      "text": "Replace drive belts",
+      "price": 1650.0
+    },
+    {
+      "text": "Replace Brake Caliper Front one",
+      "price": 1100.0
+    },
+    {
+      "text": "Replace Suspension Front Stabilizer link one",
+      "price": 825.0
+    },
+    {
+      "text": "Replace Tie Rod inner",
+      "price": 825.0
+    },
+    {
+      "text": "Replace Tie Rod End one",
+      "price": 825.0
+    },
+    {
+      "text": "Perform 3D wheel alignment",
+      "price": 1650.0
+    },
+    {
+      "text": "Perform Professional Fuel Injector Cleaning Service",
+      "price": 3382.56
+    },
+    {
+      "text": "Pro 99 Throttle Body/EGR Special Cleaner",
+      "price": 286.0
+    },
+    {
+      "text": "Fast Break Brake Fluid DOT3 250ml",
+      "price": 200.2
+    },
+    {
+      "text": "Long Life Coolant Blue 1L",
+      "price": 715.7
+    },
+    {
+      "text": "Drive belt - Hon City 16",
+      "price": 4004.0
+    },
+    {
+      "text": "Honda Spark Plugs",
+      "price": 6292.0
+    },
+    {
+      "text": "Honda Front Stabilizer Link",
+      "price": 4290.0
+    },
+    {
+      "text": "Honda Tie Rod End",
+      "price": 4290.0
+    },
+    {
+      "text": "Honda Rack End",
+      "price": 4290.0
+    },
+    {
+      "text": "Honda Caliper Kit",
+      "price": 5005.0
+    },
+    {
+      "text": "Liqui-Moly Jet Cleaning For Injectors - Gasoline 2",
+      "price": 616.69
+    },
+    {
+      "text": "Carry out 60,000 km Service",
+      "price": 1650.0
+    },
+    {
+      "text": "Replace engine oil and oil filter",
+      "price": 0.0
+    },
+    {
+      "text": "Perform FREE vehicle health check - 40 Safety Check Points",
+      "price": 0.0
+    },
+    {
+      "text": "Perform battery, charging and starting system checks",
+      "price": 0.0
+    },
+    {
+      "text": "Perform brake cleaning, service and adjustments",
+      "price": 0.0
+    },
+    {
+      "text": "Check engine and powertrain - Scan all modules",
+      "price": 2750.0
+    },
+    {
+      "text": "Replace front brake pads with refacing rotors",
+      "price": 408.0
+    },
+    {
+      "text": "Miscellaneous",
+      "price": 0.0
+    },
+    {
+      "text": "REPLACE AIR FILTER",
+      "price": 0.0
+    },
+    {
+      "text": "REPLACE CABIN FILTER",
+      "price": 0.0
+    },
+    {
+      "text": "Shell Helix Ultra Professional Fully Synthetic",
+      "price": 3493.44
+    },
+    {
+      "text": "Vic Oil Filter",
+      "price": 250.25
+    },
+    {
+      "text": "Wurth Brake Cleaner",
+      "price": 264.55
+    },
+    {
+      "text": "Sp-544 FM Air Filter - Hon City Jazz",
+      "price": 337.48
+    },
+    {
+      "text": "Honda Cabin Filter (Fleet max)",
+      "price": 500.5
+    }
+  ],
+  "total": null,
+  "notes": [
+    "Two estimates stitched into one image: a repair (labor 14,932.56, parts 29,989.59) above a 60,000 km service (labor 4,808.00, parts 4,846.22). No grand total is printed.",
+    "Four section 'Total' rows must not be read as lines.",
+    "Parts rows have Qty, Price and Amount; the right-most Amount is the line price."
+  ]
+}

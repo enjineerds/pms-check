@@ -1,0 +1,85 @@
+{
+  "image": "reddit/reddit-01-honda-6mo-annotated-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xxbpis/honda_first_6_months_pms_is_it_overpriced/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 6-months",
+  "lines": [
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "PM 6-months",
+      "price": 1900.0
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 427.13
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 35.52
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3404.46
+    },
+    {
+      "text": "SP 0W20 FS ID 1L (engine oil flusiing)",
+      "price": 1750.0
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 759.82
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 933.04
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 358.92
+    },
+    {
+      "text": "GREASE,PIN (NIGLUBE RM)",
+      "price": 44.64
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 90.18
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 57.14
+    },
+    {
+      "text": "CS KIT",
+      "price": 50.0
+    },
+    {
+      "text": "HONDA WS WASHER FLUID 1L",
+      "price": 127.68
+    },
+    {
+      "text": "CABIN DISINFECTION CHEM",
+      "price": 885.63
+    },
+    {
+      "text": "MISCELLANIOUS FEE",
+      "price": 834.0
+    },
+    {
+      "text": "COMPLETE WASH",
+      "price": 1785.71
+    }
+  ],
+  "total": 15057.15,
+  "notes": [
+    "The owner drew a pen loop over the whole unit-price column and added ticks and marks beside some descriptions.",
+    "The description column starts lower than the price columns, so each description sits a little below its prices.",
+    "Line prices are before 12% VAT; the 'Estimated Cost' total includes it."
+  ]
+}

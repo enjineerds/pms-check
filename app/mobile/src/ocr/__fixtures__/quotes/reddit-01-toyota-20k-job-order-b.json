@@ -1,0 +1,60 @@
+{
+  "image": "reddit/reddit-01-toyota-20k-job-order-b.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xspf2x/toyota_wigo_20000km_pms_help_what_to_remove/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": "Wigo",
+  "service": "20,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "TGFS SP/C2 5W-30 1L",
+      "price": 2330.46
+    },
+    {
+      "text": "20,000 KM CHECK-UP",
+      "price": 1600.0
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, OIL FILTER",
+      "price": 456.44
+    },
+    {
+      "text": "GAS INJECTOR CLEANER",
+      "price": 894.33
+    },
+    {
+      "text": "ELEMENT, AIR REFINER",
+      "price": 2357.21
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, AIR CLEANER FILTER",
+      "price": 1074.74
+    },
+    {
+      "text": "PLUG, SPARK",
+      "price": 742.08
+    },
+    {
+      "text": "SUNDRY 2",
+      "price": 500.0
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "stop brake noise",
+      "price": 405.62
+    },
+    {
+      "text": "TOYOTA GENUINE GASOLINE ENGINE FLUSH",
+      "price": 702.44
+    }
+  ],
+  "total": 12467.3,
+  "notes": [
+    "Line prices are before 12% VAT; the grand total includes it.",
+    "The model comes from the post title, not the image."
+  ]
+}

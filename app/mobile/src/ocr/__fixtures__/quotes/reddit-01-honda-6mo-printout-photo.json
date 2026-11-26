@@ -1,0 +1,85 @@
+{
+  "image": "reddit/reddit-01-honda-6mo-printout-photo.jpg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wirozu/13k_pesos_for_10km_pms_honda_city_in_honda_city/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": "City",
+  "service": "PM 6-months",
+  "lines": [
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "PM 6-months",
+      "price": 1710.0
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 57.14
+    },
+    {
+      "text": "LONG LIFE COOLANT 1L",
+      "price": 320.25
+    },
+    {
+      "text": "MISC.",
+      "price": 300.0
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 31.97
+    },
+    {
+      "text": "FUEL ENGINE CLEANER",
+      "price": 1519.64
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 384.42
+    },
+    {
+      "text": "ENGINE FLUSH",
+      "price": 915.17
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 2880.8
+    },
+    {
+      "text": "GREASE,PIN (NIGLUBE RM)",
+      "price": 44.64
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 933.04
+    },
+    {
+      "text": "CABIN DISINFECTION CHEM",
+      "price": 827.68
+    },
+    {
+      "text": "CS KIT",
+      "price": 50.0
+    },
+    {
+      "text": "AC LUBRICANT AGENT",
+      "price": 1502.68
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 179.46
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 90.18
+    }
+  ],
+  "total": null,
+  "notes": [
+    "Cropped above the grand total; only labor (1,710.00) and parts (10,037.07) subtotals show.",
+    "Each row starts with a part number such as 08200P9909ZE1 between the quantity and the description.",
+    "Some amounts are discounted below quantity times unit price."
+  ]
+}

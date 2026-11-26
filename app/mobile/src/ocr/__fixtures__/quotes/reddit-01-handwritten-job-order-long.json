@@ -1,0 +1,128 @@
+{
+  "image": "reddit/reddit-01-handwritten-job-order-long.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1e4lq22/heavy_pms/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": null,
+  "model": null,
+  "service": null,
+  "lines": [
+    {
+      "text": "Change oil",
+      "price": 0
+    },
+    {
+      "text": "Clean & Adjust Brakes",
+      "price": 700
+    },
+    {
+      "text": "Balance & tire Rotation",
+      "price": 800
+    },
+    {
+      "text": "Pull down oil pan to change ATF",
+      "price": 1800
+    },
+    {
+      "text": "Change Diff. oil",
+      "price": 650
+    },
+    {
+      "text": "Change Coolant",
+      "price": 450
+    },
+    {
+      "text": "Brake Fluid Sanitioning",
+      "price": 550
+    },
+    {
+      "text": "Change Power Steering Fluid",
+      "price": 350
+    },
+    {
+      "text": "Replace Fuel Filter",
+      "price": 650
+    },
+    {
+      "text": "EGR cleaning Intake Manifold Scan & Reset",
+      "price": 6500
+    },
+    {
+      "text": "8 Fully syn. Atlantic 5W40 @690",
+      "price": 5520
+    },
+    {
+      "text": "4 Flushing oil @270",
+      "price": 1080
+    },
+    {
+      "text": "1 Oil filter",
+      "price": 400
+    },
+    {
+      "text": "5 coolant @285",
+      "price": 1425
+    },
+    {
+      "text": "Brake cleaner / Sand Paper",
+      "price": 445
+    },
+    {
+      "text": "MWW",
+      "price": 300
+    },
+    {
+      "text": "5 ATF 7 @690",
+      "price": 3450
+    },
+    {
+      "text": "4 DIFF. oil 80W90 @690",
+      "price": 2760
+    },
+    {
+      "text": "Silicon Gasket",
+      "price": 350
+    },
+    {
+      "text": "Brake cleaner",
+      "price": 400
+    },
+    {
+      "text": "2 Brake Fluid @180",
+      "price": 360
+    },
+    {
+      "text": "2 Brake cleaner @400",
+      "price": 800
+    },
+    {
+      "text": "2 Carburator cleaner @350",
+      "price": 700
+    },
+    {
+      "text": "New Mem.",
+      "price": 300
+    },
+    {
+      "text": "Fuel Filter",
+      "price": 850
+    },
+    {
+      "text": "air filter 33740",
+      "price": 950
+    },
+    {
+      "text": "Gas for Cleaning",
+      "price": 150
+    }
+  ],
+  "total": 28936.25,
+  "notes": [
+    "Change oil labor reads 'N/C' (no charge), recorded as 0.",
+    "Labor 12,450 less 20% (2,490) = 9,960, and materials 8,425 less 15% (1,263.75) = 7,161.25, are worked out in the margin; those figures are not lines.",
+    "Materials lines carry a unit price ('@690') in the middle and the amount on the right.",
+    "Two rows are covered by white tape. 'Change Power Steering Fluid' and its 350 are on tape over earlier writing.",
+    "'Gas for Cleaning' is struck through, but its 150 is still counted in the grand total.",
+    "Folded paper with a crease across the Additional Work section."
+  ]
+}

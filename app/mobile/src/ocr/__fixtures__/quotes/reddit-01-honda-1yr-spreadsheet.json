@@ -1,0 +1,97 @@
+{
+  "image": "reddit/reddit-01-honda-1yr-spreadsheet.jpg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1x5ho5m/20k_odo1year_pms_inquirycomparison_from_2_diff/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 1-year",
+  "lines": [
+    {
+      "text": "PM 1-year",
+      "price": 2553.6
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 478.39
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 39.78
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3813.0
+    },
+    {
+      "text": "ELEMENTASSY_AIR/",
+      "price": 627.3
+    },
+    {
+      "text": "AIRCON FILTER PM 2.5+ SMALL",
+      "price": 1761.54
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 1045.0
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 851.0
+    },
+    {
+      "text": "SP 0W20 FS ID 1L (FOR OIL FLUSHING)",
+      "price": 1960.0
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 401.99
+    },
+    {
+      "text": "GREASE,PIN (NIGLUBE RM)",
+      "price": 50.0
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 101.0
+    },
+    {
+      "text": "CS KIT",
+      "price": 56.0
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 64.0
+    },
+    {
+      "text": "HONDA WS WASHER FLUID 1L",
+      "price": 143.0
+    },
+    {
+      "text": "AC LUBRICANT AGENT",
+      "price": 1801.0
+    },
+    {
+      "text": "CABIN DISINFECTION CHEM",
+      "price": 991.91
+    },
+    {
+      "text": "LEATHER WAX",
+      "price": 541.0
+    },
+    {
+      "text": "MISCELLANEOUS FEE",
+      "price": 934.08
+    },
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    }
+  ],
+  "total": 18213.59,
+  "notes": [
+    "A spreadsheet export from a second Honda dealer, posted beside the 1-year estimate for comparison.",
+    "A Discount column of 0.000 sits between the quantity and the price on every row.",
+    "Highlighted subtotal rows (18,213.59 and 0.00) have no description."
+  ]
+}

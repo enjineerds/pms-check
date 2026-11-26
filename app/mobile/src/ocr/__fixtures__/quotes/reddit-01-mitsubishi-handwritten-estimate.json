@@ -1,0 +1,54 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-handwritten-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1w334n6/casa_pms_for_montero_2026_gls_at_2nd_pms/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": "Mitsubishi",
+  "model": null,
+  "service": "PMS",
+  "lines": [
+    {
+      "text": "PMS labor & consumables",
+      "price": 4133
+    },
+    {
+      "text": "Fully synthetic oil =8 =820",
+      "price": 6560
+    },
+    {
+      "text": "Brake cleaner",
+      "price": 421
+    },
+    {
+      "text": "oil filter & D/P Gasket",
+      "price": 1500
+    },
+    {
+      "text": "silicon SPRAY",
+      "price": 250
+    },
+    {
+      "text": "windshield washer",
+      "price": 421
+    },
+    {
+      "text": "X-1R Treatment",
+      "price": 1250
+    },
+    {
+      "text": "X-1R Decarb",
+      "price": 1650
+    },
+    {
+      "text": "X-1R Flush",
+      "price": 891
+    }
+  ],
+  "total": 17100,
+  "notes": [
+    "Handwritten over a faint printed repair estimate form, in dim light.",
+    "Each line is written 'item = qty = price'; the oil line adds '= 6560' for 8 x 820, so the qty and unit price must not be read as prices.",
+    "The lines add up to 17,076 if the oil filter reads 1,500; the circled total is 17,100.",
+    "The labor amount is written inline after '=' at the top, not in a price column."
+  ]
+}

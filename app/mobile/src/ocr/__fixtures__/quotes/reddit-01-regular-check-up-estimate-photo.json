@@ -1,0 +1,41 @@
+{
+  "image": "reddit/reddit-01-regular-check-up-estimate-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1x22o1z/pahelp_naman_po_regarding_my_2nd_pms_pricing/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": null,
+  "model": null,
+  "service": "ESTIMATE FOR REGULAR CHECK UP",
+  "lines": [
+    {
+      "text": "OIL FILTER",
+      "price": 650.0
+    },
+    {
+      "text": "FULLY SYNTHETIC OIL",
+      "price": 4950.0
+    },
+    {
+      "text": "DRAIN PLUG WASHER",
+      "price": 150.0
+    },
+    {
+      "text": "RADIATOR STICKER",
+      "price": 15.0
+    },
+    {
+      "text": "PERFORM REGULAR CHECK UP",
+      "price": 2492.0
+    },
+    {
+      "text": "MISCELLANEOUS",
+      "price": 600.0
+    }
+  ],
+  "total": 8857.0,
+  "notes": [
+    "Quantities with units ('5 LTRS', '1 PC.') sit before each description.",
+    "Pen ticks follow each price.",
+    "The make is not shown."
+  ]
+}

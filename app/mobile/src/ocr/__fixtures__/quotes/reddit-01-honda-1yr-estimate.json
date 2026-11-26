@@ -1,0 +1,73 @@
+{
+  "image": "reddit/reddit-01-honda-1yr-estimate.jpg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1x5ho5m/20k_odo1year_pms_inquirycomparison_from_2_diff/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 1-year",
+  "lines": [
+    {
+      "text": "PM 1-year",
+      "price": 2280.0
+    },
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 427.13
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 35.52
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3404.46
+    },
+    {
+      "text": "ELEMENTASSY_AIR/",
+      "price": 560.09
+    },
+    {
+      "text": "AIRCON FILTER PM 2.5+ SMALL",
+      "price": 1572.8
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 759.82
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 358.92
+    },
+    {
+      "text": "CABIN DISINFECTION",
+      "price": 885.63
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 933.04
+    },
+    {
+      "text": "WORKSHOP KIT / PM MISC CHARGE",
+      "price": 758.93
+    },
+    {
+      "text": "COMPLETE WASH",
+      "price": 1160.71
+    },
+    {
+      "text": "PERFORM ENGINE DETAILING",
+      "price": 982.14
+    }
+  ],
+  "total": 15813.49,
+  "notes": [
+    "Line prices are before 12% VAT; the 'Est. Cost(PHP)' total includes it.",
+    "Five section subtotals and a second summary block repeat amounts; none of them is a line.",
+    "Cabin disinfection is 6 ML at a per-litre unit price of 8,856.30."
+  ]
+}

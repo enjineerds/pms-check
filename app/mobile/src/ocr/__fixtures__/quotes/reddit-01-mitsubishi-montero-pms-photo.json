@@ -1,0 +1,45 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-montero-pms-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1lf036m/first_1k_pms_quote_is_this_fair_or_am_i_being/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Mitsubishi",
+  "model": "Montero",
+  "service": "PERFORM PMS",
+  "lines": [
+    {
+      "text": "ENGINE OIL FS",
+      "price": 5400.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 1415.0
+    },
+    {
+      "text": "DRAINPLUG WASHER",
+      "price": 153.0
+    },
+    {
+      "text": "WINDSCREEN CLEANER",
+      "price": 160.0
+    },
+    {
+      "text": "RAD STICKER",
+      "price": 15.0
+    },
+    {
+      "text": "PERFORM PMS REPLACE OIL FILTER",
+      "price": 0.0
+    },
+    {
+      "text": "MISC",
+      "price": 500.0
+    }
+  ],
+  "total": 7643.0,
+  "notes": [
+    "Labor reads FREE rather than a number; it is recorded as 0.",
+    "MISC 500.00 appears only in the summary box, next to the PARTS and LABOR subtotals.",
+    "A thumb covers the left margin but no text."
+  ]
+}

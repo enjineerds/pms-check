@@ -1,0 +1,113 @@
+{
+  "image": "reddit/reddit-01-honda-2yr-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xlqx7c/honda_pms_city_rs_second_year_maintenance/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": "City",
+  "service": "PM 2-years",
+  "lines": [
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "PM 2-years",
+      "price": 3230.0
+    },
+    {
+      "text": "WHEEL ALIGNMENT",
+      "price": 2234.4
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 427.13
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 35.52
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3404.46
+    },
+    {
+      "text": "ELEMENTASSY_AIR/",
+      "price": 560.09
+    },
+    {
+      "text": "SET FUEL STRAINER",
+      "price": 4811.3
+    },
+    {
+      "text": "RETAINER (ORANGE) (T",
+      "price": 180.33
+    },
+    {
+      "text": "AIRCON FILTER PM 2.5+ SMALL",
+      "price": 1572.8
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 105.64
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 105.64
+    },
+    {
+      "text": "HCF-2 CVTF 3.5L",
+      "price": 2348.21
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 358.92
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 90.18
+    },
+    {
+      "text": "GREASE,PIN (NIGLUBE RM)",
+      "price": 44.64
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 933.04
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 759.82
+    },
+    {
+      "text": "AC LUBRICANT AGENT",
+      "price": 1608.04
+    },
+    {
+      "text": "HONDA WS WASHER FLUID 1L",
+      "price": 255.36
+    },
+    {
+      "text": "LEATHER WAX",
+      "price": 483.04
+    },
+    {
+      "text": "CABIN DISINFECTION CHEM",
+      "price": 885.63
+    },
+    {
+      "text": "MAT/MISC",
+      "price": 758.92
+    },
+    {
+      "text": "PERFORM ENGINE DETAILING",
+      "price": 982.14
+    }
+  ],
+  "total": 29316.28,
+  "notes": [
+    "Line prices are before 12% VAT; the 'Est. Cost(PHP)' total includes it.",
+    "WASHER, DRAIN PLUG, appears three times, twice at a different price, so lines can't be keyed by text alone.",
+    "The model comes from the post title."
+  ]
+}

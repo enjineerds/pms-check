@@ -1,0 +1,67 @@
+{
+  "image": "reddit/reddit-01-widevalue-independent-quote.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1kyy6s8/need_advise_re_pms_quotation_at_rapide_is_it_too/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": null,
+  "model": null,
+  "service": "PREVENTIVE MAINTENANCE",
+  "lines": [
+    {
+      "text": "EXPRESS GAS FULLY SYNTHETIC OIL PACKAGE",
+      "price": 3350.0
+    },
+    {
+      "text": "LIT FULLY SYNTHTEIC OIL",
+      "price": null
+    },
+    {
+      "text": "OIL FILTER",
+      "price": null
+    },
+    {
+      "text": "SHOP SUPPLIES CHARGE",
+      "price": 100.0
+    },
+    {
+      "text": "SET BRAKE SHOE L/R",
+      "price": 3950.0
+    },
+    {
+      "text": "AIR FILTER",
+      "price": 1200.0
+    },
+    {
+      "text": "CABIN FILTER",
+      "price": 1350.0
+    },
+    {
+      "text": "WIPER BLADE BANANA TYPE",
+      "price": 1700.0
+    },
+    {
+      "text": "FRONT WHEEL BEARING L/R",
+      "price": 9000.0
+    },
+    {
+      "text": "PRESSJOB WHEEL BEARING L/R",
+      "price": 3000.0
+    },
+    {
+      "text": "CVT DRAIN & REFILL",
+      "price": 950.0
+    },
+    {
+      "text": "LIT CVT FLUID",
+      "price": 2850.0
+    }
+  ],
+  "total": 28950.0,
+  "notes": [
+    "An independent shop, not a casa.",
+    "A CONDITION column (DIRTY, WORN OUT, DUE TO KM) sits between the description and the prices.",
+    "The oil and filter rows are part of the package price above them.",
+    "The printed RECOMMENDED subtotal is 25,500.00, but its lines add up to 24,000.00; the grand total follows the printed subtotals.",
+    "The header names staff; those names are deliberately not transcribed."
+  ]
+}

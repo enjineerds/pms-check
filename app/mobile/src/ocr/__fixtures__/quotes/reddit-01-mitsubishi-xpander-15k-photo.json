@@ -1,0 +1,62 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-xpander-15k-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xp3nw8/15km_or_16month_pms_is_this_okay_please_help/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Mitsubishi",
+  "model": "Xpander",
+  "service": "15,000KM PMS LABOR",
+  "lines": [
+    {
+      "text": "FULLY SYNTHETIC OIL",
+      "price": 3680.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 650.0
+    },
+    {
+      "text": "ENGINE FLUSH",
+      "price": 399.0
+    },
+    {
+      "text": "FUEL INJECTOR CLEANER",
+      "price": 499.0
+    },
+    {
+      "text": "ENGINE PROTECTOR",
+      "price": 499.0
+    },
+    {
+      "text": "PARTS CLEANER",
+      "price": 375.0
+    },
+    {
+      "text": "BATTERY CHECK (MIDTRONICS)",
+      "price": 160.0
+    },
+    {
+      "text": "CONSUMABLES",
+      "price": 863.0
+    },
+    {
+      "text": "15,000KM PMS LABOR",
+      "price": 1971.0
+    },
+    {
+      "text": "BRAKE CLEANING",
+      "price": 1350.0
+    },
+    {
+      "text": "AIR CON CLEANING",
+      "price": 2500.0
+    }
+  ],
+  "total": 12946.0,
+  "notes": [
+    "Unit prices are written without decimals (920, 650) and totals with them (3,680.00).",
+    "The total column sits about half a row above the descriptions.",
+    "Empty rows show a '-' in the total column.",
+    "A handwritten '186' sits in the right margin; it isn't a line."
+  ]
+}

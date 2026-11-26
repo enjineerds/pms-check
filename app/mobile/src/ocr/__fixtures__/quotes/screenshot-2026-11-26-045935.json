@@ -1,0 +1,51 @@
+{
+  "image": "Screenshot 2026-11-26 at 4.59.35 AM.png",
+  "source": null,
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Nissan",
+  "model": "Navara",
+  "service": "PERFORM 70K KM CHECK UP",
+  "lines": [
+    {
+      "text": "NISSAN GEN MOT OIL 05W-40",
+      "price": 4320.0
+    },
+    {
+      "text": "FILTER ASSY-OIL",
+      "price": 1159.0
+    },
+    {
+      "text": "WASHER DRAIN",
+      "price": 79.0
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 362.0
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 239.0
+    },
+    {
+      "text": "BACTASHIELD PLASTIC SANTITATION COVER",
+      "price": 0.0
+    },
+    {
+      "text": "PERFORM 70K KM CHECK UP",
+      "price": 1474.0
+    },
+    {
+      "text": "Misc. Charge (NDM)",
+      "price": 700.0
+    }
+  ],
+  "total": 8333.0,
+  "notes": [
+    "A low-resolution screenshot (585 x 577) of the same repair order as reddit-01-nissan-navara-70k-repair-order-photo; same expected lines.",
+    "Text is very small; amounts are about 5 px tall.",
+    "Every amount carries a '₱' prefix (₱4,320.00).",
+    "Prices sit about half a row below their descriptions, so nearest-row pairing shifts them by one.",
+    "A Discount column of ₱0.00 sits between the unit price and the total."
+  ]
+}

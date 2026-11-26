@@ -1,0 +1,57 @@
+{
+  "image": "reddit/reddit-01-toyota-1k-repair-order-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xafh6g/comment_purpose_only_1st_1000_km_pms_toyota_avanza/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "1,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "1,000 KM CHECK-UP FREE LABOR",
+      "price": 0.0
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, OIL FILTER",
+      "price": 456.44
+    },
+    {
+      "text": "1,000 KM CHECK-UP",
+      "price": 775.0
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "TOYOTA GENUINE GASOLINE ENGINE FLUSH",
+      "price": 702.44
+    },
+    {
+      "text": "GAS INJECTOR CLEANER",
+      "price": 894.33
+    },
+    {
+      "text": "MISC E",
+      "price": 669.64
+    },
+    {
+      "text": "TWWF W765",
+      "price": 118.94
+    },
+    {
+      "text": "TGMO SP/CF 10W-30 1L",
+      "price": 1685.92
+    },
+    {
+      "text": "PROPERLY INSTALLED GENUINE FLOORMAT-PM",
+      "price": 0.0
+    }
+  ],
+  "total": 6015.42,
+  "notes": [
+    "Photographed at a steep angle: each price sits about one row above its description, so rows can only be paired by slope or by quantity x unit price.",
+    "The summary block is offset the same way; its labels and amounts don't line up horizontally.",
+    "Header shows staff names; not transcribed."
+  ]
+}

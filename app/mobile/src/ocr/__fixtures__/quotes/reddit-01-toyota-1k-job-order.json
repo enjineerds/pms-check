@@ -1,0 +1,36 @@
+{
+  "image": "reddit/reddit-01-toyota-1k-job-order.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1lj7gze/goods_na_ba_tong_quotation_ko_for_my_1st_pms/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "1,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "1,000 KM CHECK-UP",
+      "price": 0.0
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, OIL FILTER",
+      "price": 388.39
+    },
+    {
+      "text": "GASKET",
+      "price": 67.86
+    },
+    {
+      "text": "MISCELLANEOUS CHARGE",
+      "price": 625.0
+    },
+    {
+      "text": "TGMO SN/CF 10W-30 1L",
+      "price": 1160.72
+    }
+  ],
+  "total": 2511.01,
+  "notes": [
+    "Line prices are before 12% VAT; the grand total includes it.",
+    "Same Toyota job-order layout as the 10K and 20K job orders, with a 'Customer' watermark."
+  ]
+}

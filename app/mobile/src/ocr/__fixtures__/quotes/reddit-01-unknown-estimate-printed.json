@@ -1,0 +1,44 @@
+{
+  "image": "reddit/reddit-01-unknown-estimate-printed.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1vi5mx6/1st_time_car_owner_here_normal_lang_ba_na_ganito/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": null,
+  "model": null,
+  "service": null,
+  "lines": [
+    {
+      "text": "OIL FILTER",
+      "price": 666.0
+    },
+    {
+      "text": "FULLY SYNTHETIC",
+      "price": 4100.0
+    },
+    {
+      "text": "WIND SCREEN CLEANER",
+      "price": 395.0
+    },
+    {
+      "text": "GASKET OIL DRAIN",
+      "price": null
+    },
+    {
+      "text": "FUEL CLEANER",
+      "price": 785.0
+    },
+    {
+      "text": "OIL FLUSHING",
+      "price": 470.0
+    },
+    {
+      "text": "RAD. CAP STICKER",
+      "price": 11.0
+    }
+  ],
+  "total": 6427.0,
+  "notes": [
+    "The gasket shows a 125.00 unit price but a dash in the total column, so it isn't charged.",
+    "No labor is listed."
+  ]
+}

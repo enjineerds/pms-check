@@ -1,0 +1,56 @@
+{
+  "image": "reddit/reddit-01-toyota-20k-job-order.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xucsel/20k_km_pms_asking_for_your_thoughts_and_opinions/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "20,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "TGFS SP/C2 5W-30 1L",
+      "price": 2480.76
+    },
+    {
+      "text": "20,000 KM CHECK-UP",
+      "price": 2142.85
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, OIL FILTER",
+      "price": 456.44
+    },
+    {
+      "text": "ELEMENT SUB-ASSY, AIR CLEANER FILTER",
+      "price": 1074.74
+    },
+    {
+      "text": "PLUG, SPARK",
+      "price": 742.08
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "SHOP MATERIALS",
+      "price": 276.79
+    },
+    {
+      "text": "BATTERY CHECK",
+      "price": 149.11
+    },
+    {
+      "text": "TOYOTA AIR CARE",
+      "price": 745.54
+    },
+    {
+      "text": "AIRCON CLEANER",
+      "price": 3909.34
+    }
+  ],
+  "total": 13491.35,
+  "notes": [
+    "Line prices are before 12% VAT; the grand total includes it.",
+    "A scan of a printout with a 'Customer' watermark."
+  ]
+}

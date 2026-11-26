@@ -406,7 +406,7 @@ The spike passes when the module builds on SDK 58, reads from a file URI the app
 | Navigation | expo-router (file routes, typed) |
 | Local storage | expo-sqlite. One database holds cars, quotes, lines, outbox, settings, and the current catalog bundle. |
 | In-flight state | A `useReducer` for the quote draft, with an undo stack for V3-3b/c/d toasts. It lives in a context scoped to the check flow. |
-| Validation | zod at every boundary: catalog bundle load, SQLite row read, network responses |
+| Validation | zod at the boundaries the app doesn't write: catalog bundle load and network responses. SQLite rows are guarded by CHECK constraints and versioned migrations instead. |
 | i18n | A small typed dictionary for `en` and `fil`, chosen on V3-0 and switchable on Home |
 | Analytics | posthog-react-native, anonymous, with no person profiles (same policy as the landing page) |
 | Builds | EAS Build for store binaries. EAS Update for JS and bundled-catalog updates. |
@@ -478,12 +478,13 @@ CREATE TABLE quote (
 );
 
 CREATE TABLE quote_line (
-  id TEXT PRIMARY KEY, quote_id TEXT NOT NULL REFERENCES quote(id) ON DELETE CASCADE,
+  quote_id TEXT NOT NULL REFERENCES quote(id) ON DELETE CASCADE, id TEXT NOT NULL,
   position INTEGER NOT NULL, raw_text TEXT NOT NULL,
   match_kind TEXT NOT NULL, service_id TEXT,
   price INTEGER NOT NULL,
   verdict TEXT NOT NULL,             -- JSON Verdict, written once
-  decision TEXT NOT NULL             -- 'accept' | 'decline' | 'pending'
+  decision TEXT NOT NULL,            -- 'accept' | 'decline' | 'pending'
+  PRIMARY KEY (quote_id, id)         -- line ids repeat across quotes
 );
 
 CREATE TABLE outbox (
@@ -495,7 +496,7 @@ CREATE TABLE catalog_current (id INTEGER PRIMARY KEY CHECK (id = 1), version TEX
 CREATE TABLE setting (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 ```
 
-The partial unique index enforces "one current car" in the database instead of in app code. A quote is written once, when the user taps "Looks right, check it". After that, only `quote_line.decision` changes. Drafts stay in memory, which matches "Nothing is saved yet".
+This is a sketch; `src/db/schema.ts` is the source of truth, with CHECK constraints on every enum column. `outbox` and `catalog_current` arrive with steps 6 and 1. The partial unique index enforces "one current car" in the database instead of in app code. A quote is written once, when the user taps "Looks right, check it". After that, only `quote_line.decision` changes. Drafts stay in memory, which matches "Nothing is saved yet".
 
 ## 8. Backend (Cloudflare)
 

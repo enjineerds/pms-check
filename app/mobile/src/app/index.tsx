@@ -144,6 +144,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
             padded={false}
             className="min-h-26 flex-1 justify-between !rounded-[28px] p-4"
             accessibilityLabel={`${t.pastQuotes}, ${t.checked(checked)}`}
+            testID="past-quotes"
             onPress={() => router.push('/quotes')}
           >
             <View className="flex-row items-center justify-between">

@@ -1,0 +1,49 @@
+# Typed path end to end, then a kill and relaunch (SYSTEM_DESIGN §12, step 3).
+# Needs a fresh app: `maestro --device <simulator-udid> test .maestro/persistence.yaml -e APP_URL=exp://127.0.0.1:8081`
+appId: host.exp.Exponent
+env:
+  APP_URL: exp://127.0.0.1:8081
+---
+- launchApp:
+    clearState: true
+    permissions:
+      camera: deny
+- openLink: ${APP_URL}?__expo_disable_onboarding=1
+- extendedWaitUntil:
+    visible: "Which language do you prefer?"
+    timeout: 60000
+- tapOn: "English.*"
+- tapOn: "Honda City.*"
+- tapOn: "2024"
+- tapOn: "Continue"
+- tapOn: "2025"
+- tapOn: "Oct"
+- tapOn: "Continue"
+- tapOn: { id: "key-4" }
+- tapOn: { id: "key-0" }
+- tapOn: { id: "key-0" }
+- tapOn: { id: "key-0" }
+- tapOn: "Continue"
+- tapOn: "Save my car"
+- assertVisible: "Your City is saved."
+- tapOn: "Check a casa quote"
+- assertVisible: "Which service is this?"
+- tapOn: "Continue"
+- tapOn: "Type the lines instead"
+- tapOn: "Engine oil.*"
+- tapOn: { id: "key-2" }
+- tapOn: { id: "key-4" }
+- tapOn: { id: "key-0" }
+- tapOn: { id: "key-0" }
+- tapOn: "Add to my quote"
+- tapOn: "Looks right, check it"
+- assertVisible: ".*10,000 km service.*"
+- stopApp
+- openLink: ${APP_URL}
+- extendedWaitUntil:
+    visible: "Honda City Sedan"
+    timeout: 60000
+- assertVisible: "4,000 km"
+- assertVisible: "Past quotes, 1 checked"
+- tapOn: { id: "past-quotes" }
+- assertVisible: ".*10,000 km service.*Saved.*"

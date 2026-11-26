@@ -23,6 +23,7 @@ export function Keypad({ onKey }: Props) {
               key={k}
               accessibilityRole="button"
               accessibilityLabel={k === 'back' ? t.deleteKey : k}
+              testID={`key-${k}`}
               onPress={() => onKey(k)}
               className={cx('h-11.5 flex-1 items-center justify-center rounded-[7px] shadow-key active:opacity-60', k === 'back' ? 'bg-keypad-back' : 'bg-surface')}
             >

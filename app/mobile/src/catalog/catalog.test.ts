@@ -40,8 +40,16 @@ describe('catalog integrity, SYSTEM_DESIGN §9', () => {
     ['cvt', CITY_CVT.id],
     ['manual', CITY_MT.id],
   ] as const)('gives a %s City from an unbound year its own transmission schedule', (transmission, scheduleId) => {
-    const car = { modelId: HONDA_CITY.id, variantId: HONDA_CITY.variants[0].id, year: 2024, transmission };
-    expect(resolveSchedule(car, CATALOG).schedule.id).toBe(scheduleId);
+    const car = { modelId: HONDA_CITY.id, variantId: HONDA_CITY.variants[0].id, year: 2021, transmission };
+    expect(resolveSchedule(car, CATALOG)).toEqual({ schedule: expect.objectContaining({ id: scheduleId }), usedFallback: true });
+  });
+
+  it.each([2022, 2023, 2024, 2025, 2026].flatMap((year) => [
+    [year, 'cvt', CITY_CVT.id],
+    [year, 'manual', CITY_MT.id],
+  ] as const))('binds a %i %s City to the manual’s schedule', (year, transmission, scheduleId) => {
+    const car = { modelId: HONDA_CITY.id, variantId: HONDA_CITY.variants[0].id, year, transmission };
+    expect(resolveSchedule(car, CATALOG)).toEqual({ schedule: expect.objectContaining({ id: scheduleId }), usedFallback: false });
   });
 
   it('resolves every schedule a model binds to, and its fallback', () => {

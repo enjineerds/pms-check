@@ -1,6 +1,7 @@
+import { resolveSchedule } from '@/core/schedule';
 import { verdict } from '@/core/verdict';
 import type { Conditions, Km, Schedule, ServiceId, Verdict } from '@/core/types';
-import { CITY_CVT, CITY_MT } from './hondaCity';
+import { CITY_CVT, CITY_MT, HONDA_CITY } from './hondaCity';
 import { CATALOG, searchServices, serviceByName } from './index';
 
 describe('catalog integrity, SYSTEM_DESIGN §9', () => {
@@ -34,6 +35,14 @@ describe('catalog integrity, SYSTEM_DESIGN §9', () => {
       expect(kms).toEqual([...kms].sort((a, b) => a - b));
     },
   );
+
+  it.each([
+    ['cvt', CITY_CVT.id],
+    ['manual', CITY_MT.id],
+  ] as const)('gives a %s City from an unbound year its own transmission schedule', (transmission, scheduleId) => {
+    const car = { modelId: HONDA_CITY.id, variantId: HONDA_CITY.variants[0].id, year: 2024, transmission };
+    expect(resolveSchedule(car, CATALOG).schedule.id).toBe(scheduleId);
+  });
 
   it('resolves every schedule a model binds to, and its fallback', () => {
     const ids = new Set(CATALOG.schedules.map((s) => s.id));

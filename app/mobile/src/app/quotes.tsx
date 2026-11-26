@@ -69,7 +69,7 @@ export default function Quotes() {
                     {quoteTitle(q, copy.quote)}
                   </Text>
                   <Text variant="small" color="ink-faint">
-                    {q.shopName} · {formatDay(q.createdAt, copy.quote)}
+                    {[q.shopName, formatDay(q.createdAt, copy.quote)].filter(Boolean).join(' · ')}
                   </Text>
                 </View>
                 {checking ? (

@@ -1,0 +1,49 @@
+{
+  "image": "reddit/reddit-01-honda-10k-handwritten.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1w0d4ch/first_major_pms_breakdown_of_cost_must_be_40/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": "Honda",
+  "model": null,
+  "service": "10T km. CHECK-UP",
+  "lines": [
+    {
+      "text": "10T km. CHECK-UP",
+      "price": 1820
+    },
+    {
+      "text": "SHOP MATERIALS",
+      "price": 850
+    },
+    {
+      "text": "HONDA FULLY SYN OIL",
+      "price": 3600
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 526
+    },
+    {
+      "text": "D/P WASHER",
+      "price": 44
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 250
+    },
+    {
+      "text": "PAD GREASE",
+      "price": 120
+    },
+    {
+      "text": "PIN GREASE",
+      "price": 70
+    }
+  ],
+  "total": null,
+  "notes": [
+    "Two columns: labor on the left, parts on the right under 'PARTS'.",
+    "Two more part lines at the bottom are covered by white tape and can't be read.",
+    "'FULLY SYN' is written above 'HONDA OIL' as an insertion."
+  ]
+}

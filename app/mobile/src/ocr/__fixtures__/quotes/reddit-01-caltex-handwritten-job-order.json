@@ -1,0 +1,49 @@
+{
+  "image": "reddit/reddit-01-caltex-handwritten-job-order.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1ijkzsu/toyota_corolla_2e_power_steering_leak_and/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": null,
+  "model": null,
+  "service": null,
+  "lines": [
+    {
+      "text": "REPLACE P/S PUMP",
+      "price": 3500
+    },
+    {
+      "text": "REPLACE HOSE RETURN/SUPPLY",
+      "price": 1200
+    },
+    {
+      "text": "REPLACE STABLINK RR",
+      "price": null
+    },
+    {
+      "text": "POWER STEERING PUMP",
+      "price": 9500
+    },
+    {
+      "text": "HOSE SUPPLY",
+      "price": 1500
+    },
+    {
+      "text": "HOSE RETURN",
+      "price": 1900
+    },
+    {
+      "text": "STABLINK RR",
+      "price": 2600
+    },
+    {
+      "text": "P/S FLUID",
+      "price": 1140
+    }
+  ],
+  "total": 21340,
+  "notes": [
+    "A repair job order at an independent shop, not a PMS quote.",
+    "A brace groups the first two labor lines against 3,500; the third labor line has no price of its own.",
+    "Handwritten subtotals 4,700 (labor) and 16,640 (materials) sit in the price column and must not be read as lines."
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "image": "reddit/reddit-01-toyota-20k-repair-order-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1w0jrpw/25000_km_pms_at_toyota_alin_dito_ang_pwede_alisin/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "25,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "20km check up",
+      "price": 0.0
+    },
+    {
+      "text": "TGFS SP/C2 5W-30 1L",
+      "price": 2330.46
+    },
+    {
+      "text": "25,000 KM CHECK-UP",
+      "price": 1350.0
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "MISCELLANEOUS",
+      "price": 442.86
+    },
+    {
+      "text": "PLASTIC COVER SET",
+      "price": 178.57
+    },
+    {
+      "text": "5 IN 1 PROTSHEET",
+      "price": 133.93
+    },
+    {
+      "text": "TOYOTA GENUINE BACTAKLENZ (7ML)",
+      "price": 937.71
+    },
+    {
+      "text": "TWWF W765",
+      "price": 118.94
+    },
+    {
+      "text": "GAS INJECTOR CLEANER",
+      "price": 894.33
+    },
+    {
+      "text": "TOYOTA BRAKE CLEANER-PM",
+      "price": 326.67
+    },
+    {
+      "text": "ENGINE TREATMENT",
+      "price": 1111.67
+    },
+    {
+      "text": "SANDPAPER 120 - PM",
+      "price": 41.67
+    },
+    {
+      "text": "BRAKE PASTE/STOP SQUEL BG - PM",
+      "price": 943.33
+    },
+    {
+      "text": "COTTON GLOVES - PM",
+      "price": 41.67
+    },
+    {
+      "text": "X1R DECARB PETROL",
+      "price": 2328.87
+    },
+    {
+      "text": "TLL BODY WASH REGULAR PM",
+      "price": 223.22
+    },
+    {
+      "text": "aircare labor",
+      "price": 553.57
+    },
+    {
+      "text": "AIRCON CLEANER",
+      "price": 3909.34
+    }
+  ],
+  "total": 15935.01,
+  "notes": [
+    "A phone photo of a printed repair order, taken at an angle, with a 'Customer' watermark across the lines.",
+    "Each row has a job type (PM or GS) and an operation code such as TLL-X1RDCP-PM before the description.",
+    "The header says 20km check up but the labor line is the 25,000 KM CHECK-UP.",
+    "The grand total is faint and partly struck through by the rule above it."
+  ]
+}

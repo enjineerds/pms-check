@@ -1,0 +1,51 @@
+{
+  "image": "reddit/reddit-01-chery-pms-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wh0qxy/hello_tama_lang_ba_tong_cost_ng_pms_ko_52k_odo/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Chery",
+  "model": null,
+  "service": "PMS",
+  "lines": [
+    {
+      "text": "PMS LABOR",
+      "price": 550.0
+    },
+    {
+      "text": "MISC",
+      "price": 770.0
+    },
+    {
+      "text": "Engine Oil",
+      "price": 2825.0
+    },
+    {
+      "text": "Oil Filter",
+      "price": 450.0
+    },
+    {
+      "text": "Drain Plug Gasket",
+      "price": 80.0
+    },
+    {
+      "text": "Air Filter",
+      "price": 911.0
+    },
+    {
+      "text": "FUEL ADDITIVES",
+      "price": 923.0
+    },
+    {
+      "text": "ANTI-SQUEAK",
+      "price": 923.0
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 350.0
+    }
+  ],
+  "total": 7782.0,
+  "notes": [
+    "The brake cleaner's unit price is written '350' without decimals, while its amount reads 350.00."
+  ]
+}

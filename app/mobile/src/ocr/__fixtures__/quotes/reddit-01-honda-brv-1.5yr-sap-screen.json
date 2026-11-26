@@ -1,0 +1,80 @@
+{
+  "image": "reddit/reddit-01-honda-brv-1.5yr-sap-screen.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wm0flb/honda_brv_2025_15_years_pms_quotation_valid/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Honda",
+  "model": "BR-V",
+  "service": "PM 1.5-years",
+  "lines": [
+    {
+      "text": "PM 1.5-years",
+      "price": 2128.0
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 478.39
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 39.78
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3585.0
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 851.0
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 1045.0
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 401.99
+    },
+    {
+      "text": "SP 0W20 FS ID 1L (oil flushing)",
+      "price": 1846.01
+    },
+    {
+      "text": "GREASE,PIN (NIGLUBE RM)",
+      "price": 50.0
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 101.0
+    },
+    {
+      "text": "CS KIT",
+      "price": 56.0
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 64.0
+    },
+    {
+      "text": "HONDA WS WASHER FLUID 1L",
+      "price": 118.92
+    },
+    {
+      "text": "AC LUBRICANT AGENT",
+      "price": 1683.0
+    },
+    {
+      "text": "MISCELLENEOUS FEE (SOP)",
+      "price": 934.08
+    },
+    {
+      "text": "AC EVAPORATOR CLEANING",
+      "price": 2500.0
+    }
+  ],
+  "total": 15882.17,
+  "notes": [
+    "A photo of the dealer's SAP screen, not a printout.",
+    "Each row carries task, item number, item category and part number before the description."
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "image": "reddit/reddit-01-handwritten-job-order-highlighted.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1jnygy7/45k_mileage_pms_quotation_outside_casa_fairly/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": "Toyota",
+  "model": null,
+  "service": null,
+  "lines": [
+    {
+      "text": "REPLACE BRAKE PADS FRONT",
+      "price": 600
+    },
+    {
+      "text": "CLEAN AND ADJUST BRAKES REAR",
+      "price": 500
+    },
+    {
+      "text": "2 REPLACE STABILIZER LINK",
+      "price": 900
+    },
+    {
+      "text": "REPLACE SPARK PLUGS",
+      "price": 500
+    },
+    {
+      "text": "ALIGNMENT TOE (900)",
+      "price": 720
+    },
+    {
+      "text": "CHANGE OIL LABOR FREE",
+      "price": null
+    },
+    {
+      "text": "3 FULLY SYNTHETIC 5W30",
+      "price": 2100
+    },
+    {
+      "text": "3 FLUSHING OIL",
+      "price": 795
+    },
+    {
+      "text": "1 OIL FILTER",
+      "price": 400
+    },
+    {
+      "text": "3 SPARK PLUGS",
+      "price": 1050,
+      "unsure": true
+    },
+    {
+      "text": "AIR FILTER",
+      "price": 550
+    },
+    {
+      "text": "CABIN FILTER",
+      "price": 600
+    },
+    {
+      "text": "BRAKE PADS FRONT",
+      "price": 1600
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 420
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 197
+    },
+    {
+      "text": "2 STABILIZER LINK",
+      "price": 2100
+    },
+    {
+      "text": "REPLACE ATF DIALYSIS",
+      "price": 1600
+    },
+    {
+      "text": "5 LTRS. TOYOTA ATF",
+      "price": 3900
+    },
+    {
+      "text": "5 LTRS. ATF FLUSHING (1.900)",
+      "price": 1615
+    }
+  ],
+  "total": 18832.75,
+  "notes": [
+    "Repair and PMS mixed, at an independent shop.",
+    "Discounts are worked out in the price column: labor 2,500 less 20% = 2,000; materials 3,295 less 15% (494.25) = 2,800.75; ATF dialysis 1,600 less 20% (320) = 1,280. Those subtotal, discount and result numbers are not lines.",
+    "Prices sit about half a row above their descriptions, and the highlighted figures are the ones charged; they add up to the circled grand total.",
+    "The spark plug part number reads like 'LZKR6B'; its 1,050 sits above the line."
+  ]
+}

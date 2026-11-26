@@ -1,0 +1,69 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-xpander-15k-repair-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1xp3nw8/15km_or_16month_pms_is_this_okay_please_help/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Mitsubishi",
+  "model": "Xpander",
+  "service": "PERFORM PMS 15,000 KM CHECK UP",
+  "lines": [
+    {
+      "text": "PERFORM PMS 15,000 KM CHECK UP",
+      "price": 4180.0
+    },
+    {
+      "text": "OPEN BRAKES - CLEAN & ADJUST",
+      "price": null
+    },
+    {
+      "text": "REPLACE OIL FILTER",
+      "price": 675.0
+    },
+    {
+      "text": "TOP UP 1 LITER ENGINE OIL",
+      "price": 920.0
+    },
+    {
+      "text": "ENGINE TUNE UP",
+      "price": null
+    },
+    {
+      "text": "ENGINE TREATMENT",
+      "price": 1344.0
+    },
+    {
+      "text": "CLEAN AIRFILTER & AIRCON FILTER",
+      "price": null
+    },
+    {
+      "text": "BACTAKLEEN",
+      "price": 995.01
+    },
+    {
+      "text": "CAR CLEAN SET",
+      "price": 65.0
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 250.0
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 135.0
+    },
+    {
+      "text": "MISC. / SHOP MATERIALS",
+      "price": 600.0
+    },
+    {
+      "text": "ENGINE DETAILING (OPTIONAL)",
+      "price": 1230.0
+    }
+  ],
+  "total": 10394.01,
+  "notes": [
+    "The 4,180.00 labor price is centred between the first two rows; it covers the check-up and the brake clean.",
+    "Descriptions are centred, not left-aligned.",
+    "Prices fall in two columns, PARTS and LABOR."
+  ]
+}

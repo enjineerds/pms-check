@@ -1,0 +1,94 @@
+{
+  "image": "reddit/reddit-01-toyota-avanza-35k-job-estimate.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1y11kf5/35k_odo_pms_thoughts_sa_pwede_patangal_sa/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": "Toyota",
+  "model": "Avanza",
+  "service": "35,000 KILOMETER CHECK UP",
+  "lines": [
+    {
+      "text": "35,000 KILOMETER CHECK UP",
+      "price": 2800.0
+    },
+    {
+      "text": "ENGINE OIL (FULLY SYNTHETIC OIL)",
+      "price": 3800.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 580.0
+    },
+    {
+      "text": "GASKET",
+      "price": 33.0
+    },
+    {
+      "text": "INJECTOR CLEANER",
+      "price": 990.0
+    },
+    {
+      "text": "ENGINE DECARBONIZATION",
+      "price": 4350.0
+    },
+    {
+      "text": "ENGINE WASH (OPTIONAL)",
+      "price": 1400.0
+    },
+    {
+      "text": "RUGS",
+      "price": 24.0
+    },
+    {
+      "text": "W.BRAKE PASTE",
+      "price": 450.0
+    },
+    {
+      "text": "OIL TREATMENT",
+      "price": 1930.0
+    },
+    {
+      "text": "SILICON SPRAY",
+      "price": 940.0
+    },
+    {
+      "text": "FUEL TREATMENT",
+      "price": 1200.0
+    },
+    {
+      "text": "ANTIBAC",
+      "price": 1100.0
+    },
+    {
+      "text": "B. CLEANER",
+      "price": 840.0
+    },
+    {
+      "text": "BACKTAKLENZ",
+      "price": 980.0
+    },
+    {
+      "text": "SANDPAPER",
+      "price": 32.0
+    },
+    {
+      "text": "ENV. FEE",
+      "price": 12.0
+    },
+    {
+      "text": "MISC.",
+      "price": 800.0
+    },
+    {
+      "text": "BAT.CHECK",
+      "price": 175.0
+    }
+  ],
+  "total": 22436.0,
+  "notes": [
+    "A digital estimate shared as an image, not a photo.",
+    "Under the check-up line, 25 unpriced checklist rows such as '( ) Inspect Drive Belts' list what the labor covers; they are not lines.",
+    "Prices sit in three columns (PARTS, LABOR, P.O.L.), so the right-most number per row is the price wherever it falls.",
+    "Column totals 5,403.00, 2,800.00 and 14,233.00 are repeated in a summary block; none of them is a line."
+  ]
+}

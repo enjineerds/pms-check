@@ -1,0 +1,84 @@
+{
+  "image": "reddit/reddit-01-honda-4.5yr-printout.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wvq1ef/planning_to_cut_cost_sa_pms_ano_ano_po_yung/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 4.5-years",
+  "lines": [
+    {
+      "text": "PM 4.5-years",
+      "price": 2090.0
+    },
+    {
+      "text": "ENGINE WASH AND DRESSING",
+      "price": 1044.64
+    },
+    {
+      "text": "CARTRIDGE, OIL FILTE",
+      "price": 427.13
+    },
+    {
+      "text": "WASHER, DRAIN PLUG,",
+      "price": 35.52
+    },
+    {
+      "text": "SP 0W20 FS ID 4L",
+      "price": 3200.89
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 179.46
+    },
+    {
+      "text": "GREASE,PAD(MOLYKOTE",
+      "price": 90.18
+    },
+    {
+      "text": "CS KIT",
+      "price": 50.0
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 57.14
+    },
+    {
+      "text": "BRAKE FLUID DOT3 TOP UP ONLY",
+      "price": 73.19
+    },
+    {
+      "text": "SUPER LONG LIFE COOLANT TOP UP ONLY",
+      "price": 134.19
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 759.82
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 933.04
+    },
+    {
+      "text": "AC LUBRICANT AGENT",
+      "price": 1502.68
+    },
+    {
+      "text": "SHOPMAT AND MATERIALS",
+      "price": 223.21
+    },
+    {
+      "text": "CABIN DISINFECTION (BACTACLEEN)",
+      "price": 827.68
+    },
+    {
+      "text": "HONDA GENUINE ENGINE FLUSH",
+      "price": 891.96
+    }
+  ],
+  "total": null,
+  "notes": [
+    "Cropped to the line table; only labor (3,134.64) and parts (9,386.09) subtotals show.",
+    "The two top-up lines charge a fraction of the unit price, so the right column differs from the middle one."
+  ]
+}

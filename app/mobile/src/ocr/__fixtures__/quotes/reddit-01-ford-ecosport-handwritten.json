@@ -1,0 +1,46 @@
+{
+  "image": "reddit/reddit-01-ford-ecosport-handwritten.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1wo8xyr/ecosport_pms_pricing_advice_for_a_newbie/",
+  "kind": "quote",
+  "medium": "handwritten",
+  "make": "Ford",
+  "model": "EcoSport",
+  "service": null,
+  "lines": [
+    {
+      "text": "CHANGE OIL",
+      "price": 3500
+    },
+    {
+      "text": "CABIN FILTER",
+      "price": 1000
+    },
+    {
+      "text": "AIR FILTER",
+      "price": 1500
+    },
+    {
+      "text": "FUEL FILTER",
+      "price": 1500
+    },
+    {
+      "text": "SPARK PLUG 4",
+      "price": 2800
+    },
+    {
+      "text": "TIMING BELT TENSIONER",
+      "price": 9500
+    },
+    {
+      "text": "ENGINE SUPPORT",
+      "price": 5500
+    }
+  ],
+  "total": 25300,
+  "notes": [
+    "The '500' and '800' endings are scrawled; the readings above are the ones that add up to the written 25,300.",
+    "A brace joins TIMING BELT and TENSIONER against one price.",
+    "Thousands are written with '.' in some prices (9.500, 5.500) and ',' in others.",
+    "The odometer reads 56965; name, plate and phone are already blanked in the photo."
+  ]
+}

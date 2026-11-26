@@ -1,0 +1,78 @@
+{
+  "image": "reddit/reddit-01-mitsubishi-mirage-30k-estimate-photo.jpg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1hgur3o/20k_pms_suggestion_for_mirage_g4_parang_medyo/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Mitsubishi",
+  "model": "Mirage",
+  "service": "PERFORM 20,000 KMS CHECK UP",
+  "lines": [
+    {
+      "text": "PERFORM 20,000 KMS CHECK UP",
+      "price": 0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 0
+    },
+    {
+      "text": "AIR FILTER",
+      "price": 0
+    },
+    {
+      "text": "A/C FILTER",
+      "price": 1320.0
+    },
+    {
+      "text": "WASHER/RAGS",
+      "price": 0
+    },
+    {
+      "text": "ENGINE OIL",
+      "price": 1860.0
+    },
+    {
+      "text": "DECARBONISE",
+      "price": 3500.0
+    },
+    {
+      "text": "TREATMENT",
+      "price": 640.0
+    },
+    {
+      "text": "CLEAN BRAKES/TIRE ROTATE",
+      "price": 1840.0
+    },
+    {
+      "text": "AIRCON EVAPORATOR CLEANING",
+      "price": 5890.0
+    },
+    {
+      "text": "CAIRFOG",
+      "price": 1200.0
+    },
+    {
+      "text": "ENGINE DETAILING",
+      "price": 730.0
+    },
+    {
+      "text": "FLUSHING",
+      "price": 850.0
+    },
+    {
+      "text": "MISC. FEE",
+      "price": 500.0
+    },
+    {
+      "text": "WINDSHIELD WASHER",
+      "price": 250.0
+    }
+  ],
+  "total": 18580.0,
+  "notes": [
+    "'FREE' stands in for a price on four rows; recorded as 0.",
+    "Prices fall in three columns (Parts, Labor, Materials).",
+    "Materials prices sit slightly above their descriptions.",
+    "The file name says 30k but the quote is for the 20,000 km check-up."
+  ]
+}

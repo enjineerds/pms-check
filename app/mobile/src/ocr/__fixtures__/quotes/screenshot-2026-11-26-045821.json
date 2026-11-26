@@ -1,0 +1,62 @@
+{
+  "image": "Screenshot 2026-11-26 at 4.58.21 AM.png",
+  "source": null,
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 10T KM / 6 MONTHS",
+  "lines": [
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "PM 10T KM / 6 MONTHS",
+      "price": 1625.0
+    },
+    {
+      "text": "PM MISC CHARGES",
+      "price": 315.18
+    },
+    {
+      "text": "PM MATERIAL CHARGES",
+      "price": 275.0
+    },
+    {
+      "text": "ENGINE CLEANER",
+      "price": 743.37
+    },
+    {
+      "text": "WORKSHOP KIT",
+      "price": 51.5
+    },
+    {
+      "text": "SEMI-SYNTHETIC ENGINE OIL 1GALLON",
+      "price": 1768.54
+    },
+    {
+      "text": "ENGINE OIL TREATMENT",
+      "price": 919.89
+    },
+    {
+      "text": "DRAIN PLUG WASHER 14MM",
+      "price": 27.3
+    },
+    {
+      "text": "BRAKE & PARTS CLEANER 150ml",
+      "price": 286.94
+    },
+    {
+      "text": "ENGINE OIL FILTER",
+      "price": 398.36
+    }
+  ],
+  "total": 7180.4,
+  "notes": [
+    "The paper is curled, so the price columns drift downward against the descriptions; by the last part the price sits a full row lower.",
+    "Line prices are before 12% VAT; the 'Total Cost' includes it.",
+    "Each row starts with a Honda part number such as 08200P9909ZE1.",
+    "A screenshot of a photo with no recorded source."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "image": "Screenshot 2026-11-26 at 4.58.55 AM.png",
+  "source": null,
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "6MOS",
+  "lines": [
+    {
+      "text": "6MOS",
+      "price": 2100.6
+    },
+    {
+      "text": "(OPTIONAL) COMPLETE WASH",
+      "price": 1100.0
+    },
+    {
+      "text": "FULLY SYNTHETIC ENGINE OIL",
+      "price": 3100.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 460.0
+    },
+    {
+      "text": "DRAIN PLUG WASHER",
+      "price": 35.0
+    },
+    {
+      "text": "SHOP MATERIALS",
+      "price": 360.0
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 250.0
+    },
+    {
+      "text": "MISCELLANEOUS",
+      "price": 280.0
+    },
+    {
+      "text": "HONDA OIL TREATMENT",
+      "price": 1100.0
+    },
+    {
+      "text": "HONDA FUEL CLEANER",
+      "price": 850.0
+    },
+    {
+      "text": "(OPTIONAL) BACTAKLEEN (CABIN DISINFECTION)",
+      "price": 950.0
+    }
+  ],
+  "total": 10585.6,
+  "notes": [
+    "A low-resolution screenshot (617 x 568) of the same estimate as reddit-01-honda-6mo-estimate-photo; same expected lines.",
+    "Text is very small; the parts prices are about 6 px tall.",
+    "Each parts price is printed about half a row below its description, so nearest-row pairing shifts every price by one line; only the order and the 7,385.00 parts total settle it.",
+    "Optional lines are printed in red."
+  ]
+}

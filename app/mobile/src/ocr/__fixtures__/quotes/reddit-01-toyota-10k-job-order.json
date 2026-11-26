@@ -1,0 +1,56 @@
+{
+  "image": "reddit/reddit-01-toyota-10k-job-order.jpeg",
+  "source": "https://www.reddit.com/r/Gulong/comments/1vkfgjo/10k_pms_quotation/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Toyota",
+  "model": null,
+  "service": "10,000 KM CHECK-UP",
+  "lines": [
+    {
+      "text": "10,000 KM CHECK-UP",
+      "price": 1500.0
+    },
+    {
+      "text": "TGFS SP/C2 5W-30 1L",
+      "price": 3107.28
+    },
+    {
+      "text": "GASKET",
+      "price": 68.2
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 438.08
+    },
+    {
+      "text": "TOYOTA GENUINE BACTAKLENZ (7ML)",
+      "price": 937.71
+    },
+    {
+      "text": "CHECK FLUIDS|FILTERS|BATTERY|TIRES|LIGHT",
+      "price": 55.36
+    },
+    {
+      "text": "BRAKE CLEANER",
+      "price": 207.38
+    },
+    {
+      "text": "TWWF W765",
+      "price": 118.94
+    },
+    {
+      "text": "MISCELLANEOUS",
+      "price": 416.96
+    },
+    {
+      "text": "PROPERLY INSTALLED GENUINE FLOORMAT-PM",
+      "price": 0.0
+    }
+  ],
+  "total": 7671.9,
+  "notes": [
+    "Line prices are before 12% VAT; the grand total includes it.",
+    "Two descriptions wrap onto a second row."
+  ]
+}

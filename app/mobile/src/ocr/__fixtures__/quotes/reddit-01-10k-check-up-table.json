@@ -1,0 +1,70 @@
+{
+  "image": "reddit/reddit-01-10k-check-up-table.png",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1vqidts/pms_10000_km_quotation_need_your_insights/",
+  "kind": "quote",
+  "medium": "screen",
+  "make": null,
+  "model": null,
+  "service": "10T KM CHECK UP",
+  "lines": [
+    {
+      "text": "10T KM CHECK UP",
+      "price": 2128.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 479.0
+    },
+    {
+      "text": "DP WASHER",
+      "price": 39.78
+    },
+    {
+      "text": "FULLY SYNTHETIC OIL",
+      "price": 3585.0
+    },
+    {
+      "text": "BRAKE CLEANER & PASTE",
+      "price": 840.0
+    },
+    {
+      "text": "SHOP MATERIALS",
+      "price": 1590.0
+    },
+    {
+      "text": "TRANSMISSION FLUID",
+      "price": null
+    },
+    {
+      "text": "ENGINE FLUSHING (Run Engine for 10 mins./ Drain flushing oil, w/ sludge or dirt)",
+      "price": 1100
+    },
+    {
+      "text": "ENGINE TREATMENT (Avoid metal sludge, Engine noise reduction, Reduce engine friction)",
+      "price": 1200
+    },
+    {
+      "text": "FUEL SYSTEM CLEANER / ENGINE CLEANER (Cleaning of whole fuel system) DECARB",
+      "price": 1800.0
+    },
+    {
+      "text": "ANTIBAC",
+      "price": 988.0
+    },
+    {
+      "text": "ENGINE DETAILING",
+      "price": 1400.0
+    },
+    {
+      "text": "NANO CYRSTAL WAX",
+      "price": null
+    }
+  ],
+  "total": 15149.78,
+  "notes": [
+    "The check-up labor (2,128.00) sits in a merged LABOR cell spanning rows 2 to 14, vertically centred beside SHOP MATERIALS, not on the check-up row.",
+    "Prices fall in two columns, LABOR and PARTS.",
+    "The grand total is printed beside the label '12% VAT on Labor:', so the label can't be trusted to find it.",
+    "The header cell reads '6 MONTHS OR 10,000 KM WHICHEVER COMES FIRST'."
+  ]
+}

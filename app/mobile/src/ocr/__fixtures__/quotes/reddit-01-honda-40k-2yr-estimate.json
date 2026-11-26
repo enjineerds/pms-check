@@ -1,0 +1,77 @@
+{
+  "image": "reddit/reddit-01-honda-40k-2yr-estimate.png",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1hgrnau/honda_is_charging_me_19k_for_my_20km_pms_i_need/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "PM 40T KM 2 YEARS CATEGORY",
+  "lines": [
+    {
+      "text": "PM 40T KM 2 YEARS CATEGORY",
+      "price": 2600.0
+    },
+    {
+      "text": "QUALITY INSPECTION",
+      "price": 0.0
+    },
+    {
+      "text": "COMPLETE WASHING (MEDIUM)",
+      "price": 1339.0
+    },
+    {
+      "text": "PM MISC CHARGES",
+      "price": 309.0
+    },
+    {
+      "text": "PM MATERIAL CHARGES",
+      "price": 325.0
+    },
+    {
+      "text": "ENGINE OIL FILTER",
+      "price": 398.36
+    },
+    {
+      "text": "DRAIN PLUG WASHER 14MM",
+      "price": 27.3
+    },
+    {
+      "text": "SN 0W20 UNI 6X4L",
+      "price": 2380.6
+    },
+    {
+      "text": "ENGINE AIR FILTER",
+      "price": 1287.5
+    },
+    {
+      "text": "FUEL FILTER ASSEMBLY",
+      "price": 5119.66
+    },
+    {
+      "text": "FUEL FILTER RETAINER",
+      "price": 178.08
+    },
+    {
+      "text": "AIRCON FILTER PM 2.5+ SMALL",
+      "price": 1467.75
+    },
+    {
+      "text": "DRAIN PLUG WASHER 18MM",
+      "price": 88.83
+    },
+    {
+      "text": "PACKING WASHER",
+      "price": 107.03
+    },
+    {
+      "text": "TRANSMISSION FLUID HCF-2 3.5L",
+      "price": 1853.92
+    }
+  ],
+  "total": 19579.87,
+  "notes": [
+    "Line prices are before 12% VAT; the 'Est. Cost(PHP)' total includes it.",
+    "The header shows the odometer (19,591 KM) and a blacked-out mobile number.",
+    "Low resolution; the digits are small but clean."
+  ]
+}

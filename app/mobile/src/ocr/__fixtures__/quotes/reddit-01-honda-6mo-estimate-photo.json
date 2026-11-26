@@ -1,0 +1,62 @@
+{
+  "image": "reddit/reddit-01-honda-6mo-estimate-photo.jpeg",
+  "source": "https://www.reddit.com/r/CarsPH/comments/1juz6vy/ganto_ba_price_for_first_6_months_pms_honda_casa/",
+  "kind": "quote",
+  "medium": "printed",
+  "make": "Honda",
+  "model": null,
+  "service": "6MOS",
+  "lines": [
+    {
+      "text": "6MOS",
+      "price": 2100.6
+    },
+    {
+      "text": "(OPTIONAL) COMPLETE WASH",
+      "price": 1100.0
+    },
+    {
+      "text": "FULLY SYNTHETIC ENGINE OIL",
+      "price": 3100.0
+    },
+    {
+      "text": "OIL FILTER",
+      "price": 460.0
+    },
+    {
+      "text": "DRAIN PLUG WASHER",
+      "price": 35.0
+    },
+    {
+      "text": "SHOP MATERIALS",
+      "price": 360.0
+    },
+    {
+      "text": "BRAKE PASTE",
+      "price": 250.0
+    },
+    {
+      "text": "MISCELLANEOUS",
+      "price": 280.0
+    },
+    {
+      "text": "HONDA OIL TREATMENT",
+      "price": 1100.0
+    },
+    {
+      "text": "HONDA FUEL CLEANER",
+      "price": 850.0
+    },
+    {
+      "text": "(OPTIONAL) BACTAKLEEN (CABIN DISINFECTION)",
+      "price": 950.0
+    }
+  ],
+  "total": 10585.6,
+  "notes": [
+    "Each parts price is printed about half a row below its description, so nearest-row pairing shifts every price by one line; only the order and the 7,385.00 parts total settle it.",
+    "Optional lines are printed in red.",
+    "A thumb covers the start of 'FULLY SYNTHETIC'.",
+    "VAT is blank; the total amount equals labor plus parts."
+  ]
+}

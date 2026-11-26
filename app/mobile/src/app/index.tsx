@@ -17,8 +17,7 @@ import { CATALOG, findModel, variantLabel } from '@/catalog';
 import { copyFor } from '@/i18n';
 import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
-import { SIX_FIGURE_ID } from '@/sample/quotes';
-import { currentCar, isListed, useStore } from '@/store/store';
+import { currentCar, useStore } from '@/store/store';
 import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
 let arrived = false;
@@ -69,7 +68,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
   const due = service.due.km;
   const next = service.after.km;
-  const checked = quotes.filter(isListed).filter((q) => q.lines.every((l) => l.decision !== 'pending')).length;
+  const checked = quotes.filter((q) => q.lines.every((l) => l.decision !== 'pending')).length;
 
   return (
     <View className="flex-1 bg-ground">
@@ -153,13 +152,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
                 {t.checked(checked)}
               </Text>
             </View>
-            <Text
-              variant="lead"
-              weight="bold"
-              className="mt-4"
-              // Dev only.
-              onLongPress={__DEV__ ? () => router.push(`/quote/${SIX_FIGURE_ID}`) : undefined}
-            >
+            <Text variant="lead" weight="bold" className="mt-4">
               {t.pastQuotes}
             </Text>
           </Card>

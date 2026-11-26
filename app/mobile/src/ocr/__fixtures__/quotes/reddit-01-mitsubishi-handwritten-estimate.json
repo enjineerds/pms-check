@@ -21,8 +21,7 @@
     },
     {
       "text": "oil filter & D/P Gasket",
-      "price": 1500,
-      "unsure": true
+      "price": 1500
     },
     {
       "text": "silicon SPRAY",
@@ -42,8 +41,7 @@
     },
     {
       "text": "X-1R Flush",
-      "price": 891,
-      "unsure": true
+      "price": 891
     }
   ],
   "total": 17100,

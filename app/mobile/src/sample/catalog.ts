@@ -62,7 +62,7 @@ export interface CatalogService {
 const yes: Verdict = { kind: 'yes', reason: { kind: 'due-now' }, source: { title: "Vios owner's manual, 2025" } };
 const later = (km: number): Verdict => ({
   kind: 'ask',
-  reason: { kind: 'other-visit', nextKm: km as Km, lastKm: null },
+  reason: { kind: 'other-visit', next: { km: km as Km }, last: null },
   source: { title: "Vios owner's manual, 2025" },
 });
 const wear: Verdict = { kind: 'ask', reason: { kind: 'wear-item' }, source: { title: "Vios owner's manual, 2025" } };

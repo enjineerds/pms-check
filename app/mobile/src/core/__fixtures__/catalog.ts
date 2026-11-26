@@ -1,18 +1,25 @@
 // Synthetic test data shaped like an owner's manual table. Not a real manufacturer schedule.
-import type { CatalogBundle, Km, ModelId, Schedule, ScheduleId, ServiceId, ServiceItem, ServiceKind, VariantId } from '../types';
+import type {
+  CatalogBundle,
+  ItemRule,
+  Km,
+  ModelId,
+  Schedule,
+  ScheduleId,
+  ScheduledItem,
+  ServiceId,
+  ServiceItem,
+  ServiceKind,
+  VariantId,
+} from '../types';
 
-const km = (n: number) => n as Km;
+export const km = (n: number) => n as Km;
 export const sid = (s: string) => s as ServiceId;
 
-export const POINTS = [
-  { km: km(1_000), months: 1 },
-  { km: km(10_000), months: 12 },
-  { km: km(20_000), months: 24 },
-  { km: km(30_000), months: 36 },
-  { km: km(40_000), months: 48 },
-  { km: km(50_000), months: 60 },
-];
-const ALL = [0, 1, 2, 3, 4, 5];
+const every = (kmEvery: number | null, months: number | null): ItemRule => ({
+  at: [],
+  every: { km: kmEvery === null ? null : km(kmEvery), months },
+});
 
 const service = (id: string, kind: ServiceKind): ServiceItem => ({
   id: sid(id),
@@ -27,6 +34,7 @@ export const SERVICES = [
   service('brake-inspection', 'scheduled'),
   service('cabin-filter', 'scheduled'),
   service('coolant', 'scheduled'),
+  service('brake-fluid', 'scheduled'),
   service('cvt-fluid', 'scheduled'),
   service('gear-oil', 'scheduled'),
   service('spark-plugs', 'scheduled'),
@@ -34,22 +42,29 @@ export const SERVICES = [
   service('engine-flush', 'upsell'),
 ];
 
+const item = (id: string, normal: ItemRule, severe?: ItemRule): ScheduledItem => ({
+  serviceId: sid(id),
+  action: 'replace',
+  normal,
+  ...(severe ? { severe } : {}),
+});
+
 const shared = [
-  { serviceId: sid('oil-filter'), action: 'replace' as const, dueAt: ALL },
-  { serviceId: sid('brake-inspection'), action: 'inspect' as const, dueAt: [1, 2, 3, 4, 5] },
-  { serviceId: sid('cabin-filter'), action: 'replace' as const, dueAt: [2, 4] },
-  { serviceId: sid('coolant'), action: 'replace' as const, dueAt: [4] },
+  item('oil-filter', every(10_000, 12), every(5_000, 6)),
+  item('brake-inspection', every(10_000, 12)),
+  item('cabin-filter', every(20_000, 24)),
+  item('coolant', { at: [{ km: km(200_000), months: 120 }], every: { km: km(100_000), months: 60 } }),
+  item('brake-fluid', every(null, 36)),
 ];
 
-const schedule = (id: string, extra: Schedule['items']): Schedule => ({
+const schedule = (id: string, extra: ScheduledItem[]): Schedule => ({
   id: id as ScheduleId,
   source: { title: `Test schedule (synthetic): ${id}` },
-  points: POINTS,
   items: [...shared, ...extra],
 });
 
-export const CVT = schedule('test-sedan-cvt', [{ serviceId: sid('cvt-fluid'), action: 'replace', dueAt: [4] }]);
-export const MANUAL = schedule('test-sedan-manual', [{ serviceId: sid('gear-oil'), action: 'replace', dueAt: [4] }]);
+export const CVT = schedule('test-sedan-cvt', [item('cvt-fluid', every(40_000, 24))]);
+export const MANUAL = schedule('test-sedan-manual', [item('gear-oil', every(120_000, 72), every(60_000, 36))]);
 export const FALLBACK = schedule('test-sedan-fallback', []);
 
 export const MODEL_ID = 'test-sedan' as ModelId;

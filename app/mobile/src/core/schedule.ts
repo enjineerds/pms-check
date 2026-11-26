@@ -1,4 +1,4 @@
-import type { Car, CatalogBundle, Km, Schedule, ScheduleId, YearRange } from './types';
+import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleId, ScheduledItem, ServicePoint, YearRange } from './types';
 
 const within = (r: YearRange, year: number) => year >= r.from && year <= r.to;
 
@@ -27,27 +27,36 @@ export interface Tolerance {
 /** Assumed until confirmed against how casas book PMS (SYSTEM_DESIGN §11.3). */
 export const DEFAULT_TOLERANCE: Tolerance = { km: 1_000, months: 1 };
 
-export type Reached =
-  | { index: number; status: 'due-now' | 'overdue'; overKm: number; overMonths: number }
-  | { index: null };
+/** How often the car visits: the shortest interval any item asks for, on each clock. */
+export function cadence(schedule: Schedule, conditions: Conditions): ServicePoint {
+  const intervals = schedule.items.map((i) => ruleFor(i, conditions).every).filter((e) => e !== null);
+  const min = (xs: (number | null)[]) => Math.min(...xs.filter((x) => x !== null));
+  return { km: min(intervals.map((e) => e.km)) as Km, months: min(intervals.map((e) => e.months)) };
+}
 
-export function reachedPoint(odometerKm: Km, ageMonths: number, schedule: Schedule, tolerance = DEFAULT_TOLERANCE): Reached {
-  const index = schedule.points.findLastIndex(
-    (p) => odometerKm >= p.km - tolerance.km || ageMonths >= p.months - tolerance.months,
+export const ruleFor = (item: ScheduledItem, conditions: Conditions): ItemRule =>
+  (conditions === 'severe' && item.severe) || item.normal;
+
+const nth = (c: ServicePoint, n: number): ServicePoint => ({ km: (c.km * n) as Km, months: c.months * n });
+
+export type Reached =
+  | { point: ServicePoint; status: 'due-now' | 'overdue'; overKm: number; overMonths: number }
+  | { point: null };
+
+export function reachedPoint(odometerKm: Km, ageMonths: number, every: ServicePoint, tolerance = DEFAULT_TOLERANCE): Reached {
+  const n = Math.max(
+    Math.floor((odometerKm + tolerance.km) / every.km),
+    Math.floor((ageMonths + tolerance.months) / every.months),
   );
-  if (index === -1) return { index: null };
-  const point = schedule.points[index];
+  if (n === 0) return { point: null };
+  const point = nth(every, n);
   const overKm = Math.max(0, odometerKm - point.km);
   const overMonths = Math.max(0, ageMonths - point.months);
   const status = overKm <= tolerance.km && overMonths <= tolerance.months ? 'due-now' : 'overdue';
-  return { index, status, overKm, overMonths };
+  return { point, status, overKm, overMonths };
 }
 
-export type Next = { index: number; inKm: number; inMonths: number } | { index: null };
-
-export function nextPoint(odometerKm: Km, ageMonths: number, schedule: Schedule): Next {
-  const index = schedule.points.findIndex((p) => odometerKm < p.km && ageMonths < p.months);
-  if (index === -1) return { index: null };
-  const point = schedule.points[index];
-  return { index, inKm: point.km - odometerKm, inMonths: point.months - ageMonths };
+export function nextPoint(odometerKm: Km, ageMonths: number, every: ServicePoint) {
+  const point = nth(every, Math.max(Math.floor(odometerKm / every.km), Math.floor(ageMonths / every.months)) + 1);
+  return { point, inKm: point.km - odometerKm, inMonths: point.months - ageMonths };
 }

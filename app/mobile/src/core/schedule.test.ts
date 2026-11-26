@@ -1,6 +1,6 @@
 import type { Car, Km, Transmission, VariantId, YearMonth } from './types';
 import { CATALOG, CVT, FALLBACK, MANUAL, MODEL_ID, VARIANT_ID } from './__fixtures__/catalog';
-import { nextPoint, reachedPoint, resolveSchedule } from './schedule';
+import { cadence, nextPoint, reachedPoint, resolveSchedule } from './schedule';
 
 const car = (over: Partial<Car> = {}): Car => ({
   id: 'car-1',
@@ -47,68 +47,69 @@ describe('resolveSchedule', () => {
   });
 });
 
+describe('cadence', () => {
+  it('is every 5,000 km or 6 months under severe conditions, set by the oil change', () => {
+    expect(cadence(CVT, 'severe')).toEqual({ km: 5_000, months: 6 });
+  });
+
+  it('is every 10,000 km or 12 months under normal conditions', () => {
+    expect(cadence(CVT, 'normal')).toEqual({ km: 10_000, months: 12 });
+  });
+});
+
+const TEN_K = { km: 10_000 as Km, months: 12 };
+
 describe('reachedPoint', () => {
   const at = (odometer: number, months: number, tolerance?: { km: number; months: number }) =>
-    reachedPoint(odometer as Km, months, CVT, tolerance);
+    reachedPoint(odometer as Km, months, TEN_K, tolerance);
 
   it('is due now at 10,240 km, 240 km past the 10,000 km service', () => {
-    expect(at(10_240, 6)).toEqual({ index: 1, status: 'due-now', overKm: 240, overMonths: 0 });
+    expect(at(10_240, 6)).toEqual({ point: { km: 10_000, months: 12 }, status: 'due-now', overKm: 240, overMonths: 0 });
   });
 
-  it('reaches a point 1,000 km early, at exactly the tolerance', () => {
-    expect(at(9_000, 6)).toMatchObject({ index: 1, status: 'due-now', overKm: 0 });
+  it('reaches a service 1,000 km early, at exactly the tolerance', () => {
+    expect(at(9_000, 6)).toMatchObject({ point: { km: 10_000 }, status: 'due-now', overKm: 0 });
   });
 
-  it('does not reach a point one kilometer before the tolerance', () => {
-    expect(at(8_999, 6)).toMatchObject({ index: 0 });
+  it('reaches nothing one kilometer before the tolerance', () => {
+    expect(at(8_999, 6)).toEqual({ point: null });
   });
 
   it('stays due now at exactly 1,000 km past, and is overdue one kilometer later', () => {
-    expect(at(11_000, 6)).toMatchObject({ index: 1, status: 'due-now', overKm: 1_000 });
-    expect(at(11_001, 6)).toMatchObject({ index: 1, status: 'overdue', overKm: 1_001 });
+    expect(at(11_000, 6)).toMatchObject({ status: 'due-now', overKm: 1_000 });
+    expect(at(11_001, 6)).toMatchObject({ status: 'overdue', overKm: 1_001 });
   });
 
-  it('reaches a point on months alone when the car is driven little', () => {
-    expect(at(3_000, 12)).toMatchObject({ index: 1, status: 'due-now', overKm: 0, overMonths: 0 });
+  it('reaches a service on months alone when the car is driven little', () => {
+    expect(at(3_000, 12)).toMatchObject({ point: { km: 10_000, months: 12 }, status: 'due-now' });
   });
 
-  it('is overdue when months run more than a month past the point', () => {
-    expect(at(3_000, 14)).toMatchObject({ index: 1, status: 'overdue', overMonths: 2 });
+  it('is overdue when months run more than a month past the service', () => {
+    expect(at(3_000, 14)).toMatchObject({ status: 'overdue', overMonths: 2 });
   });
 
-  it('reaches the first service at 1,000 km', () => {
-    expect(at(1_000, 0)).toMatchObject({ index: 0, status: 'due-now' });
-  });
-
-  it('reaches no point when nothing is due and tolerance is zero', () => {
-    expect(at(500, 0, { km: 0, months: 0 })).toEqual({ index: null });
-  });
-
-  it('returns the latest point reached, not the first', () => {
-    expect(at(40_100, 50)).toMatchObject({ index: 4 });
+  it('returns the latest service reached, on whichever clock is further along', () => {
+    expect(at(40_100, 50)).toMatchObject({ point: { km: 40_000, months: 48 } });
+    expect(at(12_000, 37)).toMatchObject({ point: { km: 30_000, months: 36 } });
   });
 });
 
 describe('nextPoint', () => {
-  const next = (odometer: number, months: number) => nextPoint(odometer as Km, months, CVT);
+  const next = (odometer: number, months: number) => nextPoint(odometer as Km, months, TEN_K);
 
   it('is the 20,000 km service, 9,760 km away, right after the 10,000 km one', () => {
-    expect(next(10_240, 6)).toEqual({ index: 2, inKm: 9_760, inMonths: 18 });
+    expect(next(10_240, 6)).toEqual({ point: { km: 20_000, months: 24 }, inKm: 9_760, inMonths: 18 });
   });
 
   it('is the first service for a new car', () => {
-    expect(next(0, 0)).toEqual({ index: 0, inKm: 1_000, inMonths: 1 });
+    expect(next(0, 0)).toEqual({ point: { km: 10_000, months: 12 }, inKm: 10_000, inMonths: 12 });
   });
 
-  it('moves past a point the moment the odometer reaches it', () => {
-    expect(next(10_000, 6)).toMatchObject({ index: 2 });
+  it('moves past a service the moment the odometer reaches it', () => {
+    expect(next(10_000, 6)).toMatchObject({ point: { km: 20_000 } });
   });
 
-  it('moves past a point the moment the months reach it', () => {
-    expect(next(3_000, 12)).toMatchObject({ index: 2 });
-  });
-
-  it('has no next point past the last one in the schedule', () => {
-    expect(next(50_500, 61)).toEqual({ index: null });
+  it('moves past a service the moment the months reach it', () => {
+    expect(next(3_000, 12)).toMatchObject({ point: { km: 20_000 } });
   });
 });

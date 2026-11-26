@@ -61,17 +61,31 @@ export interface ServiceItem {
   sayYesOnlyIf?: Localized;
 }
 
+/** A null side means that clock never triggers the item, like brake fluid's "every 3 years". */
+export interface Interval {
+  km: Km | null;
+  months: number | null;
+}
+
+/** Fixed milestones first, then a repeating interval counted from the last one (or from zero). */
+export interface ItemRule {
+  at: ServicePoint[];
+  every: Interval | null;
+}
+
+/** The manual's normal or severe column. Severe is the default (SYSTEM_DESIGN §11.1). */
+export type Conditions = 'normal' | 'severe';
+
 export interface ScheduledItem {
   serviceId: ServiceId;
   action: 'replace' | 'inspect' | 'clean' | 'adjust';
-  /** Indexes into `Schedule.points`. */
-  dueAt: number[];
+  normal: ItemRule;
+  severe?: ItemRule;
 }
 
 export interface Schedule {
   id: ScheduleId;
   source: SourceRef;
-  points: ServicePoint[];
   items: ScheduledItem[];
 }
 
@@ -117,9 +131,11 @@ export interface DraftLine {
 
 export type VerdictKind = 'yes' | 'ask' | 'no';
 
+export type Milestone = { km: Km } | { months: number };
+
 export type VerdictReason =
   | { kind: 'due-now' }
-  | { kind: 'other-visit'; nextKm: Km | null; lastKm: Km | null }
+  | { kind: 'other-visit'; next: Milestone | null; last: Milestone | null }
   | { kind: 'wear-item' }
   | { kind: 'not-in-your-schedule' }
   | { kind: 'approximate-schedule' }

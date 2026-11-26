@@ -16,7 +16,7 @@ export default function Quotes() {
   const open = quotes.filter(isChecking);
   const done = quotes.filter((q) => !isChecking(q));
   const saved = sum(done.map(savedAmount));
-  const cta = <GlassButton label={copy.common.checkQuote} onPress={() => router.push('/check/camera')} />;
+  const cta = <GlassButton label={copy.common.checkQuote} onPress={() => router.push('/check/visit')} />;
 
   if (quotes.length === 0) {
     return (

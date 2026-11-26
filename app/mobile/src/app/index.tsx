@@ -8,7 +8,6 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { useCameraPermissions } from 'expo-camera';
 import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
@@ -45,7 +44,6 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
     return first && !reduceMotion;
   });
   const quotes = useStore((s) => s.quotes);
-  const [camera] = useCameraPermissions();
 
   const rise = useSharedValue(arriving ? 0 : 1);
   const panelH = useSharedValue(0);
@@ -166,7 +164,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
             </Text>
           </Card>
         </View>
-        <GlassButton label={t.cta} onPress={() => router.push(camera?.granted ? '/check/scan' : '/check/camera')} />
+        <GlassButton label={t.cta} onPress={() => router.push('/check/visit')} />
       </Animated.View>
     </View>
   );

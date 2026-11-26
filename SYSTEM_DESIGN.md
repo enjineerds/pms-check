@@ -431,7 +431,7 @@ src/app/
     saved.tsx                 Car saved (V3-11)
   check/
     _layout.tsx               owns the QuoteDraft reducer
-    visit.tsx                 Confirm odometer and service point (no frame yet, see section 11)
+    visit.tsx                 Confirm odometer and service point (built without a frame, see section 11)
     scan.tsx                  Allow camera (V3-18), camera off (V3-19), Scan (V3-2), Choose a photo (V3-23)
     reading.tsx               Reading the quote (V3-15), couldn't read (V3-7)
     lines.tsx                 Check the lines (V3-3, 3b-3e), Edit a line sheet (V3-12)
@@ -572,7 +572,7 @@ flowchart LR
 ## 11. Open questions
 
 1. **Normal or severe schedule.** Decided: severe is the default (§4.2). Still open is whether car setup should let an owner who drives in light traffic switch to normal.
-2. **Two screens have no frame yet.** The delivery month step (`car/delivered`) is built from the year and month chips of V3-9 and needs a design pass. Every check still needs a short confirm step for the odometer and the service point (`check/visit`), which is required for correct verdicts. The item detail screen (V3-5) also needs accept and decline controls for *Ask first* lines.
+2. **Two screens have no frame yet.** The delivery month step (`car/delivered`) is built from the year and month chips of V3-9. The visit step (`check/visit`) is built from the odometer keypad of V3-10 and the radio rows of V3-9. Both need a design pass. The visit step runs before the scan, so it can't yet prefill from the quote header (section 5.2). The item detail screen (V3-5) also needs accept and decline controls for *Ask first* lines.
 3. **Tolerance defaults.** 1,000 km and 1 month around a service point are assumed in section 5.2. Confirm against how casas actually book PMS.
 4. **`ask` for out-of-range prices.** Section 5.3 keeps price out of the verdict. Confirm that this is the product intent.
 5. **The serif schedule note** (`app/DESIGN.md`, Typography) is still unresolved. It has no system impact, but it is listed so it isn't lost.

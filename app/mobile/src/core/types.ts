@@ -81,6 +81,8 @@ export interface ScheduledItem {
   action: 'replace' | 'inspect' | 'clean' | 'adjust';
   normal: ItemRule;
   severe?: ItemRule;
+  /** The manual page this row was transcribed from. */
+  page?: string;
 }
 
 export interface Schedule {

@@ -1,4 +1,4 @@
-import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleId, ScheduledItem, ServicePoint, YearMonth, YearRange } from './types';
+import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleBinding, ScheduleId, ScheduledItem, ServicePoint, YearMonth, YearRange } from './types';
 
 const within = (r: YearRange, year: number) => year >= r.from && year <= r.to;
 
@@ -11,13 +11,18 @@ function scheduleById(catalog: CatalogBundle, id: ScheduleId): Schedule {
 export function resolveSchedule(car: Pick<Car, 'modelId' | 'variantId' | 'year' | 'transmission'>, catalog: CatalogBundle): { schedule: Schedule; usedFallback: boolean } {
   const model = catalog.models.find((m) => m.id === car.modelId);
   if (!model) throw new Error(`Catalog has no model ${car.modelId}`);
-  const binding = model.variants
-    .find((v) => v.id === car.variantId)
-    ?.schedules.find((b) => b.transmission === car.transmission && within(b.years, car.year));
-  return binding
-    ? { schedule: scheduleById(catalog, binding.scheduleId), usedFallback: false }
-    : { schedule: scheduleById(catalog, model.fallbackScheduleId), usedFallback: true };
+  const own = model.variants.find((v) => v.id === car.variantId)?.schedules ?? [];
+  const exact = own.find((b) => b.transmission === car.transmission && within(b.years, car.year));
+  if (exact) return { schedule: scheduleById(catalog, exact.scheduleId), usedFallback: false };
+  const closestIn = (bs: ScheduleBinding[]) => nearestYear(bs.filter((b) => b.transmission === car.transmission), car.year);
+  const closest = closestIn(own) ?? closestIn(model.variants.flatMap((v) => v.schedules));
+  return { schedule: scheduleById(catalog, closest?.scheduleId ?? model.fallbackScheduleId), usedFallback: true };
 }
+
+const yearsAway = (r: YearRange, year: number) => Math.max(r.from - year, year - r.to, 0);
+
+const nearestYear = (bs: ScheduleBinding[], year: number): ScheduleBinding | undefined =>
+  bs.reduce<ScheduleBinding | undefined>((best, b) => (!best || yearsAway(b.years, year) < yearsAway(best.years, year) ? b : best), undefined);
 
 export interface Tolerance {
   km: number;

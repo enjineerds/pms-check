@@ -282,7 +282,7 @@ All of this is pure TypeScript in `app/mobile/src/core/`, with no React and no I
 resolveSchedule(car, catalog) -> { schedule, usedFallback: boolean }
 ```
 
-Pick the variant's `ScheduleBinding` matching `car.year` and `car.transmission`. If `car.variantId` is null, or no binding matches, use the model's `fallbackScheduleId` and set `usedFallback`.
+Pick the variant's `ScheduleBinding` matching `car.year` and `car.transmission`. If `car.variantId` is null, or no binding matches, set `usedFallback` and keep the transmission. Take the binding with the same transmission and the nearest years, from the car's own variant first, then from any variant of the model. Transmission items like CVT fluid only apply to their own gearbox. Use the model's `fallbackScheduleId` only when no binding has the car's transmission.
 
 ### 5.2 Which service visit
 

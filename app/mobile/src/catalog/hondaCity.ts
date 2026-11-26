@@ -1,5 +1,6 @@
 // Transcribed from the Honda City 4D owner's manual (42T00R510, 2026 print), Maintenance Schedule,
 // "Except Thai models" table, pp. 404–406. Footnotes resolved for Philippines models ("other countries").
+// The 2022 print (pp. 255–257) has no "other countries" footnote; its Malaysian values match these, so 2022–2026 share them.
 import type { CarModel, ItemRule, Km, ModelId, Schedule, ScheduleId, ScheduledItem, ServiceId, VariantId } from '@/core/types';
 
 const every = (km: number | null, months: number | null): ItemRule => ({
@@ -58,16 +59,16 @@ export const HONDA_CITY: CarModel = {
   make: 'Honda',
   name: 'City',
   defaultBodyStyle: 'sedan',
-  years: { from: 2026, to: 2026 },
+  years: { from: 2022, to: 2026 },
   fallbackScheduleId: CITY_CVT.id,
   variants: [
     {
       id: 'honda-city-sedan' as VariantId,
       label: 'Sedan',
-      years: { from: 2026, to: 2026 },
+      years: { from: 2022, to: 2026 },
       schedules: [
-        { years: { from: 2026, to: 2026 }, transmission: 'cvt', scheduleId: CITY_CVT.id },
-        { years: { from: 2026, to: 2026 }, transmission: 'manual', scheduleId: CITY_MT.id },
+        { years: { from: 2022, to: 2026 }, transmission: 'cvt', scheduleId: CITY_CVT.id },
+        { years: { from: 2022, to: 2026 }, transmission: 'manual', scheduleId: CITY_MT.id },
       ],
     },
   ],

@@ -27,15 +27,25 @@ describe('resolveSchedule', () => {
     });
   });
 
-  it('uses the fallback schedule when the variant is not listed', () => {
-    expect(resolveSchedule(car({ variantId: null }), CATALOG)).toEqual({
+  it('uses the fallback schedule when the variant is not listed and no binding has the transmission', () => {
+    expect(resolveSchedule(car({ variantId: null, transmission: 'at' }), CATALOG)).toEqual({
       schedule: expect.objectContaining({ id: FALLBACK.id }),
       usedFallback: true,
     });
   });
 
-  it('uses the fallback schedule when no binding covers the year', () => {
-    expect(resolveSchedule(car({ year: 2019 }), CATALOG).usedFallback).toBe(true);
+  it('keeps the transmission when no binding covers the year', () => {
+    expect(resolveSchedule(car({ year: 2019, transmission: 'manual' }), CATALOG)).toEqual({
+      schedule: expect.objectContaining({ id: MANUAL.id }),
+      usedFallback: true,
+    });
+  });
+
+  it('keeps the transmission when the variant is not listed', () => {
+    expect(resolveSchedule(car({ variantId: null, transmission: 'manual' }), CATALOG)).toEqual({
+      schedule: expect.objectContaining({ id: MANUAL.id }),
+      usedFallback: true,
+    });
   });
 
   it('uses the fallback schedule when no binding covers the transmission', () => {

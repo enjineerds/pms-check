@@ -57,8 +57,8 @@ export const en = {
   },
   car: {
     title: 'Pick your car',
-    step: (n: number) => `Step ${n} of 4`,
-    stepOf: (n: number, model: string) => `Step ${n} of 4 · ${model}`,
+    step: (n: number) => `Step ${n} of 5`,
+    stepOf: (n: number, model: string) => `Step ${n} of 5 · ${model}`,
   },
   carModel: {
     question: 'Which car do you drive?',
@@ -86,6 +86,12 @@ export const en = {
     matchBody: (family: string) => `Oil, filters and brakes are the same across the ${family} range.`,
     askTitle: 'Ask the advisor about the rest',
     askBody: 'If a verdict looks odd, ask to see their schedule for your variant.',
+  },
+  carDelivered: {
+    question: 'When did you get your car?',
+    year: 'Year',
+    month: 'Month',
+    hint: 'It’s on your OR/CR or delivery receipt. Your PMS schedule counts months from this date.',
   },
   carOdometer: {
     question: 'What does your odometer say?',

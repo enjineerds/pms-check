@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { applyKey } from '@/core/keypad';
 import { formatKm, groupDigits } from '@/core/money';
-import { serviceFor } from '@/core/schedule';
+import { ageMonths, serviceFor } from '@/core/schedule';
 import type { Km } from '@/core/types';
 import { CATALOG } from '@/catalog';
 import { useCopy } from '@/i18n';
@@ -16,15 +16,15 @@ export default function Odometer() {
   const [raw, setRaw] = useState('');
   const km = Number(raw);
   const setup = useStore((s) => s.setup);
-  const modelId = setup.modelId;
-  // Age is unknown until the delivery-month step exists (SYSTEM_DESIGN §11.2), so only the km clock counts here.
-  const due = modelId && km > 0 ? serviceFor({ ...setup, modelId }, km as Km, 0, CATALOG).due.km : null;
+  const { modelId, deliveredOn } = setup;
+  const due =
+    modelId && deliveredOn && km > 0 ? serviceFor({ ...setup, modelId }, km as Km, ageMonths(deliveredOn, new Date()), CATALOG).due.km : null;
   return (
     <>
       <View className="flex-1">
         <Screen
           flushBottom
-          header={<Header title={copy.car.title} subtitle={copy.car.step(3)} />}
+          header={<Header title={copy.car.title} subtitle={copy.car.step(4)} />}
           footer={
             <GlassButton
               label={copy.common.continue}

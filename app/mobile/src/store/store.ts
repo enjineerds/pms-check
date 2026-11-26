@@ -8,6 +8,7 @@ export interface CarSetup {
   variantId: VariantId | null;
   year: number;
   transmission: Transmission;
+  deliveredOn: YearMonth | null;
   bodyStyle: BodyStyle;
   km: number;
 }
@@ -24,6 +25,7 @@ const EMPTY_SETUP: CarSetup = {
   variantId: null,
   year: 2025,
   transmission: 'cvt',
+  deliveredOn: null,
   bodyStyle: 'sedan',
   km: 0,
 };
@@ -52,7 +54,7 @@ export const resetSetup = () => set({ setup: EMPTY_SETUP });
 
 export function saveSetupAsCar(): Car | null {
   const s = state.setup;
-  if (!s.modelId) return null;
+  if (!s.modelId || !s.deliveredOn) return null;
   const now = new Date();
   const car: Car = {
     id: `car-${now.getTime()}`,
@@ -60,7 +62,7 @@ export function saveSetupAsCar(): Car | null {
     variantId: s.variantId,
     year: s.year,
     transmission: s.transmission,
-    deliveredOn: `${s.year}-01` as YearMonth,
+    deliveredOn: s.deliveredOn,
     bodyStyle: s.bodyStyle,
     odometer: { km: s.km as Km, readAt: now.toISOString() },
     isCurrent: true,

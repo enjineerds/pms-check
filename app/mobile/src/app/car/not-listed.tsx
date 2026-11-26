@@ -20,7 +20,7 @@ export default function VariantNotListed() {
             label={t.useSchedule(family)}
             onPress={() => {
               patchSetup({ variantId: null });
-              router.push('/car/odometer');
+              router.push('/car/delivered');
             }}
           />
           <SecondaryButton label={t.pickAnother} onPress={() => router.back()} />

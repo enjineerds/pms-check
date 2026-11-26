@@ -1,4 +1,5 @@
 import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleBinding, ScheduleId, ScheduledItem, ServicePoint, YearMonth, YearRange } from './types';
+import { splitYearMonth } from './delivery';
 
 const within = (r: YearRange, year: number) => year >= r.from && year <= r.to;
 
@@ -67,8 +68,8 @@ export function nextPoint(odometerKm: Km, ageMonths: number, every: ServicePoint
 }
 
 export function ageMonths(deliveredOn: YearMonth, now: Date): number {
-  const [y, m] = deliveredOn.split('-').map(Number);
-  return Math.max(0, (now.getUTCFullYear() - y) * 12 + (now.getUTCMonth() + 1 - m));
+  const { year, month } = splitYearMonth(deliveredOn);
+  return Math.max(0, (now.getUTCFullYear() - year) * 12 + (now.getUTCMonth() + 1 - month));
 }
 
 type CarSchedule = Pick<Car, 'modelId' | 'variantId' | 'year' | 'transmission'>;

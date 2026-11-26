@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { applyKey } from '@/core/keypad';
-import { formatKm, groupDigits } from '@/core/money';
+import { formatKm } from '@/core/money';
 import { ageMonths, serviceFor } from '@/core/schedule';
 import type { Km } from '@/core/types';
 import { CATALOG } from '@/catalog';
 import { useCopy } from '@/i18n';
 import { patchSetup, useStore } from '@/store/store';
-import { GlassButton, Header, Keypad, Notice, Screen, Text } from '@/ui';
+import { GlassButton, Header, Keypad, Notice, OdometerReadout, Screen, Text } from '@/ui';
 
 export default function Odometer() {
   const copy = useCopy();
@@ -39,13 +39,8 @@ export default function Odometer() {
           <Text variant="headline">
             {t.question}
           </Text>
-          <View className="mt-5 h-18 flex-row items-center justify-between rounded-pill border-[1.5px] border-ink bg-surface px-6">
-            <Text weight="bold" color={raw ? 'ink' : 'ink-faint'} className="!text-[36px] !leading-[44px] !tracking-[-0.5px]">
-              {raw ? groupDigits(km) : '0'}
-            </Text>
-            <Text variant="body" weight="medium" color="ink-soft">
-              km
-            </Text>
+          <View className="mt-5">
+            <OdometerReadout raw={raw} />
           </View>
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
             {t.hint}

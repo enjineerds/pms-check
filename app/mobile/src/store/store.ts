@@ -87,5 +87,10 @@ export const isListed = (q: Quote) => q.id !== SIX_FIGURE_ID;
 
 export const currentCar = (s: AppState): Car | undefined => s.cars.find((c) => c.isCurrent) ?? s.cars[0];
 
+export function recordOdometer(carId: string, km: Km) {
+  const odometer = { km, readAt: new Date().toISOString() };
+  set({ cars: state.cars.map((c) => (c.id === carId ? { ...c, odometer } : c)) });
+}
+
 export const setCurrentCar = (id: string) =>
   set({ cars: state.cars.map((c) => ({ ...c, isCurrent: c.id === id })) });

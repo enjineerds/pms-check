@@ -1,5 +1,5 @@
 import { CATALOG } from '@/catalog';
-import type { Car, Centavos, DraftLine, Km, ModelId, ServiceId, VariantId, YearMonth } from './types';
+import type { Car, Centavos, DraftLine, Km, ModelId, ServiceId, VariantId, Visit, YearMonth } from './types';
 import { initialDraft } from './draft';
 import { draftToQuote } from './saveDraft';
 import { ageMonths, serviceFor } from './schedule';
@@ -46,8 +46,13 @@ describe('ageMonths', () => {
   });
 });
 
+const visit = (km: number, months: number, odometerKm: number): Visit => ({
+  point: { km: km as Km, months },
+  odometerKm: odometerKm as Km,
+});
+
 describe('draftToQuote', () => {
-  const quote = draftToQuote(draft, city, CATALOG, new Date('2026-07-15T00:00:00Z'));
+  const quote = draftToQuote(draft, visit(10_000, 12, 10_240), city, CATALOG, new Date('2026-07-15T00:00:00Z'));
 
   it('judges every line against the car’s own schedule at its km and age', () => {
     expect(quote.lines.map((l) => [l.rawText, l.verdict.kind])).toEqual([
@@ -70,6 +75,15 @@ describe('draftToQuote', () => {
       catalogVersion: CATALOG.version,
       shopName: 'Test Motors',
     });
+  });
+
+  it('judges at the confirmed visit, not the odometer saved at car setup', () => {
+    const fromSetup = { ...city, odometer: { km: 1_500 as Km, readAt: '2026-01-10T00:00:00Z' } };
+    const april = new Date('2026-04-15T00:00:00Z');
+    const kinds = (v: Visit) => draftToQuote(draft, v, fromSetup, CATALOG, april).lines.map((l) => l.verdict.kind);
+    expect(kinds(visit(5_000, 6, 5_100))).toEqual(['yes', 'no', 'ask', 'ask']);
+    expect(kinds(visit(20_000, 24, 19_800))).toEqual(['yes', 'no', 'yes', 'ask']);
+    expect(draftToQuote(draft, visit(5_000, 6, 5_100), fromSetup, CATALOG, april).visit).toEqual(visit(5_000, 6, 5_100));
   });
 });
 

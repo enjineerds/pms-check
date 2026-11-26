@@ -15,7 +15,7 @@ import { useDraft } from '@/store/draft';
 import { Card, Divider, GlassButton, Header, Notice, Screen, SecondaryButton, Text, Toast } from '@/ui';
 
 export default function Lines() {
-  const { draft, dispatch } = useDraft();
+  const { draft, dispatch, visit } = useDraft();
   const t = useCopy().lines;
   const car = useStore(currentCar);
   const [editId, setEditId] = useState<string | null>(null);
@@ -38,9 +38,10 @@ export default function Lines() {
     const open = lines.find((l) => !isResolved(l));
     if (open) return setEditId(open.id);
     if (!car) return;
-    const q = draftToQuote(draft, car, CATALOG, new Date());
+    if (!visit) return router.replace('/check/visit');
+    const q = draftToQuote(draft, visit, car, CATALOG, new Date());
     addQuote(q);
-    router.dismissAll();
+    router.dismissTo('/');
     router.push(`/quote/${q.id}`);
   };
 

@@ -1,11 +1,20 @@
-import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react';
+import { createContext, useContext, useReducer, useState, type Dispatch, type ReactNode } from 'react';
 import { draftReducer, initialDraft, type DraftAction, type DraftState } from '@/core/draft';
+import type { Visit } from '@/core/types';
 
-const Ctx = createContext<{ draft: DraftState; dispatch: Dispatch<DraftAction> } | null>(null);
+interface CheckFlow {
+  draft: DraftState;
+  dispatch: Dispatch<DraftAction>;
+  visit: Visit | null;
+  setVisit: (v: Visit) => void;
+}
+
+const Ctx = createContext<CheckFlow | null>(null);
 
 export function QuoteDraftProvider({ children }: { children: ReactNode }) {
   const [draft, dispatch] = useReducer(draftReducer, initialDraft);
-  return <Ctx.Provider value={{ draft, dispatch }}>{children}</Ctx.Provider>;
+  const [visit, setVisit] = useState<Visit | null>(null);
+  return <Ctx.Provider value={{ draft, dispatch, visit, setVisit }}>{children}</Ctx.Provider>;
 }
 
 export function useDraft() {

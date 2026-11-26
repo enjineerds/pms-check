@@ -119,6 +119,16 @@ export const en = {
   check: {
     scanTitle: 'Scan the quote',
   },
+  visit: {
+    title: 'This visit',
+    question: 'Which service is this?',
+    odometer: 'Odometer',
+    fresh: 'From your last reading. Change it if it’s moved.',
+    stale: (km: string, days: number) => `Your last reading was ${km}, ${days} days ago. What does it say now?`,
+    service: 'Service',
+    point: (km: string, months: number) => `${km} km · ${months} months`,
+    hint: 'The quote usually says it at the top, like “10K PMS”.',
+  },
   camera: {
     offSubtitle: 'Camera access is off',
     openSettings: 'Open settings',

@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -121,6 +121,16 @@ export const fil: Copy = {
   },
   check: {
     scanTitle: 'I-scan ang quote',
+  },
+  visit: {
+    title: 'Ang pagbisitang ito',
+    question: 'Anong service ito?',
+    odometer: 'Odometer',
+    fresh: 'Mula sa huli mong reading. Palitan kung nagbago na.',
+    stale: (km: string, days: number) => `${km} ang huli mong reading, ${days} araw na ang nakalipas. Ano na ngayon?`,
+    service: 'Service',
+    point: (km: string, months: number) => `${km} km · ${months} buwan`,
+    hint: 'Kadalasang nakasulat ito sa itaas ng quote, tulad ng “10K PMS”.',
   },
   camera: {
     offSubtitle: 'Naka-off ang camera',

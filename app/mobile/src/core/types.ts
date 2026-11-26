@@ -161,11 +161,16 @@ export interface SavedLine {
   decision: Decision;
 }
 
+export interface Visit {
+  point: ServicePoint;
+  odometerKm: Km;
+}
+
 export interface Quote {
   id: string;
   carId: string;
   shopName: string | null;
-  visit: { point: ServicePoint; odometerKm: Km };
+  visit: Visit;
   scheduleId: ScheduleId;
   usedFallbackSchedule: boolean;
   catalogVersion: string;

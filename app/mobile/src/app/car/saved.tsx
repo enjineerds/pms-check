@@ -30,7 +30,7 @@ export default function CarSaved() {
             label={copy.common.checkQuote}
             onPress={() => {
               router.dismissAll();
-              router.push('/check/camera');
+              router.push('/check/visit');
             }}
           />
           <SecondaryButton label={t.home} onPress={() => router.dismissAll()} />

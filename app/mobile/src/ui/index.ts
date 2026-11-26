@@ -16,6 +16,7 @@ export { RadioRow } from './RadioRow';
 export { AdvisorPanel } from './AdvisorPanel';
 export { Sheet } from './Sheet';
 export { Keypad } from './Keypad';
+export { OdometerReadout } from './OdometerReadout';
 export { CAR_ARRIVE_MS, CarImage } from './CarImage';
 export { Field } from './Field';
 export { SearchField } from './SearchField';

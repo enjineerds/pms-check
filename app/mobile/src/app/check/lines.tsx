@@ -41,7 +41,7 @@ export default function Lines() {
     if (!visit) return router.replace('/check/visit');
     const q = draftToQuote(draft, visit, car, CATALOG, new Date());
     addQuote(q);
-    router.dismissAll();
+    router.dismissTo('/');
     router.push(`/quote/${q.id}`);
   };
 

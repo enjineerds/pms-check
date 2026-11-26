@@ -1,24 +1,25 @@
 import { useRef, useState, type ComponentRef } from 'react';
 import { Pressable, View, type TextInput } from 'react-native';
 import { router } from 'expo-router';
-import { findModel, MODELS, type CatalogModel } from '@/sample/catalog';
+import { CATALOG, modelFor, transmissionsOf } from '@/catalog';
+import type { CarModel } from '@/core/types';
 import { useCopy, type Copy } from '@/i18n';
 import { patchSetup } from '@/store/store';
 import { Card, Divider, Header, Icon, Screen, SearchField, Text } from '@/ui';
 
-const variantsLine = (m: CatalogModel, t: Copy['carModel']) =>
-  `${m.variants.map((v) => v.name).join(', ')} · ${t.years(m.years[0], m.years[1])}`;
+const variantsLine = (m: CarModel, t: Copy['carModel']) =>
+  `${m.variants.map((v) => v.label).join(', ')} · ${t.years(m.years.from, m.years.to)}`;
 
 export default function PickModel() {
   const copy = useCopy();
   const t = copy.carModel;
   const [q, setQ] = useState('');
   const input = useRef<ComponentRef<typeof TextInput>>(null);
-  const list = MODELS.filter((m) => `${m.make} ${m.name}`.toLowerCase().includes(q.trim().toLowerCase()));
+  const list = CATALOG.models.filter((m) => `${m.make} ${m.name}`.toLowerCase().includes(q.trim().toLowerCase()));
 
-  const pick = (id: CatalogModel['id']) => {
-    const m = findModel(id);
-    patchSetup({ modelId: m.id, variantId: null, bodyStyle: m.bodyStyle, transmission: m.transmissions[0], year: m.years[1] });
+  const pick = (id: CarModel['id']) => {
+    const m = modelFor(id);
+    patchSetup({ modelId: m.id, variantId: null, bodyStyle: m.defaultBodyStyle, transmission: transmissionsOf(m)[0], year: m.years.to });
     router.push('/car/variant');
   };
 

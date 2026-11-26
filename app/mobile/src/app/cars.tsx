@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { formatKm } from '@/core/money';
 import { useCopy } from '@/i18n';
-import { findModel, findVariantName } from '@/sample/catalog';
+import { modelFor, variantLabel } from '@/catalog';
 import { setCurrentCar, useStore } from '@/store/store';
 import { Card, cx, GlassDisc, Header, Icon, Screen, SecondaryButton, Text } from '@/ui';
 
@@ -16,7 +16,7 @@ export default function Cars() {
     >
       <View className="gap-3">
         {cars.map((c) => {
-          const m = findModel(c.modelId);
+          const m = modelFor(c.modelId);
           return (
             <Card
               key={c.id}
@@ -32,7 +32,7 @@ export default function Cars() {
                   {m.make} {m.name}
                 </Text>
                 <Text variant="small" color="ink-soft">
-                  {findVariantName(c.variantId) || t.variantNotListed} · {formatKm(c.odometer.km)}
+                  {variantLabel(m, c.variantId) || t.variantNotListed} · {formatKm(c.odometer.km)}
                 </Text>
               </View>
               {c.isCurrent ? (

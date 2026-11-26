@@ -2,8 +2,8 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { groupDigits } from '@/core/money';
-import { duePointKm, isDueNow } from '@/core/service';
-import { findModel } from '@/sample/catalog';
+import { ageMonths, serviceFor } from '@/core/schedule';
+import { CATALOG, findModel } from '@/catalog';
 import { useCopy } from '@/i18n';
 import { currentCar, useStore } from '@/store/store';
 import { CarImage, GlassButton, GlassDisc, Icon, Notice, Screen, SecondaryButton, Text } from '@/ui';
@@ -16,9 +16,10 @@ export default function CarSaved() {
   if (!car) return null;
   const model = findModel(car.modelId);
   const km = car.odometer.km;
-  const due = duePointKm(km);
+  const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
+  const due = service.due.km;
   const over = km - due;
-  const dueNow = isDueNow(km);
+  const dueNow = service.reached;
   return (
     <Screen
       footer={
@@ -39,7 +40,7 @@ export default function CarSaved() {
         <Icon name="check" size={26} colorClassName="accent-panel-ink" />
       </GlassDisc>
       <Text variant="display" className="mt-5">
-        {t.title(model.name)}
+        {t.title(model?.name ?? '')}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
         {t.body}

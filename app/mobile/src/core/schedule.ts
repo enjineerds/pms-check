@@ -1,4 +1,4 @@
-import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleId, ScheduledItem, ServicePoint, YearRange } from './types';
+import type { Car, CatalogBundle, Conditions, ItemRule, Km, Schedule, ScheduleId, ScheduledItem, ServicePoint, YearMonth, YearRange } from './types';
 
 const within = (r: YearRange, year: number) => year >= r.from && year <= r.to;
 
@@ -8,7 +8,7 @@ function scheduleById(catalog: CatalogBundle, id: ScheduleId): Schedule {
   return s;
 }
 
-export function resolveSchedule(car: Car, catalog: CatalogBundle): { schedule: Schedule; usedFallback: boolean } {
+export function resolveSchedule(car: Pick<Car, 'modelId' | 'variantId' | 'year' | 'transmission'>, catalog: CatalogBundle): { schedule: Schedule; usedFallback: boolean } {
   const model = catalog.models.find((m) => m.id === car.modelId);
   if (!model) throw new Error(`Catalog has no model ${car.modelId}`);
   const binding = model.variants
@@ -59,4 +59,24 @@ export function reachedPoint(odometerKm: Km, ageMonths: number, every: ServicePo
 export function nextPoint(odometerKm: Km, ageMonths: number, every: ServicePoint) {
   const point = nth(every, Math.max(Math.floor(odometerKm / every.km), Math.floor(ageMonths / every.months)) + 1);
   return { point, inKm: point.km - odometerKm, inMonths: point.months - ageMonths };
+}
+
+export function ageMonths(deliveredOn: YearMonth, now: Date): number {
+  const [y, m] = deliveredOn.split('-').map(Number);
+  return Math.max(0, (now.getUTCFullYear() - y) * 12 + (now.getUTCMonth() + 1 - m));
+}
+
+type CarSchedule = Pick<Car, 'modelId' | 'variantId' | 'year' | 'transmission'>;
+
+/** The visit the car is due for (reached, or the next one), and the visit after it. */
+export function serviceFor(car: CarSchedule, odometerKm: Km, months: number, catalog: CatalogBundle, conditions: Conditions = 'severe') {
+  const every = cadence(resolveSchedule(car, catalog).schedule, conditions);
+  const reached = reachedPoint(odometerKm, months, every);
+  const due = reached.point ?? nextPoint(odometerKm, months, every).point;
+  return {
+    every,
+    due,
+    reached: reached.point !== null,
+    after: { km: (due.km + every.km) as Km, months: due.months + every.months },
+  };
 }

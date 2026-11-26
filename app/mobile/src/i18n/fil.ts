@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carSaved.next/away, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn, item.notFound/yourCar/copied/noManual/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carSaved.next/away, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -190,7 +190,7 @@ export const fil: Copy = {
     title: 'Ayusin ang linyang ito',
     quoteSays: 'Ang nakasulat sa quote',
     price: 'Presyo',
-    known: 'Kilala namin ito. Susuriin namin ito laban sa schedule ng Vios mo.',
+    known: 'Kilala namin ito. Susuriin namin ito laban sa schedule ng kotse mo.',
     unknown: 'Wala pa ito sa listahan namin. Ililista pa rin namin, at puwede mo itong itanong sa advisor.',
     save: 'I-save',
     delete: 'Burahin ang linyang ito',
@@ -211,7 +211,7 @@ export const fil: Copy = {
   verdict: {
     word: { yes: 'Oo', ask: 'Itanong', no: 'Hindi' },
     reason: {
-      dueNow: 'Lahat nasa schedule ng Toyota',
+      dueNow: (make: string) => `Lahat nasa schedule ng ${make}`,
       dueAt: (when: string) => `Sa ${when}`,
       wasDueAt: (when: string) => `Due na noong ${when}`,
       wasDue: 'Due na ito dati pa',
@@ -241,11 +241,12 @@ export const fil: Copy = {
     quote: 'Quote',
     sayNo: (amount: string) => `Tanggihan ang ${amount} sa quote na ito.`,
     allIn: 'Nasa schedule ang lahat ng narito.',
-    quoted: (amount: string) => `${amount} ang singil ng casa para sa Vios mo.`,
+    askFirst: (amount: string) => `Itanong muna ang ${amount} sa quote na ito.`,
+    quoted: (amount: string, model: string) => `${amount} ang singil ng casa para sa ${model} mo.`,
     askMeans: ' ay makatwiran pero hindi pa kailangan. Hilingin na makita ito.',
     showAdvisor: 'Ipakita sa advisor',
     source: (title: string) => `Pinagmulan: ${title}`,
-    defaultSource: 'Vios owner’s manual · 2025',
+    defaultSource: 'manual ng kotse mo',
   },
   item: {
     notFound: 'Hindi makita ang item',
@@ -257,6 +258,11 @@ export const fil: Copy = {
     copy: 'Kopyahin',
     manual: 'Ano ang sabi ng manual',
     noManual: 'Hindi namin makita ang item na ito sa schedule ng kotse mo.',
+    either: (a: string, b: string) => `${a} o ${b}`,
+    listsEvery: (make: string, when: string) => `Nakalista ito sa ${make} tuwing ${when}.`,
+    listsAtThen: (make: string, at: string, every: string) => `Nakalista ito sa ${make} sa ${at}, tapos tuwing ${every}.`,
+    notListed: (make: string) => `Wala ito sa schedule ng ${make}.`,
+    wearPart: 'Pinapalitan ang piyesang ito kapag nakitang pudpod sa inspeksyon.',
     source: (title: string) => `Pinagmulan: ${title} · `,
     sourceNotFound: 'hindi makita',
     why: 'Bakit nila ito inaalok',

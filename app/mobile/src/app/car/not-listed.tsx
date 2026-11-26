@@ -1,16 +1,16 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import { findModel } from '@/sample/catalog';
+import { modelFor } from '@/catalog';
 import { useCopy } from '@/i18n';
 import { patchSetup, useStore } from '@/store/store';
 import { Card, Divider, GlassButton, Header, Icon, Screen, SecondaryButton, Text } from '@/ui';
 
 export default function VariantNotListed() {
   const modelId = useStore((s) => s.setup.modelId);
-  const model = findModel(modelId);
+  const model = modelFor(modelId);
   const copy = useCopy();
   const t = copy.carNotListed;
-  const family = `${model.name} ${model.variants[0].name.split(' ')[0]}`;
+  const family = `${model.name} ${model.variants[0].label}`;
   return (
     <Screen
       header={<Header title={copy.car.title} subtitle={copy.car.stepOf(2, `${model.make} ${model.name}`)} />}

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { toastText } from '@/core/draft';
 import { draftToQuote } from '@/core/saveDraft';
+import { CATALOG } from '@/catalog';
 import { formatPeso } from '@/core/money';
 import type { Centavos } from '@/core/types';
 import { draftTotal, isResolved, totalCheck } from '@/core/quote';
@@ -37,7 +38,7 @@ export default function Lines() {
     const open = lines.find((l) => !isResolved(l));
     if (open) return setEditId(open.id);
     if (!car) return;
-    const q = draftToQuote(draft, car);
+    const q = draftToQuote(draft, car, CATALOG, new Date());
     addQuote(q);
     router.dismissAll();
     router.push(`/quote/${q.id}`);

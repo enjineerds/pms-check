@@ -1,6 +1,6 @@
-import type { Centavos, Decision, DraftLine, LinePrice, Quote, SavedLine, VerdictKind } from './types';
+import type { Centavos, Decision, DraftLine, LinePrice, Locale, Quote, SavedLine, VerdictKind } from './types';
 import { groupDigits } from './money';
-import { findService } from '@/sample/catalog';
+import { findService } from '@/catalog';
 import type { Copy } from '@/i18n/en';
 
 export const priceOf = (p: LinePrice): Centavos | null => {
@@ -56,8 +56,8 @@ export const savedAmount = (q: Quote): Centavos => sum(byDecision(q.lines, 'decl
 
 export const decisionFor = (k: VerdictKind): Decision => (k === 'yes' ? 'accept' : k === 'no' ? 'decline' : 'pending');
 
-export const lineName = (l: SavedLine): string =>
-  l.match.kind === 'none' ? l.rawText : (findService(l.match.serviceId)?.name ?? l.rawText);
+export const lineName = (l: SavedLine, locale: Locale): string =>
+  l.match.kind === 'none' ? l.rawText : (findService(l.match.serviceId)?.name[locale] ?? l.rawText);
 
 
 /** `months: 0` marks a one-off job, not a PMS point. */

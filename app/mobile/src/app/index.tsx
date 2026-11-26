@@ -12,12 +12,12 @@ import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
 import type { Car, Locale } from '@/core/types';
-import { duePointKm, nextPointKm, progressToNext } from '@/core/service';
+import { ageMonths, serviceFor } from '@/core/schedule';
+import { CATALOG, findModel, variantLabel } from '@/catalog';
 import { copyFor } from '@/i18n';
 import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
 import { SIX_FIGURE_ID } from '@/sample/quotes';
-import { findModel, findVariantName } from '@/sample/catalog';
 import { currentCar, isListed, useStore } from '@/store/store';
 import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
@@ -66,8 +66,9 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
 
   const model = findModel(car.modelId);
   const km = car.odometer.km;
-  const due = duePointKm(km);
-  const next = nextPointKm(km);
+  const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
+  const due = service.due.km;
+  const next = service.after.km;
   const checked = quotes.filter(isListed).filter((q) => q.lines.every((l) => l.decision !== 'pending')).length;
 
   return (
@@ -80,7 +81,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
       >
         <View className="flex-1">
           <Text variant="lead" weight="bold">
-            {model.make} {model.name} {findVariantName(car.variantId)}
+            {model?.make} {model?.name} {variantLabel(model, car.variantId)}
           </Text>
           {/* Separate pieces, so narrow phones wrap between facts, never inside one. */}
           <View className="flex-row flex-wrap">
@@ -134,7 +135,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
               </Text>
             </View>
             <View className="mt-4">
-              <ServiceRoad progress={progressToNext(km)} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
+              <ServiceRoad progress={Math.min(1, Math.max(0, 1 - (next - km) / service.every.km))} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
             </View>
             <Text variant="lead" weight="bold" className="mt-2.5">
               {t.afterThis(groupDigits(next))}

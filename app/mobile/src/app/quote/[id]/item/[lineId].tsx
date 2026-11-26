@@ -3,9 +3,10 @@ import { Platform, Pressable, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
 import { lineName } from '@/core/quote';
-import { itemHeadline, sayThis } from '@/core/verdictCopy';
-import { findModel, findService } from '@/sample/catalog';
-import { useCopy } from '@/i18n';
+import { itemHeadline, manualSays, sayThis } from '@/core/verdictCopy';
+import { CATALOG, findModel, findService } from '@/catalog';
+import { ruleFor } from '@/core/schedule';
+import { useCopy, useLocale } from '@/i18n';
 import { currentCar, setDecision, useQuote, useStore } from '@/store/store';
 import { GlassButton, GlossGradient, Header, Icon, Notice, Screen, SecondaryButton, Segmented, Text } from '@/ui';
 
@@ -26,13 +27,18 @@ export default function ItemDetail() {
   const car = useStore(currentCar);
   const [copied, setCopied] = useState(false);
   const copy = useCopy();
+  const locale = useLocale();
   const t = copy.item;
   const line = quote?.lines.find((l) => l.id === lineId);
   if (!quote || !line) return <Screen header={<Header title={t.notFound} />} />;
 
-  const name = lineName(line);
-  const model = car ? findModel(car.modelId).name : t.yourCar;
+  const name = lineName(line, locale);
+  const carModel = car ? findModel(car.modelId) : undefined;
+  const model = carModel?.name ?? t.yourCar;
   const service = line.match.kind === 'none' ? undefined : findService(line.match.serviceId);
+  const item = CATALOG.schedules.find((s) => s.id === quote.scheduleId)?.items.find((i) => i.serviceId === service?.id);
+  const manual = service ? manualSays(service.kind, item && ruleFor(item, 'severe'), carModel?.make ?? '', t, copy.verdict) : undefined;
+  const onlyIf = service?.sayYesOnlyIf?.[locale];
   const say = `“${sayThis(line.verdict, name, quote.visit.point.km, copy.verdict)}”`;
   const copySay = async () => {
     try {
@@ -78,7 +84,7 @@ export default function ItemDetail() {
 
       <Heading>{t.manual}</Heading>
       <Text variant="body" weight="regular" color="ink">
-        {service?.manual ?? t.noManual}
+        {manual ?? t.noManual}
       </Text>
       <Text variant="caption" weight="regular" color="ink-soft" className="mt-1.5">
         {t.source(line.verdict.source?.title ?? t.sourceNotFound)}
@@ -89,16 +95,16 @@ export default function ItemDetail() {
 
       <Heading>{t.why}</Heading>
       <Text variant="body" weight="regular">
-        {service?.why ?? t.noWhy}
+        {service?.whyOffered?.[locale] ?? t.noWhy}
       </Text>
 
-      {service?.onlyIf ? (
+      {onlyIf ? (
         <View className="mt-4">
           <Notice tone="amber" icon="question">
             <Text variant="small" weight="bold">
               {t.onlyIf}
             </Text>
-            {service.onlyIf.startsWith('they') ? 'they ' + service.onlyIf.slice(5) : service.onlyIf}
+            {onlyIf}
           </Notice>
         </View>
       ) : null}

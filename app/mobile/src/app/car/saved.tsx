@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { groupDigits } from '@/core/money';
-import { ageMonths, serviceFor } from '@/core/schedule';
+import { ageMonths, DEFAULT_TOLERANCE, serviceFor } from '@/core/schedule';
 import { CATALOG, findModel } from '@/catalog';
 import { useCopy } from '@/i18n';
 import { currentCar, useStore } from '@/store/store';
@@ -16,10 +16,12 @@ export default function CarSaved() {
   if (!car) return null;
   const model = findModel(car.modelId);
   const km = car.odometer.km;
-  const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
+  const months = ageMonths(car.deliveredOn, new Date());
+  const service = serviceFor(car, km, months, CATALOG);
   const due = service.due.km;
   const over = km - due;
   const dueNow = service.reached;
+  const dueByAge = dueNow && over < 0 && months + DEFAULT_TOLERANCE.months >= service.due.months;
   return (
     <Screen
       footer={
@@ -53,7 +55,7 @@ export default function CarSaved() {
           {dueNow ? t.dueNow : t.next}
         </Text>
         {t.service(groupDigits(due))}
-        {over >= 0 ? t.past(groupDigits(over)) : t.away(groupDigits(-over))}
+        {over >= 0 ? t.past(groupDigits(over)) : dueByAge ? t.age(months) : t.away(groupDigits(-over))}
       </Notice>
     </Screen>
   );

@@ -114,6 +114,7 @@ export const en = {
     service: (km: string) => `your ${km} km service. `,
     past: (km: string) => `You’re ${km} km past it.`,
     away: (km: string) => `You’re ${km} km away.`,
+    age: (months: number) => `Your car is ${months} months old.`,
   },
   check: {
     scanTitle: 'Scan the quote',

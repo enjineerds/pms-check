@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatKm, groupDigits } from '@/core/money';
-import { byDecision, lineName, sum } from '@/core/quote';
+import { advisorCard, lineName } from '@/core/quote';
 import type { VerdictKind } from '@/core/types';
 import { findModel, findVariantName } from '@/sample/catalog';
 import { useCopy } from '@/i18n';
@@ -16,9 +16,7 @@ export default function Advisor() {
   const t = copy.advisor;
   if (!quote) return null;
 
-  const accept = byDecision(quote.lines, 'accept');
-  const pending = byDecision(quote.lines, 'pending');
-  const decline = byDecision(quote.lines, 'decline');
+  const card = advisorCard(quote);
   const model = car ? findModel(car.modelId) : null;
   const sub = model && car ? `${model.make} ${model.name} ${findVariantName(car.variantId)} · ${formatKm(quote.visit.odometerKm)}` : undefined;
 
@@ -28,10 +26,10 @@ export default function Advisor() {
         {t.onlyThese(groupDigits(quote.visit.point.km))}
       </Text>
       <View className="mt-5">
-        <AdvisorPanel lines={accept.map((l) => ({ id: l.id, name: lineName(l), price: l.price }))} total={sum(accept.map((l) => l.price))} />
+        <AdvisorPanel lines={card.doThese.map((l) => ({ id: l.id, name: lineName(l), price: l.price }))} total={card.willPay} />
       </View>
-      <Block title={t.showFirst} kind="ask" lines={pending} />
-      <Block title={t.notToday} kind="no" lines={decline} />
+      <Block title={t.showFirst} kind="ask" lines={card.showFirst} />
+      <Block title={t.notToday} kind="no" lines={card.notToday} />
     </Screen>
   );
 }

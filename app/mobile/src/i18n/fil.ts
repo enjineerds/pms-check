@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carSaved.next/away, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn, item.notFound/yourCar/copied/noManual/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carSaved.next/away, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn, item.notFound/yourCar/copied/noManual/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -212,8 +212,10 @@ export const fil: Copy = {
     word: { yes: 'Oo', ask: 'Itanong', no: 'Hindi' },
     reason: {
       dueNow: 'Lahat nasa schedule ng Toyota',
-      dueAt: (km: string) => `Sa ${km}`,
+      dueAt: (when: string) => `Sa ${when}`,
+      wasDueAt: (when: string) => `Due na noong ${when}`,
       wasDue: 'Due na ito dati pa',
+      ageMonths: (n: number) => `${n} buwan`,
       wear: 'Tingnan kung pudpod na',
       notInYours: 'Wala sa schedule mo',
       approximate: 'Tantiya lang ang schedule',

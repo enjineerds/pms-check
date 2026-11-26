@@ -1,16 +1,19 @@
 import type { Copy } from '@/i18n/en';
-import type { SavedLine, Verdict } from './types';
+import type { Milestone, SavedLine, Verdict } from './types';
 import { formatKm } from './money';
 import { findService } from '@/sample/catalog';
 
 type VerdictCopy = Copy['verdict'];
+
+const when = (m: Milestone, t: VerdictCopy) => ('km' in m ? formatKm(m.km) : t.reason.ageMonths(m.months));
 
 export function reasonShort(v: Verdict, t: VerdictCopy): string {
   switch (v.reason.kind) {
     case 'due-now':
       return t.reason.dueNow;
     case 'other-visit':
-      return v.reason.nextKm ? t.reason.dueAt(formatKm(v.reason.nextKm)) : t.reason.wasDue;
+      if (v.reason.next) return t.reason.dueAt(when(v.reason.next, t));
+      return v.reason.last ? t.reason.wasDueAt(when(v.reason.last, t)) : t.reason.wasDue;
     case 'wear-item':
       return t.reason.wear;
     case 'not-in-your-schedule':

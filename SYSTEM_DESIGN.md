@@ -140,19 +140,31 @@ interface ServiceItem {
 interface Schedule {
   id: ScheduleId;
   source: SourceRef;             // owner's manual citation
-  points: ServicePoint[];        // the manual's table columns, in order
   items: ScheduledItem[];
 }
 
 interface ServicePoint {
-  km: Km;                        // 1,000 / 5,000 / 10,000 / ...
-  months: number;                // 1 / 6 / 12 / ... ("whichever comes first")
+  km: Km;                        // 10,000 / 200,000 / ...
+  months: number;                // 12 / 120 / ... ("whichever comes first")
 }
+
+interface Interval {
+  km: Km | null;                 // null: this clock never triggers the item
+  months: number | null;         // brake fluid "every 3 years" is { km: null, months: 36 }
+}
+
+interface ItemRule {
+  at: ServicePoint[];            // fixed milestones first: coolant "at 200,000 km or 10 years"
+  every: Interval | null;        // then repeating, counted from the last `at` (or from zero)
+}
+
+type Conditions = 'normal' | 'severe';
 
 interface ScheduledItem {
   serviceId: ServiceId;          // must be kind 'scheduled'
   action: 'replace' | 'inspect' | 'clean' | 'adjust';
-  dueAt: number[];               // indexes into Schedule.points
+  normal: ItemRule;
+  severe?: ItemRule;             // the manual's "Severe" row, when it prints one
 }
 
 interface SourceRef {
@@ -161,9 +173,11 @@ interface SourceRef {
 }
 ```
 
-**Why the schedule is a table of points.** Owner's manuals print maintenance as a table: columns are service points ("1,000 km or 1 month", "10,000 km or 12 months"), rows are items, and each cell says replace, inspect, or blank. `Schedule` stores exactly that table. The first service, 5,000 km steps, time-only items (brake fluid every 24 months), and fixed-point items (coolant at 40,000 km) are all just cells. No rounding of the odometer to a multiple is needed anywhere.
+**Why each item carries its own rule.** An earlier draft stored the manual as one shared list of service points, with each item due at some of them. The first real manual transcribed (Honda City, Philippines models, pp. 404–406) doesn't fit that. Each row sets its own interval, and the km and time clocks run at different ratios per row: engine oil every 10,000 km or 1 year, oil filter every 20,000 km or 2 years, brake fluid every 3 years with no km limit, spark plugs every 100,000 km with no time limit, coolant at 200,000 km or 10 years and then every 100,000 km or 5 years. Forcing those onto shared points gives wrong verdicts for cars driven little or a lot. So each `ScheduledItem` stores the row as the manual words it. A table of dots on a column grid becomes an `every` rule read straight off the dots (dust and pollen filter at every 20,000 km / 12 month column is `every: { km: 20000, months: 12 }`), and an irregular row lists its first dots in `at`.
 
-**Authoring sugar, expanded by the build script.** Source JSON may write `{ every: { km: 20000, months: 24 } }` for an item. `scripts/build-catalog.ts` expands that into explicit `dueAt` indexes against the schedule's points and fails if the rule lands on no point. The app only ever sees the expanded table.
+**Normal and severe.** Manuals print a severe row for some items (Honda: oil, oil filter, manual transmission fluid). Severe covers stop-and-go traffic, heat above 35°C and dusty roads, which describes most Philippine driving, so the engine applies `severe` by default and falls back to `normal` where an item has no severe row (§11.1).
+
+**What the build script checks.** Every rule has at least one non-null clock, `at` milestones are increasing, and each item names the manual page its row came from.
 
 **Why the schedule is bound per year and transmission.** CVT fluid, ATF, and manual gear oil have different rows, and manuals change between model years. `Car.year` and `Car.transmission` pick the `ScheduleBinding`. The build script fails if a variant's bindings overlap or leave a gap in its years and transmissions.
 
@@ -247,7 +261,7 @@ interface Verdict {
 
 type VerdictReason =
   | { kind: 'due-now' }                                  // "All in Toyota's schedule"
-  | { kind: 'other-visit'; nextKm: Km | null; lastKm: Km | null }
+  | { kind: 'other-visit'; next: Milestone | null; last: Milestone | null }
                                                          // "Due at 40,000 km" or "Was due at 40,000 km. Ask if it was done."
   | { kind: 'wear-item' }                                // "Ask to see the worn part"
   | { kind: 'not-in-your-schedule' }                     // scheduled item, but not for this car
@@ -270,16 +284,19 @@ resolveSchedule(car, catalog) -> { schedule, usedFallback: boolean }
 
 Pick the variant's `ScheduleBinding` matching `car.year` and `car.transmission`. If `car.variantId` is null, or no binding matches, use the model's `fallbackScheduleId` and set `usedFallback`.
 
-### 5.2 Which service point
+### 5.2 Which service visit
 
 ```
-reachedPoint(odometerKm, ageMonths, schedule, tolerance) -> { index, status: 'due-now' | 'overdue', overKm, overMonths } | { index: null }
-nextPoint(odometerKm, ageMonths, schedule) -> { index, inKm, inMonths }
+cadence(schedule, conditions) -> ServicePoint      // the shortest km and months interval any item asks for
+reachedPoint(odometerKm, ageMonths, cadence, tolerance) -> { point, status: 'due-now' | 'overdue', overKm, overMonths } | { point: null }
+nextPoint(odometerKm, ageMonths, cadence) -> { point, inKm, inMonths }
 ```
 
-- A point is reached when `odometerKm >= point.km - tolerance.km` **or** `ageMonths >= point.months - tolerance.months` (whichever comes first). Defaults: 1,000 km and 1 month.
-- `reachedPoint` returns the latest reached point. It is `due-now` while both overruns are within tolerance, otherwise `overdue`. V3-11 "You're 240 km past it" is `due-now` with `overKm = 240`.
+- Visits are multiples of the cadence. Under severe conditions the City's cadence is 5,000 km or 6 months, set by the oil change.
+- A visit is reached when `odometerKm >= point.km - tolerance.km` **or** `ageMonths >= point.months - tolerance.months` (whichever comes first). Defaults: 1,000 km and 1 month.
+- `reachedPoint` returns the latest reached visit, on whichever clock is further along. It is `due-now` while both overruns are within tolerance, otherwise `overdue`. V3-11 "You're 240 km past it" is `due-now` with `overKm = 240`.
 - `nextPoint` drives V3-1 ("in 9,760 km, after this 20,000 km").
+- These drive Home and car setup only. The verdict never reads them.
 - `ageMonths` comes from `car.deliveredOn` and today's date.
 
 **The visit is confirmed, not inferred.** At the start of every check (`check/visit`), the app prefills the service point from `reachedPoint` and the quote header when it is read ("10K PMS"), and asks the user to confirm. If `odometer.readAt` is older than 14 days, the same screen asks for a fresh reading first. The confirmed `visit` is the only service input to the verdict. The odometer saved at car setup never decides a verdict on its own.
@@ -287,16 +304,18 @@ nextPoint(odometerKm, ageMonths, schedule) -> { index, inKm, inMonths }
 ### 5.3 Verdict per line
 
 ```
-verdict(line: SavedLine-without-verdict, schedule, visitIndex, usedFallback, catalog) -> Verdict
+verdict(line: SavedLine-without-verdict, schedule, visit: ServicePoint, conditions, usedFallback, catalog, tolerance) -> Verdict
 ```
+
+`visit` is the confirmed visit: its km and the car's age in months. An item is *due* at the visit when, on either clock, the visit is within tolerance of one of the item's milestones (its `at` points, then each repeat of `every`).
 
 An ordered table. The first matching row wins, and the last row catches everything, so every input has exactly one answer.
 
 | # | Condition | Verdict | Reason |
 |---|---|---|---|
 | 1 | `match.kind` is `none` | ask | unknown-item |
-| 2 | item is scheduled at the visit point | yes | due-now |
-| 3 | item is in this schedule at other points only | ask | other-visit (nearest later and earlier point) |
+| 2 | item is in this schedule and due at the visit | yes | due-now |
+| 3 | item is in this schedule but not due at the visit | ask | other-visit (nearest later and earlier milestone, on the km clock when the rule has one) |
 | 4 | item kind is `wear` | ask | wear-item |
 | 5 | item kind is `scheduled`, absent from this schedule | ask | not-in-your-schedule |
 | 6 | item kind is `upsell` and `usedFallback` | ask | approximate-schedule |
@@ -304,7 +323,7 @@ An ordered table. The first matching row wins, and the last row catches everythi
 
 Row 2 says *yes* to scheduled inspections too, because the inspection itself is part of the PMS. A replacement found by that inspection is a different, `wear` item, which lands on row 4.
 
-Row 3 covers missed services. A coolant change scheduled only at 40,000 km, quoted at a 50,000 km visit, is *Ask first* with "Was due at 40,000 km. Ask if it was done." It is never *Say no*.
+Row 3 covers missed services. A coolant change due at 200,000 km, quoted at a 210,000 km visit, is *Ask first* with "Was due at 200,000 km. Ask if it was done." It is never *Say no*.
 
 *Say no* has exactly one path, row 7. It needs a line matched with certainty (exact alias or user-confirmed), an item the catalog marks as an upsell, and the car's own schedule. Price is not a verdict input. An out-of-range price is shown as a separate note, because a fair price does not make a service required.
 
@@ -533,10 +552,10 @@ flowchart LR
 ```
 
 - **Authoring.** One file per model under `catalog/src/models/`, transcribed from the owner's manual table. Services live in `catalog/src/services.json` with their `kind`, English and Filipino names, and aliases. Every schedule cites its source. A PR that changes a schedule shows the diff and the source in review.
-- **Build script.** It is the lever. It expands authoring sugar into explicit `dueAt` indexes, validates types, and fails CI on any of these:
+- **Build script.** It is the lever. It validates types and fails CI on any of these:
   - a `serviceId` or `scheduleId` that doesn't resolve
   - a variant's bindings that overlap or leave a year or transmission uncovered
-  - a rule that lands on no service point
+  - a rule with no clock set, or `at` milestones out of order
   - a `ScheduledItem` pointing at a `wear` or `upsell` item
   - an `upsell` item appearing in any schedule
 - **Golden verdicts.** Each schedule has fixture quotes with expected verdicts, run in CI, so a schedule edit that flips a verdict shows up in review.
@@ -552,7 +571,7 @@ flowchart LR
 
 ## 11. Open questions
 
-1. **Normal or severe schedule.** PH owner's manuals also print a "severe conditions" schedule (heavy stop-and-go traffic, dust, short trips), which much of Metro Manila driving meets. Supporting it means one more axis on `ScheduleBinding` and a question in car setup. Which should be the default is a product call.
+1. **Normal or severe schedule.** Decided: severe is the default (§4.2). Still open is whether car setup should let an owner who drives in light traffic switch to normal.
 2. **Two screens have no frame yet.** Car setup needs a delivery month (`car/delivered`), and every check needs a short confirm step for the odometer and the service point (`check/visit`). Both are required for correct verdicts. The item detail screen (V3-5) also needs accept and decline controls for *Ask first* lines.
 3. **Tolerance defaults.** 1,000 km and 1 month around a service point are assumed in section 5.2. Confirm against how casas actually book PMS.
 4. **`ask` for out-of-range prices.** Section 5.3 keeps price out of the verdict. Confirm that this is the product intent.

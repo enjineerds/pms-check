@@ -30,6 +30,24 @@ export const totalsByVerdict = (lines: readonly SavedLine[]): Record<VerdictKind
 
 export const byDecision = (lines: readonly SavedLine[], d: Decision) => lines.filter((l) => l.decision === d);
 
+export type TotalCheck = { kind: 'unknown' } | { kind: 'match' } | { kind: 'mismatch'; missing: Centavos };
+
+export function totalCheck(prices: readonly Centavos[], quotedTotal: Centavos | null): TotalCheck {
+  if (quotedTotal === null) return { kind: 'unknown' };
+  const missing = (quotedTotal - sum(prices)) as Centavos;
+  return missing === 0 ? { kind: 'match' } : { kind: 'mismatch', missing };
+}
+
+export function advisorCard(q: Quote) {
+  const doThese = byDecision(q.lines, 'accept');
+  return {
+    doThese,
+    showFirst: byDecision(q.lines, 'pending'),
+    notToday: byDecision(q.lines, 'decline'),
+    willPay: sum(doThese.map((l) => l.price)),
+  };
+}
+
 export const quotedSum = (q: Quote): Centavos => sum(q.lines.map((l) => l.price));
 
 export const isChecking = (q: Quote) => q.lines.some((l) => l.decision === 'pending');

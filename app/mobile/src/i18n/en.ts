@@ -209,8 +209,10 @@ export const en = {
     word: { yes: 'Say yes', ask: 'Ask first', no: 'Say no' },
     reason: {
       dueNow: 'All in Toyota’s schedule',
-      dueAt: (km: string) => `Due at ${km}`,
+      dueAt: (when: string) => `Due at ${when}`,
+      wasDueAt: (when: string) => `Was due at ${when}`,
       wasDue: 'Was due earlier',
+      ageMonths: (n: number) => `${n} months`,
       wear: 'Check the wear',
       notInYours: 'Not in your schedule',
       approximate: 'Schedule is approximate',

@@ -24,7 +24,7 @@ export default function PickVariant() {
           label={copy.common.continue}
           onPress={() => {
             patchSetup({ variantId: selected });
-            router.push('/car/odometer');
+            router.push('/car/delivered');
           }}
         />
       }

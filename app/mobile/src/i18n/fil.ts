@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carSaved.next/away, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -60,8 +60,8 @@ export const fil: Copy = {
   },
   car: {
     title: 'Piliin ang kotse mo',
-    step: (n: number) => `Hakbang ${n} ng 4`,
-    stepOf: (n: number, model: string) => `Hakbang ${n} ng 4 · ${model}`,
+    step: (n: number) => `Hakbang ${n} ng 5`,
+    stepOf: (n: number, model: string) => `Hakbang ${n} ng 5 · ${model}`,
   },
   carModel: {
     question: 'Anong kotse ang minamaneho mo?',
@@ -90,6 +90,12 @@ export const fil: Copy = {
     askTitle: 'Itanong sa advisor ang iba',
     askBody: 'Kung kakaiba ang verdict, hilingin ang schedule nila para sa variant mo.',
   },
+  carDelivered: {
+    question: 'Kailan mo nakuha ang kotse mo?',
+    year: 'Taon',
+    month: 'Buwan',
+    hint: 'Nasa OR/CR o delivery receipt mo. Dito nagsisimula ang bilang ng buwan sa PMS schedule mo.',
+  },
   carOdometer: {
     question: 'Ano ang nakasulat sa odometer mo?',
     hint: 'Tingnan ang dashboard. Okay na ang pinakamalapit na 100 km.',
@@ -111,6 +117,7 @@ export const fil: Copy = {
     service: (km: string) => `ang ${km} km service mo. `,
     past: (km: string) => `${km} km na ang lampas mo.`,
     away: (km: string) => `${km} km pa bago ito.`,
+    age: (months: number) => `${months} buwan na ang kotse mo.`,
   },
   check: {
     scanTitle: 'I-scan ang quote',

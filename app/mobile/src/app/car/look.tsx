@@ -14,7 +14,7 @@ export default function CarLook() {
   const styles = BODY_STYLES.map((value) => ({ value, label: copy.bodyStyle[value] }));
   return (
     <Screen
-      header={<Header title={copy.car.title} subtitle={copy.car.stepOf(4, `${model.make} ${model.name}`)} />}
+      header={<Header title={copy.car.title} subtitle={copy.car.stepOf(5, `${model.make} ${model.name}`)} />}
       footer={
         <GlassButton
           label={t.save}

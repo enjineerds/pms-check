@@ -425,7 +425,7 @@ src/app/
   car/
     model.tsx                 Pick the model (V3-8)
     variant.tsx               Variant, year, transmission (V3-9), not listed (V3-22)
-    delivered.tsx             Delivery month (no frame yet, see section 11)
+    delivered.tsx             Delivery month (built without a frame, see section 11)
     look.tsx                  Body style (V3-9b)
     odometer.tsx              Odometer (V3-10)
     saved.tsx                 Car saved (V3-11)
@@ -572,7 +572,7 @@ flowchart LR
 ## 11. Open questions
 
 1. **Normal or severe schedule.** Decided: severe is the default (§4.2). Still open is whether car setup should let an owner who drives in light traffic switch to normal.
-2. **Two screens have no frame yet.** Car setup needs a delivery month (`car/delivered`), and every check needs a short confirm step for the odometer and the service point (`check/visit`). Both are required for correct verdicts. The item detail screen (V3-5) also needs accept and decline controls for *Ask first* lines.
+2. **Two screens have no frame yet.** The delivery month step (`car/delivered`) is built from the year and month chips of V3-9 and needs a design pass. Every check still needs a short confirm step for the odometer and the service point (`check/visit`), which is required for correct verdicts. The item detail screen (V3-5) also needs accept and decline controls for *Ask first* lines.
 3. **Tolerance defaults.** 1,000 km and 1 month around a service point are assumed in section 5.2. Confirm against how casas actually book PMS.
 4. **`ask` for out-of-range prices.** Section 5.3 keeps price out of the verdict. Confirm that this is the product intent.
 5. **The serif schedule note** (`app/DESIGN.md`, Typography) is still unresolved. It has no system impact, but it is listed so it isn't lost.

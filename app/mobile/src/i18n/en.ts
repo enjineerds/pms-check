@@ -57,8 +57,8 @@ export const en = {
   },
   car: {
     title: 'Pick your car',
-    step: (n: number) => `Step ${n} of 4`,
-    stepOf: (n: number, model: string) => `Step ${n} of 4 · ${model}`,
+    step: (n: number) => `Step ${n} of 5`,
+    stepOf: (n: number, model: string) => `Step ${n} of 5 · ${model}`,
   },
   carModel: {
     question: 'Which car do you drive?',
@@ -87,6 +87,12 @@ export const en = {
     askTitle: 'Ask the advisor about the rest',
     askBody: 'If a verdict looks odd, ask to see their schedule for your variant.',
   },
+  carDelivered: {
+    question: 'When did you get your car?',
+    year: 'Year',
+    month: 'Month',
+    hint: 'It’s on your OR/CR or delivery receipt. Your PMS schedule counts months from this date.',
+  },
   carOdometer: {
     question: 'What does your odometer say?',
     hint: 'Look at the dashboard. The nearest 100 km is fine.',
@@ -108,6 +114,7 @@ export const en = {
     service: (km: string) => `your ${km} km service. `,
     past: (km: string) => `You’re ${km} km past it.`,
     away: (km: string) => `You’re ${km} km away.`,
+    age: (months: number) => `Your car is ${months} months old.`,
   },
   check: {
     scanTitle: 'Scan the quote',

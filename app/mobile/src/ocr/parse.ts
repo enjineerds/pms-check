@@ -162,17 +162,32 @@ const TAX = /\bVAT|DISCOUNT|\bLESS\b/i;
 /** An odometer, phone or document number sits right after its label. */
 const NOT_PRICE = /\b(KILOMETERS?|KMS?|MILEAGE|ODO\w*|YEAR|MODEL|TEL|PHONE|MOBILE|TIN|INVOICE|DATE|PLATE|VIN|NO)\W*$|\bCALL\b/i;
 
+const HEADER_WORD = /(?<![\w/])(?:DESCRIPTIONS?|DESC\.?|PARTICULARS|ITEMS?|QTY\.?|QUANTITY|UNIT\s+(?:PRICE|COST)|U\/P|PRICE|AMOUNT|AMT\.?|NO\.)(?![\w/])/gi;
+const WORD = /\b[A-Za-z]{3,}\b/;
+
+/** Strips column headings from a row that reads as a header: two headings, or headings and nothing else. */
+function withoutHeader(text: string): string {
+  const headings = text.match(HEADER_WORD)?.length ?? 0;
+  if (headings === 0) return text;
+  const rest = text.replace(HEADER_WORD, ' ').replace(/\s+/g, ' ').trim();
+  if (headings < 2 && WORD.test(rest)) return text;
+  return WORD.test(rest) ? rest : '';
+}
+
 function pricedRow(row: Cell[]): Priced | null {
   for (let i = row.length - 1; i >= 0; i--) {
     const found = trailingAmount(row.slice(0, i + 1).map((c) => c.text).join(' '));
     if (!found) continue;
     const words = found.rest.split(/\s+/).filter(Boolean);
-    const text = words.filter((w) => !parseAmount(w) && !/^\d{1,2}$/.test(w)).join(' ');
+    const printed = words.filter((w) => !parseAmount(w) && !/^\d{1,2}$/.test(w)).join(' ');
     const others = words.map((w) => parseAmount(w)?.value).filter((v) => v !== undefined);
     const quantities = words.filter((w) => /^\d{1,2}(?:\.0+)?$/.test(w)).map(Number);
     const value = found.amount.value;
+    // Discount and tax columns repeat 0.00 on a row, so a second zero corroborates nothing.
     const corroborated = value > 0 && others.some((u) => u === value || quantities.some((q) => q > 1 && q * u === value));
-    if (NOT_PRICE.test(text) && !TOTAL.test(text)) return null;
+    if (NOT_PRICE.test(printed) && !TOTAL.test(printed)) return null;
+    // A ₱0 header row stays as a line: dropping it measured worse (mlkit prices 368 to 367, amber 209 to 214).
+    const text = withoutHeader(printed);
     if (text === '' && !found.amount.cents && found.amount.value < BARE_INTEGER) return null;
     const kind: Kind = SUMMARY.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : /:\s*$/.test(text) ? 'summary' : 'line';
     return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated };
@@ -329,7 +344,7 @@ export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): Rea
     const shape = a.odd || (centsShare > CENTS_EXPECTED && !a.cents);
     const doubtful = low || shape || l.text === '';
     const checked = balanced || (l.corroborated && !doubtful);
-    if (handwritten || a.value === 0 || !checked) return { kind: 'unsure', guess: a.value };
+    if (handwritten || !checked) return { kind: 'unsure', guess: a.value };
     return { kind: 'read', value: a.value };
   };
 

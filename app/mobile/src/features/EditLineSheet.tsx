@@ -35,11 +35,11 @@ function EditForm({
   const [name, setName] = useState(line.rawText);
   const [price, setPrice] = useState(() => {
     const c = priceOf(line.price);
-    return c ? String(c / 100) : '';
+    return c === null ? '' : String(c / 100);
   });
 
   const amount = parseFloat(price);
-  const valid = name.trim().length > 0 && amount > 0;
+  const valid = name.trim().length > 0 && amount >= 0;
   const known = serviceByName(name);
 
   const save = () => {
@@ -99,7 +99,8 @@ function EditForm({
   );
 }
 
-export const priceLabel = (l: DraftLine) => {
+export const priceLabel = (l: DraftLine, free: string) => {
   const c = priceOf(l.price);
-  return c === null ? '—' : formatPeso(c);
+  if (c === null) return '—';
+  return c === 0 ? free : formatPeso(c);
 };

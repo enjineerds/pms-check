@@ -197,6 +197,8 @@ export const fil: Copy = {
     justAdded: 'Kadadagdag lang',
     updated: 'Na-update',
     smudged: (price: string) => `Malabo ang presyo. ${price} ba ito?`,
+    free: 'Libre',
+    freeCheck: 'Libre ba ang linyang ito?',
     rightItem: 'Ito ba ang tamang item?',
     edit: (name: string) => `Ayusin ang ${name}`,
     toastAdded: (name: string) => `Naidagdag ang ${name}`,

@@ -16,6 +16,9 @@ interface Amount {
   cents: boolean;
   confidence: number | null;
   x1: number;
+  peso: boolean;
+  /** The value if a leading 9 is the engine's reading of the peso sign. */
+  pesoAs9: Centavos | null;
 }
 
 type Kind = 'line' | 'summary' | 'total';
@@ -24,6 +27,8 @@ interface Priced {
   text: string;
   amount: Amount;
   kind: Kind;
+  /** Marked a subtotal because rows above add up to it, not by its label. */
+  adds?: boolean;
   /** The row prints the price twice, or as quantity times unit price. */
   corroborated: boolean;
 }
@@ -33,8 +38,11 @@ const GROUPED = /^\d{1,3}(?:,\d{3})+(?:\.\d{2})?$/;
 const PLAIN = /^\d{1,6}(?:\.\d{2})?$/;
 const LOOKALIKE: Record<string, string> = { O: '0', o: '0', l: '1', I: '1', S: '5' };
 
-function parseAmount(raw: string): Omit<Amount, 'confidence' | 'x1'> | null {
+type Parsed = Omit<Amount, 'confidence' | 'x1'>;
+
+function parseAmount(raw: string): Parsed | null {
   const token = raw.replace(CURRENCY, '');
+  const peso = token !== raw;
   if (!/^[\dOolIS][\dOolIS,. ]*$/.test(token) || (token.match(/\d/g) ?? []).length < 2) return null;
   const digits = token.replace(/[OolIS]/g, (c) => LOOKALIKE[c]);
   const cents = /[., ](\d{2})$/.exec(digits);
@@ -45,11 +53,12 @@ function parseAmount(raw: string): Omit<Amount, 'confidence' | 'x1'> | null {
   if (wholeDigits.length > 6) return null;
   const value = (Number(wholeDigits) * 100 + (cents ? Number(cents[1]) : 0)) as Centavos;
   if (value === 0 && !(cents && token === '0.00')) return null;
-  return { value, cents: !!cents, odd: token !== digits || !(GROUPED.test(token) || PLAIN.test(token)) };
+  const pesoAs9 = !peso && /^9/.test(token) && GROUPED.test(token.slice(1)) ? (parseAmount(token.slice(1))?.value ?? null) : null;
+  return { value, cents: !!cents, odd: token !== digits || !(GROUPED.test(token) || PLAIN.test(token)), peso, pesoAs9 };
 }
 
 /** The right-most amount at the end of a cell's text, and the text before it. */
-function trailingAmount(text: string): { amount: Omit<Amount, 'confidence' | 'x1'>; rest: string } | null {
+function trailingAmount(text: string): { amount: Parsed; rest: string } | null {
   const words = text.trim().split(/\s+/);
   if (words.length >= 2 && /^\d{1,3},$/.test(words.at(-2)!) && /^\d{3}\.\d{2}$/.test(words.at(-1)!)) words.splice(-2, 2, words.at(-2)! + words.at(-1)!);
   const tryTake = (n: number) => {
@@ -147,7 +156,8 @@ function groupRows(cells: Cell[]): Cell[][] {
 const TOTAL = /\bTOTAL\b|AMOUNT\s*DUE|\bNET\b|EST(IMATED)?\.?\s*COST/i;
 const SUMMARY =
   /SUB\s*-?\s*TOTAL|\bTOTAL\s*(AMOUNT\s*)?(OF\s*)?(LABOU?R|PARTS?|MAT\w*|MISC\w*|OIL\w*|SUBLET)\b(?!\s*(&|AND)\b)|\bVAT|DISCOUNT|\bLESS\b|BALANCE|DEPOSIT|\bCASH\b|COST\s+OF\b|(LABOU?R|PARTS?)\s*AMOUNT/i;
-const NOT_PRICE = /\b(KMS?|ODO\w*|MILEAGE|TEL|PHONE|MOBILE|TIN|INVOICE|DATE|PLATE|VIN|CALL)\b/i;
+/** An odometer, phone or document number sits right after its label. */
+const NOT_PRICE = /\b(KILOMETERS?|KMS?|MILEAGE|ODO\w*|YEAR|MODEL|TEL|PHONE|MOBILE|TIN|INVOICE|DATE|PLATE|VIN|NO)\W*$|\bCALL\b/i;
 
 function pricedRow(row: Cell[]): Priced | null {
   for (let i = row.length - 1; i >= 0; i--) {
@@ -160,6 +170,7 @@ function pricedRow(row: Cell[]): Priced | null {
     const value = found.amount.value;
     const corroborated = value > 0 && others.some((u) => u === value || quantities.some((q) => q > 1 && q * u === value));
     if (NOT_PRICE.test(text) && !TOTAL.test(text)) return null;
+    if (text === '' && !found.amount.cents && found.amount.value < 10000) return null;
     const kind: Kind = SUMMARY.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : /:\s*$/.test(text) ? 'summary' : 'line';
     return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated };
   }
@@ -168,10 +179,14 @@ function pricedRow(row: Cell[]): Priced | null {
 
 const total = (xs: readonly Priced[]) => xs.reduce((a, p) => a + p.amount.value, 0);
 
-/** A row that adds up two or more rows above it is a subtotal, whatever its label says. */
+/** A row that adds up two or more rows above it, or an unlabelled amount in the summary block, is a subtotal. */
 function markSubtotals(rows: Priced[]) {
   rows.forEach((row, i) => {
     if (row.kind !== 'line') return;
+    if (row.text === '' && rows.slice(0, i).some((r) => r.kind !== 'line')) {
+      row.kind = 'summary';
+      return;
+    }
     const above = rows.slice(0, i).filter((r) => r.kind === 'line');
     for (let a = 0; a < above.length - 1; a++) {
       let sum = 0;
@@ -179,6 +194,7 @@ function markSubtotals(rows: Priced[]) {
         sum += above[b].amount.value;
         if (b > a && sum === row.amount.value) {
           row.kind = 'summary';
+          row.adds = true;
           return;
         }
       }
@@ -200,7 +216,7 @@ function addsUp(target: number, parts: number[]): boolean {
 /** The grand total only when the lines, or summary rows above it, add up to it. */
 function checkedTotal(rows: Priced[]): Centavos | null {
   const labelled = rows.filter((r) => r.kind === 'total');
-  const pool = labelled.length ? labelled : rows.filter((r) => r.kind === 'summary');
+  const pool = labelled.length ? labelled : rows.filter((r) => (r.adds || r.text === '') && !SUMMARY.test(r.text));
   if (pool.length === 0) return null;
   const top = pool.reduce((a, b) => (b.amount.value > a.amount.value ? b : a));
   const block = rows
@@ -262,14 +278,22 @@ export function matchService(rawText: string, services: readonly ServiceItem[]):
 const CONFIDENT = { vision: 0.9, mlkit: 0.6 } as const;
 const HANDWRITTEN_CENTS = 0.35;
 
+/** When the other amounts print the peso sign, a leading 9 on one of them is that sign misread. */
+function fixPesoSign(rows: Priced[]) {
+  if (rows.filter((r) => r.amount.peso).length < 0.6 * rows.length) return;
+  for (const r of rows)
+    if (r.amount.pesoAs9 !== null) r.amount = { ...r.amount, value: r.amount.pesoAs9, odd: true, pesoAs9: null };
+}
+
 function readRows(cells: Cell[], s: number) {
   const rows = groupRows(cells.map((c) => deskew(c, s)))
     .map(pricedRow)
     .filter((p): p is Priced => p !== null);
+  fixPesoSign(rows);
   markSubtotals(rows);
   const lines = rows.filter((r) => r.kind === 'line');
   const quotedTotal = checkedTotal(rows);
-  const balanced = lines.length > 0 && rows.some((r) => r.kind !== 'line' && r.amount.value === total(lines));
+  const balanced = lines.length > 1 && rows.some((r) => r.kind !== 'line' && r.amount.value === total(lines));
   return { s, rows, lines, quotedTotal, balanced, score: balanced ? 1 : 0 };
 }
 

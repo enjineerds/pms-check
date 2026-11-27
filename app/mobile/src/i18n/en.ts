@@ -183,6 +183,7 @@ export const en = {
     looksRight: 'Looks right, check it',
     none: 'No lines yet.',
     found: (n: number) => `We found ${n} ${n === 1 ? 'line' : 'lines'}.`,
+    added: (n: number) => `You added ${n} ${n === 1 ? 'line' : 'lines'}.`,
     noneBody: 'Add what the casa quoted, one line at a time.',
     tapToFix: 'Tap a line to fix it. Amber needs a quick look.',
     matchesNow: (total: string) => `The lines add up to ${total}. That matches your quote.`,

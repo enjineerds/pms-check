@@ -19,7 +19,7 @@ export default function Lines() {
   const t = useCopy().lines;
   const car = useStore(currentCar);
   const [editId, setEditId] = useState<string | null>(null);
-  const { lines, quotedTotal, edited, marks, toast, carriedOn } = draft;
+  const { lines, quotedTotal, edited, marks, toast, carriedOn, scanned } = draft;
 
   useEffect(() => {
     if (!toast) return;
@@ -66,7 +66,7 @@ export default function Lines() {
           }}
         />
       }
-      header={<Header title={t.title} subtitle={t.subtitle} />}
+      header={<Header title={t.title} subtitle={scanned ? t.subtitle : undefined} />}
       footer={
         <>
           {toast ? <Toast message={toastText(toast, t)} onUndo={draft.undo ? () => dispatch({ type: 'undo' }) : undefined} /> : null}
@@ -85,7 +85,7 @@ export default function Lines() {
       }
     >
       <Text variant="headline" className="mt-1">
-        {lines.length === 0 ? t.none : t.found(lines.length)}
+        {lines.length === 0 ? t.none : scanned ? t.found(lines.length) : t.added(lines.length)}
       </Text>
       <Text variant="small" color="ink-soft" className="mt-1.5 !text-[14px] !leading-5">
         {lines.length === 0 ? t.noneBody : subtitle}

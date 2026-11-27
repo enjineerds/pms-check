@@ -13,6 +13,7 @@ interface Snapshot {
 export interface DraftState extends Snapshot {
   quotedTotal: Centavos | null;
   shopName: string | null;
+  scanned: boolean;
   carriedOn: boolean;
   undo: Snapshot | null;
   toast: DraftToast | null;
@@ -36,6 +37,7 @@ export const initialDraft: DraftState = {
   lines: [],
   quotedTotal: null,
   shopName: null,
+  scanned: false,
   edited: false,
   marks: {},
   carriedOn: false,
@@ -60,7 +62,7 @@ export function toastText(toast: DraftToast, t: Copy['lines']): string {
 export function draftReducer(s: DraftState, a: DraftAction): DraftState {
   switch (a.type) {
     case 'scanned':
-      return { ...initialDraft, lines: a.lines, quotedTotal: a.quotedTotal, shopName: a.shopName };
+      return { ...initialDraft, lines: a.lines, quotedTotal: a.quotedTotal, shopName: a.shopName, scanned: true };
     case 'add': {
       const toast: DraftToast = { kind: 'added', name: a.line.rawText, price: priceOf(a.line.price), id: nextId(s) };
       return { ...s, lines: [...s.lines, a.line], edited: true, marks: { [a.line.id]: 'added' }, undo: snap(s), toast };

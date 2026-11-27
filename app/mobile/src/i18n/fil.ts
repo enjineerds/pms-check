@@ -186,6 +186,7 @@ export const fil: Copy = {
     looksRight: 'Tama na, suriin ito',
     none: 'Wala pang linya.',
     found: (n: number) => `Nakakita kami ng ${n} na linya.`,
+    added: (n: number) => `Nagdagdag ka ng ${n} na linya.`,
     noneBody: 'Idagdag ang singil ng casa, isang linya bawat isa.',
     tapToFix: 'I-tap ang linya para ayusin. Kailangan ng tingin ang amber.',
     matchesNow: (total: string) => `Pumapantay ang mga linya sa ${total}. Tugma ito sa quote mo.`,

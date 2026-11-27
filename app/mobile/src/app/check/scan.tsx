@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useFocusEffect } from 'expo-router';
-import { pickFromLibrary, takeFromCamera } from '@/ocr/capture';
+import { pickFromLibrary, release, takeFromCamera } from '@/ocr/capture';
 import { setPendingImage } from '@/ocr/pending';
 import type { CapturedImage } from '@/ocr/types';
 import { useCopy } from '@/i18n';
@@ -21,6 +21,7 @@ export default function Scan() {
   const [unavailable, setUnavailable] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [dark, setDark] = useState(false);
 
   // A ref, not state: two taps can land before a re-render.
   const inFlight = useRef(false);
@@ -47,6 +48,7 @@ export default function Scan() {
     inFlight.current = true;
     setBusy(true);
     setFailed(false);
+    setDark(false);
     try {
       const img = await get();
       if (!img) return unlock();
@@ -58,13 +60,22 @@ export default function Scan() {
     }
   };
 
+  // With the flash on, a dark reading may be wrong, and the reader gets the final say.
+  const shoot = async () => {
+    const { image, tooDark } = await takeFromCamera(camera.current);
+    if (!tooDark || torch) return image;
+    await release(image);
+    setDark(true);
+    return null;
+  };
+
   return (
     <Screen header={<Header title={copy.check.scanTitle} subtitle={t.subtitle} />}>
       <View className="mt-1 flex-row items-center justify-between">
-        <View className="flex-row items-center gap-2">
-          <View className="size-2 rounded-full bg-required" />
-          <Text variant="small" weight="medium">
-            {t.holdSteady}
+        <View className="flex-1 flex-row items-center gap-2 pr-3">
+          <View className={cx('size-2 rounded-full', dark ? 'bg-optional' : 'bg-ink-faint')} />
+          <Text variant="small" weight="medium" color={dark ? 'optional' : 'ink'} className="flex-1">
+            {dark ? t.tooDark : ready ? t.holdSteady : t.starting}
           </Text>
         </View>
         {unavailable ? null : (
@@ -115,7 +126,7 @@ export default function Scan() {
           accessibilityLabel={t.shutter}
           accessibilityState={{ disabled: busy || !ready }}
           disabled={busy || !ready}
-          onPress={() => run(() => takeFromCamera(camera.current))}
+          onPress={() => run(shoot)}
           className={cx('size-21 items-center justify-center rounded-full bg-surface shadow-soft', (busy || !ready) && 'opacity-50')}
         >
           <View className="size-16 overflow-hidden rounded-full shadow-glass">

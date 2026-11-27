@@ -10,9 +10,11 @@ export interface CapturedImage {
 
 export type CameraAccess = { kind: 'undetermined' } | { kind: 'granted' } | { kind: 'denied'; canAskAgain: boolean };
 
+export type UnreadableReason = 'no-priced-rows' | 'engine-error' | 'handwritten' | 'guide';
+
 export type ReadResult =
   | { kind: 'lines'; lines: DraftLine[]; quotedTotal: Centavos | null; shopName: string | null }
-  | { kind: 'unreadable'; reason: 'no-priced-rows' | 'engine-error' };
+  | { kind: 'unreadable'; reason: UnreadableReason };
 
 /** Normalized 0..1, origin top-left. */
 export interface Box {

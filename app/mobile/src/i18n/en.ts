@@ -153,6 +153,8 @@ export const en = {
   },
   scan: {
     subtitle: 'Fit the whole quote in the frame',
+    starting: 'Starting the camera…',
+    tooDark: 'Too dark. Turn on the flash or find more light.',
     holdSteady: 'Hold steady…',
     flashOn: 'Flash on',
     flashOff: 'Flash off',

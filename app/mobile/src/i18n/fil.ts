@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -156,6 +156,8 @@ export const fil: Copy = {
   },
   scan: {
     subtitle: 'Isama ang buong quote sa frame',
+    starting: 'Binubuksan ang camera…',
+    tooDark: 'Masyadong madilim. Buksan ang flash o lumipat sa maliwanag.',
     holdSteady: 'Huwag gumalaw…',
     flashOn: 'Bukas ang flash',
     flashOff: 'Patay ang flash',

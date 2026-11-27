@@ -59,6 +59,13 @@ export function toastText(toast: DraftToast, t: Copy['lines']): string {
   }
 }
 
+/** The answer "Yes" gives to the question a row shows: the price first, then the item. */
+export function confirmShown(l: DraftLine): Partial<DraftLine> | null {
+  if (l.price.kind === 'unsure') return { price: { kind: 'confirmed', value: l.price.guess } };
+  if (l.match.kind === 'fuzzy') return { match: { kind: 'confirmed', serviceId: l.match.serviceId } };
+  return null;
+}
+
 export function draftReducer(s: DraftState, a: DraftAction): DraftState {
   switch (a.type) {
     case 'scanned':

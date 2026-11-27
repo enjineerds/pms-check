@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
-import { toastText } from '@/core/draft';
+import { confirmShown, toastText } from '@/core/draft';
 import { draftToQuote } from '@/core/saveDraft';
 import { CATALOG } from '@/catalog';
 import { formatPeso } from '@/core/money';
@@ -33,10 +33,11 @@ export default function Lines() {
   const gap = sums.kind === 'mismatch' ? sums.missing : null;
   const mismatch = !edited && !carriedOn && gap !== null && lines.length > 0;
   const editing = lines.find((l) => l.id === editId) ?? null;
+  const open = lines.filter((l) => !isResolved(l)).length;
 
   const check = () => {
-    const open = lines.find((l) => !isResolved(l));
-    if (open) return setEditId(open.id);
+    const next = lines.find((l) => !isResolved(l));
+    if (next) return setEditId(next.id);
     if (!car) return;
     if (!visit) return router.replace('/check/visit');
     const q = draftToQuote(draft, visit, car, CATALOG, new Date());
@@ -45,7 +46,7 @@ export default function Lines() {
     router.push(`/quote/${q.id}`);
   };
 
-  const subtitle = !edited ? t.tapToFix : matches ? t.matchesNow(formatPeso(total)) : t.totalNow(formatPeso(total));
+  const subtitle = open > 0 ? t.toConfirm(open) : !edited ? t.tapToFix : matches ? t.matchesNow(formatPeso(total)) : t.totalNow(formatPeso(total));
 
   const goAdd = () => router.push('/check/add');
 
@@ -77,7 +78,7 @@ export default function Lines() {
             </>
           ) : (
             <>
-              <GlassButton label={t.looksRight} disabled={lines.length === 0} onPress={check} />
+              <GlassButton label={open > 0 ? t.leftToConfirm(open) : t.looksRight} disabled={lines.length === 0} onPress={check} />
               <SecondaryButton label={t.addMissing} onPress={goAdd} />
             </>
           )}
@@ -98,7 +99,15 @@ export default function Lines() {
             return (
               <View key={l.id}>
                 {plain ? <Divider className="mx-3" /> : i > 0 ? <View className="h-1" /> : null}
-                <DraftRow line={l} mark={marks[l.id]} onPress={() => setEditId(l.id)} />
+                <DraftRow
+                  line={l}
+                  mark={marks[l.id]}
+                  onPress={() => setEditId(l.id)}
+                  onConfirm={() => {
+                    const patch = confirmShown(l);
+                    if (patch) dispatch({ type: 'update', id: l.id, patch });
+                  }}
+                />
               </View>
             );
           })}

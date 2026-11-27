@@ -95,6 +95,7 @@ describe('serviceFor', () => {
       every: { km: 5_000, months: 6 },
       due: { km: 10_000, months: 12 },
       reached: true,
+      when: { kind: 'past', km: 240 },
       after: { km: 15_000, months: 18 },
     });
   });

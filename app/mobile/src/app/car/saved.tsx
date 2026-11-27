@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { groupDigits } from '@/core/money';
-import { ageMonths, DEFAULT_TOLERANCE, serviceFor } from '@/core/schedule';
+import { ageMonths, serviceFor } from '@/core/schedule';
 import { CATALOG, findModel } from '@/catalog';
 import { useCopy } from '@/i18n';
 import { currentCar, useStore } from '@/store/store';
@@ -18,10 +18,8 @@ export default function CarSaved() {
   const km = car.odometer.km;
   const months = ageMonths(car.deliveredOn, new Date());
   const service = serviceFor(car, km, months, CATALOG);
-  const due = service.due.km;
-  const over = km - due;
+  const { when } = service;
   const dueNow = service.reached;
-  const dueByAge = dueNow && over < 0 && months + DEFAULT_TOLERANCE.months >= service.due.months;
   return (
     <Screen
       footer={
@@ -54,8 +52,8 @@ export default function CarSaved() {
         <Text variant="small" weight="bold">
           {dueNow ? t.dueNow : t.next}
         </Text>
-        {t.service(groupDigits(due))}
-        {over >= 0 ? t.past(groupDigits(over)) : dueByAge ? t.age(months) : t.away(groupDigits(-over))}
+        {t.service(groupDigits(service.due.km))}
+        {when.kind === 'past' ? t.past(groupDigits(when.km)) : when.kind === 'age' ? t.age(when.months) : t.away(groupDigits(when.km))}
       </Notice>
     </Screen>
   );

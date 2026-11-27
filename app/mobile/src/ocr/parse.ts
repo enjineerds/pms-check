@@ -31,6 +31,13 @@ interface Priced {
   adds?: boolean;
   /** The row prints the price twice, or as quantity times unit price. */
   corroborated: boolean;
+  /** Vertical middle of the price cell, after deskew. */
+  y: number;
+}
+
+interface Described {
+  text: string;
+  y: number;
 }
 
 const CURRENCY = /^(?:PHP|Php|P|₱)\s?/;
@@ -179,7 +186,7 @@ function pricedRow(row: Cell[]): Priced | null {
     const found = trailingAmount(row.slice(0, i + 1).map((c) => c.text).join(' '));
     if (!found) continue;
     const words = found.rest.split(/\s+/).filter(Boolean);
-    const printed = words.filter((w) => !parseAmount(w) && !/^\d{1,2}$/.test(w)).join(' ');
+    const printed = printedWords(words);
     const others = words.map((w) => parseAmount(w)?.value).filter((v) => v !== undefined);
     const quantities = words.filter((w) => /^\d{1,2}(?:\.0+)?$/.test(w)).map(Number);
     const value = found.amount.value;
@@ -190,9 +197,64 @@ function pricedRow(row: Cell[]): Priced | null {
     const text = withoutHeader(printed);
     if (text === '' && !found.amount.cents && found.amount.value < BARE_INTEGER) return null;
     const kind: Kind = SUMMARY.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : /:\s*$/.test(text) ? 'summary' : 'line';
-    return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated };
+    return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated, y: midY(row[i]) };
   }
   return null;
+}
+
+const printedWords = (words: string[]) => words.filter((w) => !parseAmount(w) && !/^\d{1,2}$/.test(w)).join(' ');
+
+/** The description a row prints, wherever its price landed. */
+function described(row: Cell[]): Described | null {
+  const cells = row.filter((c) => !isAmountCell(c) && /[A-Za-z]{3}/.test(c.text));
+  if (cells.length === 0) return null;
+  const words = cells.flatMap((c) => c.text.trim().split(/\s+/));
+  const found = trailingAmount(words.join(' '));
+  const text = withoutHeader(printedWords(found ? found.rest.split(/\s+/) : words));
+  if (!/[A-Za-z]{3}/.test(text) || SUMMARY.test(text) || TOTAL.test(text) || NOT_PRICE.test(text)) return null;
+  return { text, y: cells.reduce((a, c) => a + midY(c), 0) / cells.length };
+}
+
+const BLANK_COST = 1.5;
+const ANCHOR_COST = 0.1;
+const MAX_OFFSET = 3;
+
+/**
+ * On a curved page one tilt can't line up every row, so some prices pair with their neighbour's text and one is left
+ * blank. Pairs prices and descriptions in reading order, letting the vertical offset drift smoothly down the page.
+ */
+function realign(lines: Priced[], texts: Described[], rowHeight: number): string[] {
+  const n = lines.length;
+  const m = texts.length;
+  type State = { cost: number; off: number | null; back: number; pick: number };
+  const states: Map<number, State>[] = [];
+  let prev = new Map<number, State>([[-1, { cost: 0, off: null, back: -1, pick: -1 }]]);
+  for (let i = 0; i < n; i++) {
+    const next = new Map<number, State>();
+    const offer = (j: number, st: State) => {
+      const cur = next.get(j);
+      if (!cur || st.cost < cur.cost) next.set(j, st);
+    };
+    for (const [j, st] of prev) {
+      offer(j, { cost: st.cost + BLANK_COST, off: st.off, back: j, pick: -1 });
+      for (let k = j + 1; k < m; k++) {
+        const off = (lines[i].y - texts[k].y) / rowHeight;
+        if (Math.abs(off) > MAX_OFFSET) continue;
+        const smooth = st.off === null ? 0 : Math.abs(off - st.off);
+        offer(k, { cost: st.cost + smooth + ANCHOR_COST * Math.abs(off), off, back: j, pick: k });
+      }
+    }
+    states.push(next);
+    prev = next;
+  }
+  let [j, best] = [...prev].reduce((a, b) => (b[1].cost < a[1].cost ? b : a));
+  const picks: number[] = [];
+  for (let i = n - 1; i >= 0; i--) {
+    picks[i] = best.pick;
+    j = best.back;
+    if (i > 0) best = states[i - 1].get(j)!;
+  }
+  return picks.map((k) => (k < 0 ? '' : texts[k].text));
 }
 
 const total = (xs: readonly Priced[]) => xs.reduce((a, p) => a + p.amount.value, 0);
@@ -315,16 +377,55 @@ function fixPesoSign(rows: Priced[]) {
     if (r.amount.pesoAs9 !== null) r.amount = { ...r.amount, value: r.amount.pesoAs9, odd: true, pesoAs9: null };
 }
 
+const COLUMN_GAP = 0.03;
+
+/** A cell that lists several service intervals, like "10,000 / 40,000 / 70,000 kms". */
+const INTERVALS = /^\s*\d{1,3},?000(?:\s*[/&,]\s*\d{1,3},?000)+\s*(?:KMS?|K)\.?\s*$/i;
+
+/** Price columns that sit side by side on the same rows, each adding up to its own total, are alternatives: a menu, not a quote. */
+function isGuide(rows: Cell[][]): boolean {
+  const priced = rows.map((r) => r.filter(isAmountCell)).filter((r) => r.length > 0);
+  const columns: { x1: number; cells: { row: number; value: number }[] }[] = [];
+  priced.forEach((cells, row) => {
+    for (const c of cells) {
+      const value = trailingAmount(c.text)!.amount.value;
+      const col = columns.find((k) => Math.abs(k.x1 - c.x1) < COLUMN_GAP);
+      if (col) col.cells.push({ row, value });
+      else columns.push({ x1: c.x1, cells: [{ row, value }] });
+    }
+  });
+  const totals = columns.flatMap((k) => {
+    if (k.cells.length < 4) return [];
+    const last = k.cells.at(-1)!;
+    const sum = k.cells.slice(0, -1).reduce((a, c) => a + c.value, 0);
+    return sum === last.value ? [{ k, total: last.value }] : [];
+  });
+  return totals.some((a) =>
+    totals.some((b) => {
+      if (a === b || a.total === b.total) return false;
+      const rowsB = new Set(b.k.cells.map((c) => c.row));
+      return a.k.cells.filter((c) => rowsB.has(c.row)).length >= a.k.cells.length / 2;
+    }),
+  );
+}
+
+const blanks = (texts: readonly string[]) => texts.filter((t) => t === '').length;
+
 function readRows(cells: Cell[], s: number) {
-  const rows = groupRows(cells.map((c) => deskew(c, s)))
-    .map(pricedRow)
-    .filter((p): p is Priced => p !== null);
+  const grouped = groupRows(cells.map((c) => deskew(c, s)));
+  const rows = grouped.map(pricedRow).filter((p): p is Priced => p !== null);
   fixPesoSign(rows);
   markSubtotals(rows);
   const lines = rows.filter((r) => r.kind === 'line');
+  if (blanks(lines.map((l) => l.text)) > 0) {
+    const heights = cells.map(height).sort((a, b) => a - b);
+    const texts = grouped.map(described).filter((d): d is Described => d !== null);
+    const paired = realign(lines, texts, heights[heights.length >> 1]);
+    if (blanks(paired) < blanks(lines.map((l) => l.text))) lines.forEach((l, i) => (l.text = paired[i]));
+  }
   const quotedTotal = checkedTotal(rows);
   const balanced = lines.length > 1 && rows.some((r) => r.kind !== 'line' && r.amount.value === total(lines));
-  return { s, rows, lines, quotedTotal, balanced, score: balanced ? 1 : 0 };
+  return { s, grouped, rows, lines, quotedTotal, balanced, score: balanced ? 1 : 0 };
 }
 
 export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): ReadResult {
@@ -333,10 +434,11 @@ export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): Rea
   const best = tried.reduce((b, r) => (r.score > b.score ? r : b));
   const { lines, quotedTotal, balanced } = best;
   if (lines.length === 0) return { kind: 'unreadable', reason: 'no-priced-rows' };
+  if (cells.some((c) => INTERVALS.test(c.text)) || isGuide(best.grouped)) return { kind: 'unreadable', reason: 'guide' };
 
   const centsShare = lines.filter((l) => l.amount.cents).length / lines.length;
-  // Printed and on-screen quotes print centavos; handwritten job orders almost never do.
-  const handwritten = centsShare < HANDWRITTEN_CENTS;
+  // Printed and on-screen quotes print centavos; handwritten job orders almost never do, and their lines read as junk.
+  if (centsShare < HANDWRITTEN_CENTS) return { kind: 'unreadable', reason: 'handwritten' };
 
   const priceOf = (l: Priced): LinePrice => {
     const a = l.amount;
@@ -344,7 +446,7 @@ export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): Rea
     const shape = a.odd || (centsShare > CENTS_EXPECTED && !a.cents);
     const doubtful = low || shape || l.text === '';
     const checked = balanced || (l.corroborated && !doubtful);
-    if (handwritten || !checked) return { kind: 'unsure', guess: a.value };
+    if (!checked) return { kind: 'unsure', guess: a.value };
     return { kind: 'read', value: a.value };
   };
 

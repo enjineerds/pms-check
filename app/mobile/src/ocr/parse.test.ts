@@ -78,6 +78,27 @@ function wrongMatches(r: ReadResult, q: ExpectedQuote): string[] {
     });
 }
 
+const wordsOf = (s: string) => new Set(s.toUpperCase().split(/[^A-Z0-9]+/).filter((w) => w.length > 2));
+const shared = (a: string, b: string) => {
+  const [x, y] = [wordsOf(a), wordsOf(b)];
+  if (x.size === 0 || y.size === 0) return 0;
+  return [...x].filter((w) => y.has(w)).length / Math.max(x.size, y.size);
+};
+const OWN_TEXT = 0.5;
+const OTHER_TEXT = 0.8;
+
+/** A read price whose text reads as another line on the quote and not as any line of that price. */
+function borrowedText(r: ReadResult, q: ExpectedQuote): string[] {
+  return linesOf(r)
+    .filter((l) => l.price.kind === 'read' && l.rawText !== '')
+    .flatMap((l) => {
+      const own = pricedExpected(q).filter((e) => e.cents === priceOf(l.price));
+      if (own.length === 0 || own.some((e) => shared(l.rawText, e.text) >= OWN_TEXT)) return [];
+      const other = q.lines.find((e) => !own.includes(e as (typeof own)[number]) && shared(l.rawText, e.text) >= OTHER_TEXT);
+      return other ? [`"${l.rawText}" at ${priceOf(l.price)} reads as "${other.text}"`] : [];
+    });
+}
+
 const VISITS: ServicePoint[] = [
   { km: 10_000 as Km, months: 12 },
   { km: 40_000 as Km, months: 48 },
@@ -102,7 +123,7 @@ function extraSayNo(r: ReadResult, q: ExpectedQuote): string[] {
   });
 }
 
-describe('parseQuote invariants on quotes, guides excluded', () => {
+describe('parseQuote invariants on quotes', () => {
   it.each(quotes)('$name: every read price and the total are on the quote', ({ result, expected }) => {
     expect(wrongPrices(result, expected)).toEqual([]);
   });
@@ -111,13 +132,21 @@ describe('parseQuote invariants on quotes, guides excluded', () => {
     expect(wrongMatches(result, expected)).toEqual([]);
   });
 
+  it.each(quotes)('$name: every read price sits next to its own description', ({ result, expected }) => {
+    expect(borrowedText(result, expected)).toEqual([]);
+  });
+
   it.each(quotes)('$name: no Say no that the expected lines don’t give', ({ result, expected }) => {
     expect(extraSayNo(result, expected)).toEqual([]);
   });
 
-  it.each(quotes.filter((c) => c.expected.medium === 'handwritten'))('$name: handwriting keeps no read price', ({ result }) => {
-    expect(linesOf(result).filter((l) => l.price.kind === 'read').map((l) => l.rawText)).toEqual([]);
-  });
+});
+
+const reasonOf = (r: ReadResult) => (r.kind === 'unreadable' ? r.reason : 'lines');
+
+it.each(cases)('$name: only handwriting goes to typing and only a guide is called one', ({ result, expected }) => {
+  const want = expected.kind === 'guide' ? 'guide' : expected.medium === 'handwritten' ? 'handwritten' : 'lines';
+  expect(reasonOf(result)).toBe(want);
 });
 
 const COLUMN_HEADING = /\b(DESCRIPTIONS?|DESC|PARTICULARS|ITEMS?|QTY|QUANTITY|UNIT|PRICE|COST|AMOUNT|AMT|NO|U\/P)\b/gi;
@@ -163,16 +192,10 @@ function score(group: Case[]) {
   ].join(' · ');
 }
 
-function describeGuide(c: (typeof cases)[number]) {
-  const r = c.result;
-  return r.kind === 'unreadable' ? `${c.name}: unreadable` : `${c.name}: ${r.lines.length} lines, total ${r.quotedTotal}`;
-}
-
 it('measured accuracy per engine and medium', () => {
   const rows = ENGINES.flatMap((engine) => [
     `${engine} all: ${score(quotes.filter((c) => c.engine === engine))}`,
     ...MEDIA.map((m) => `${engine} ${m}: ${score(quotes.filter((c) => c.engine === engine && c.expected.medium === m))}`),
-    `${engine} guide (report only) ${describeGuide(cases.find((c) => c.engine === engine && c.expected.kind === 'guide')!)}`,
   ]);
   expect(rows.join('\n')).toMatchSnapshot();
 });

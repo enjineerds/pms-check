@@ -171,6 +171,14 @@ export const fil: Copy = {
       { title: 'Isama ang apat na sulok', body: 'Ilatag nang patag at kita ang buong pahina.' },
       { title: 'Huwag gumalaw sandali', body: 'Matatag na telepono, malinaw na larawan.' },
     ],
+    handwritten: {
+      headline: 'Mukhang sulat-kamay ang quote na ito.',
+      body: 'Hindi pa namin mabasa nang maayos ang sulat-kamay para pagkatiwalaan ang mga presyo. Mas mabilis i-type ang mga linya kaysa ayusin. Walang nase-save.',
+    },
+    guide: {
+      headline: 'Mukhang listahan ito ng presyo para sa bawat service.',
+      body: 'Isang bisita lang ang sinusuri namin bawat quote. I-scan ang quote na binigay ng casa, o i-type ang mga linya nito. Walang nase-save.',
+    },
   },
   reading: {
     title: 'Binabasa ang quote mo',

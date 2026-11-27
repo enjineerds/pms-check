@@ -395,14 +395,18 @@ The bundled ML Kit model adds a few MB to the Android app. In exchange, the firs
 
 **Confidence.** Confidence turned out not to decide anything. Vision only reports 1.0, 0.5 or 0.3, and no ML Kit threshold changes the fixture results. A price stays `read` only when the page's line prices add up exactly to a printed total or subtotal, or when the row prints the price twice (or as quantity times unit price) with normal digits. Everything else is `unsure`. The parser keeps a threshold per engine anyway, as a floor.
 
-**Handwriting.** Handwritten job orders still go through OCR. Vision finds about two thirds of their raw prices, and ML Kit almost none. Every line from a page that reads as handwritten starts amber, so nothing reaches a verdict unconfirmed. A page reads as handwritten when fewer than 35% of its priced lines print centavos: the six handwritten fixtures top out at 17%, and printed and screen pages start at 58%. A printed quote in whole pesos would go all amber. "Type the lines instead" stays one tap away.
+**Handwriting.** A page that reads as handwritten goes to "couldn't read" with its own message, and "Type the lines instead" is the first button. Vision found under half of the handwritten prices and ML Kit 2 of 76, with junk text, so every line had to be checked against the paper anyway. Typing from the catalog picker is the same work without the junk. A page reads as handwritten when fewer than 35% of its priced lines print centavos. The six handwritten fixtures top out at 17%, and printed and screen pages start at 67%. A printed quote in whole pesos would be sent to typing too.
 
-**Parser accuracy.** Measured by `src/ocr/parse.test.ts` on the 39 quotes and pinned as a snapshot. No `read` price, exact match or *Say no* is wrong on any fixture.
+**Guides.** A dealer's service menu or multi-interval price table is not a quote, so it goes to "couldn't read" with a message asking for the quote for this visit. A page is a guide when one cell only lists intervals ("10,000 / 40,000 / 70,000 kms"), or when two or more price columns sit side by side on the same rows and each adds up to its own, different total. A quote with unit price and amount columns prints one total, so it doesn't trip this.
+
+**Curved pages.** One tilt can't line up every row of a page that curves, so some prices pair with the row above and one price is left with no text. When that happens, the parser re-pairs descriptions to prices in reading order and lets the vertical offset drift smoothly down the page. It keeps the result only when fewer prices are left without text. The prices themselves don't change.
+
+**Parser accuracy.** Measured by `src/ocr/parse.test.ts` on the 39 quotes and two guides, and pinned as a snapshot. No `read` price, exact match or *Say no* is wrong on any fixture. No `read` price sits next to another line's description. Every handwritten page is sent to typing, and every guide is recognised.
 
 | | Vision | ML Kit |
 |---|---|---|
-| Prices found, read or guessed | 78% | 73% |
-| Returned lines that are amber | 61% | 49% |
+| Prices found on the 33 printed and screen quotes, read or guessed | 84% | 86% |
+| Returned lines that are amber | 54% | 47% |
 | Totals found (only when they add up) | 18 of 35 | 15 of 35 |
 
 **Temp file lifecycle.** The capture or picker writes the image to the app cache. The OCR adapter deletes it in a `finally` block, on success and on failure. On launch, the app deletes any file left in its capture folder (crash or kill mid-read). Nothing else in the app gets the file path.
@@ -414,7 +418,7 @@ The bundled ML Kit model adds a few MB to the Android app. In exchange, the firs
 3. Detect the total row into `quotedTotal`. Detect the header (shop name, service point such as "10K PMS") when present, to prefill the visit.
 4. Match `rawText` against catalog `aliases` after normalization (uppercase, strip punctuation and spacing). An exact alias hit is `exact`. Otherwise, fuzzy matching (token overlap plus edit distance) proposes the best candidate as `fuzzy`, but only when it beats the runner-up by a clear margin. Otherwise the match is `none`.
 5. Keep a price `read` only when the total check or a repeated price on its row backs it (see Confidence). Flag the rest, and any odd digit shape, as `unsure` with the best guess.
-6. If no priced row is found, return "couldn't read".
+6. If no priced row is found, return "couldn't read". Return it with a reason when the page is a guide or handwritten (see above).
 
 **Review is part of the design, not a fallback.** V3-3 shows every line. A `fuzzy` line shows the catalog name it was matched to under the raw text, in amber, and needs one tap to confirm or change. An `unsure` price is amber too. The parser does not need to be perfect. It needs to be honest about what it is unsure of, and the type system makes sure nothing unsure reaches a verdict.
 

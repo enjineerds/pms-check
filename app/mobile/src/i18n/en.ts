@@ -168,6 +168,14 @@ export const en = {
       { title: 'Fit all four corners', body: 'Lay the quote flat and keep the whole page in view.' },
       { title: 'Hold still for a second', body: 'A steady phone gives a sharp photo.' },
     ],
+    handwritten: {
+      headline: 'This quote looks handwritten.',
+      body: 'We can’t read handwriting well enough to trust the prices. Typing the lines is quicker than fixing them. Nothing was saved.',
+    },
+    guide: {
+      headline: 'This looks like a price list for every service.',
+      body: 'We check the quote for one visit. Scan the quote the casa gave you, or type its lines. Nothing was saved.',
+    },
   },
   reading: {
     title: 'Reading your quote',

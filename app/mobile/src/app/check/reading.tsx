@@ -58,7 +58,7 @@ export default function Reading() {
         dispatch({ type: 'scanned', lines: res.lines, quotedTotal: res.quotedTotal, shopName: res.shopName });
         router.replace('/check/lines');
       } else {
-        router.replace('/check/couldnt-read');
+        router.replace({ pathname: '/check/couldnt-read', params: { reason: res.reason } });
       }
     });
     return () => {

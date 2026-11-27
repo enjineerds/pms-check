@@ -393,19 +393,27 @@ How the candidates fared:
 
 The bundled ML Kit model adds a few MB to the Android app. In exchange, the first scan works offline with no Google Play services download.
 
-**Confidence.** With language correction on, Vision's confidence separates right prices from wrong ones. Of the price-only lines at 0.9 or above, 57% are a real line price. Below 0.9, only 2% are. ML Kit's confidence separates weakly: 71% above 0.9 and 43% below. So the parser keeps a threshold per engine (step 5 of Parse). On Android, `unsure` leans on digit shapes and the total check more than on confidence.
+**Confidence.** Confidence turned out not to decide anything. Vision only reports 1.0, 0.5 or 0.3, and no ML Kit threshold changes the fixture results. A price stays `read` only when the page's line prices add up exactly to a printed total or subtotal, or when the row prints the price twice (or as quantity times unit price) with normal digits. Everything else is `unsure`. The parser keeps a threshold per engine anyway, as a floor.
 
-**Handwriting.** Handwritten job orders still go through OCR. Vision finds about two thirds of their prices, and ML Kit almost none. Either way, every line from a page that reads as handwritten starts amber on the review screen, so nothing reaches a verdict unconfirmed. How the parser tells a handwritten page apart is settled in step 4, against the six handwritten fixtures. "Type the lines instead" stays one tap away.
+**Handwriting.** Handwritten job orders still go through OCR. Vision finds about two thirds of their raw prices, and ML Kit almost none. Every line from a page that reads as handwritten starts amber, so nothing reaches a verdict unconfirmed. A page reads as handwritten when fewer than 35% of its priced lines print centavos: the six handwritten fixtures top out at 17%, and printed and screen pages start at 58%. A printed quote in whole pesos would go all amber. "Type the lines instead" stays one tap away.
+
+**Parser accuracy.** Measured by `src/ocr/parse.test.ts` on the 39 quotes and pinned as a snapshot. No `read` price, exact match or *Say no* is wrong on any fixture.
+
+| | Vision | ML Kit |
+|---|---|---|
+| Prices found, read or guessed | 78% | 73% |
+| Returned lines that are amber | 61% | 49% |
+| Totals found (only when they add up) | 18 of 35 | 15 of 35 |
 
 **Temp file lifecycle.** The capture or picker writes the image to the app cache. The OCR adapter deletes it in a `finally` block, on success and on failure. On launch, the app deletes any file left in its capture folder (crash or kill mid-read). Nothing else in the app gets the file path.
 
 **Parse.** These steps are deterministic and fixture-tested against the step 0 photo set.
 
-1. Cluster blocks into rows by vertical overlap.
+1. Cluster blocks into rows by vertical overlap. Photos are often tilted, so try each tilt where descriptions and prices pair well, nearest to level first, and keep the first one whose lines add up to a total.
 2. In each row, take the right-most token matching a peso amount as the price. The rest of the row is `rawText`.
 3. Detect the total row into `quotedTotal`. Detect the header (shop name, service point such as "10K PMS") when present, to prefill the visit.
 4. Match `rawText` against catalog `aliases` after normalization (uppercase, strip punctuation and spacing). An exact alias hit is `exact`. Otherwise, fuzzy matching (token overlap plus edit distance) proposes the best candidate as `fuzzy`, but only when it beats the runner-up by a clear margin. Otherwise the match is `none`.
-5. Flag prices with low OCR confidence or odd digit shapes as `unsure`, with the best guess.
+5. Keep a price `read` only when the total check or a repeated price on its row backs it (see Confidence). Flag the rest, and any odd digit shape, as `unsure` with the best guess.
 6. If no priced row is found, return "couldn't read".
 
 **Review is part of the design, not a fallback.** V3-3 shows every line. A `fuzzy` line shows the catalog name it was matched to under the raw text, in amber, and needs one tap to confirm or change. An `unsure` price is amber too. The parser does not need to be perfect. It needs to be honest about what it is unsure of, and the type system makes sure nothing unsure reaches a verdict.

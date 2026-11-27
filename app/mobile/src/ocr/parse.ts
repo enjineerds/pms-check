@@ -79,28 +79,39 @@ const midX = (c: Cell) => (c.x0 + c.x1) / 2;
 const isAmountCell = (c: Cell) => trailingAmount(c.text)?.rest === '';
 
 const SLOPES = Array.from({ length: 41 }, (_, i) => (i - 20) * 0.005);
+const PEAK_SHARE = 0.7;
 
-/** Photos taken at an angle tilt every row; pick the slope that lines amounts up with text to their left. */
-function skew(cells: Cell[]): number {
-  const amounts = cells.filter(isAmountCell);
-  const texts = cells.filter((c) => !isAmountCell(c));
-  let best = 0;
-  let bestScore = -1;
-  for (const s of SLOPES) {
-    let score = 0;
-    for (const a of amounts) {
-      const ya = midY(a) - s * midX(a);
-      const aligned = texts.some(
-        (t) => t.x1 < a.x0 && Math.abs(midY(t) - s * midX(t) - ya) < 0.25 * Math.min(height(a), height(t)),
-      );
-      if (aligned) score += 1;
-    }
-    if (score > bestScore || (score === bestScore && Math.abs(s) < Math.abs(best))) {
-      best = s;
-      bestScore = score;
-    }
+/** How many amounts pair one-to-one with text to their left once rows are tilted by `s`. */
+function pairsAt(amounts: Cell[], texts: Cell[], s: number): number {
+  const y = (c: Cell) => midY(c) - s * midX(c);
+  const candidates = amounts
+    .flatMap((a) =>
+      texts
+        .filter((t) => t.x1 < a.x0)
+        .map((t) => ({ a, t, d: Math.abs(y(t) - y(a)) / Math.min(height(a), height(t)) }))
+        .filter((p) => p.d < 0.35),
+    )
+    .sort((p, q) => p.d - q.d);
+  const used = new Set<Cell>();
+  for (const { a, t } of candidates) {
+    if (used.has(a) || used.has(t)) continue;
+    used.add(a).add(t);
   }
-  return best;
+  return used.size / 2;
+}
+
+/**
+ * Tilts worth trying, nearest level first. A tilt that shifts every row by one pairs as well as the true
+ * one, so each peak of the pairing curve is a candidate and the total check picks between them.
+ */
+function tilts(cells: Cell[]): number[] {
+  const amounts = cells.filter(isAmountCell);
+  const texts = cells.filter((c) => !isAmountCell(c) && /[A-Za-z]{3}/.test(c.text));
+  const curve = SLOPES.map((s) => pairsAt(amounts, texts, s));
+  const top = Math.max(...curve);
+  return SLOPES.filter(
+    (_, i) => curve[i] >= PEAK_SHARE * top && curve[i] >= (curve[i - 1] ?? 0) && curve[i] >= (curve[i + 1] ?? 0),
+  ).sort((a, b) => Math.abs(a) - Math.abs(b));
 }
 
 const deskew = (c: Cell, s: number): Cell => ({ ...c, y0: c.y0 - s * midX(c), y1: c.y1 - s * midX(c) });
@@ -135,7 +146,7 @@ function groupRows(cells: Cell[]): Cell[][] {
 
 const TOTAL = /\bTOTAL\b|AMOUNT\s*DUE|\bNET\b|EST(IMATED)?\.?\s*COST/i;
 const SUMMARY =
-  /SUB\s*-?\s*TOTAL|\bTOTAL\s*(LABOU?R|PARTS?|MAT|MISC|OIL|SUBLET)|\bVAT|DISCOUNT|\bLESS\b|BALANCE|DEPOSIT|\bCASH\b|COST\s+OF\b|\bAMOUNT\s*:?$/i;
+  /SUB\s*-?\s*TOTAL|\bTOTAL\s*(AMOUNT\s*)?(OF\s*)?(LABOU?R|PARTS?|MAT\w*|MISC\w*|OIL\w*|SUBLET)\b(?!\s*(&|AND)\b)|\bVAT|DISCOUNT|\bLESS\b|BALANCE|DEPOSIT|\bCASH\b|COST\s+OF\b|(LABOU?R|PARTS?)\s*AMOUNT/i;
 const NOT_PRICE = /\b(KMS?|ODO\w*|MILEAGE|TEL|PHONE|MOBILE|TIN|INVOICE|DATE|PLATE|VIN|CALL)\b/i;
 
 function pricedRow(row: Cell[]): Priced | null {
@@ -149,7 +160,7 @@ function pricedRow(row: Cell[]): Priced | null {
     const value = found.amount.value;
     const corroborated = value > 0 && others.some((u) => u === value || quantities.some((q) => q > 1 && q * u === value));
     if (NOT_PRICE.test(text) && !TOTAL.test(text)) return null;
-    const kind: Kind = SUMMARY.test(text) || /:\s*$/.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : 'line';
+    const kind: Kind = SUMMARY.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : /:\s*$/.test(text) ? 'summary' : 'line';
     return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated };
   }
   return null;
@@ -176,7 +187,7 @@ function markSubtotals(rows: Priced[]) {
 }
 
 function addsUp(target: number, parts: number[]): boolean {
-  const xs = parts.slice(0, 12);
+  const xs = parts.slice(-12);
   for (let mask = 1; mask < 1 << xs.length; mask++) {
     if ((mask & (mask - 1)) === 0) continue;
     let sum = 0;
@@ -186,14 +197,16 @@ function addsUp(target: number, parts: number[]): boolean {
   return false;
 }
 
-/** The grand total only when the lines, or the summary rows just above it, add up to it. */
+/** The grand total only when the lines, or summary rows above it, add up to it. */
 function checkedTotal(rows: Priced[]): Centavos | null {
   const labelled = rows.filter((r) => r.kind === 'total');
   const pool = labelled.length ? labelled : rows.filter((r) => r.kind === 'summary');
   if (pool.length === 0) return null;
   const top = pool.reduce((a, b) => (b.amount.value > a.amount.value ? b : a));
-  const block: number[] = [];
-  for (let j = rows.indexOf(top) - 1; j >= 0 && rows[j].kind !== 'line'; j--) block.push(rows[j].amount.value);
+  const block = rows
+    .slice(0, rows.indexOf(top))
+    .filter((r) => r.kind !== 'line')
+    .map((r) => r.amount.value);
   const lineSum = total(rows.filter((r) => r.kind === 'line'));
   return top.amount.value === lineSum || addsUp(top.amount.value, [...new Set(block)]) ? top.amount.value : null;
 }
@@ -249,20 +262,27 @@ export function matchService(rawText: string, services: readonly ServiceItem[]):
 const CONFIDENT = { vision: 0.9, mlkit: 0.6 } as const;
 const HANDWRITTEN_CENTS = 0.35;
 
-export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): ReadResult {
-  const cells = page.lines.map(cellOf);
-  const s = skew(cells);
+function readRows(cells: Cell[], s: number) {
   const rows = groupRows(cells.map((c) => deskew(c, s)))
     .map(pricedRow)
     .filter((p): p is Priced => p !== null);
   markSubtotals(rows);
   const lines = rows.filter((r) => r.kind === 'line');
+  const quotedTotal = checkedTotal(rows);
+  const balanced = lines.length > 0 && rows.some((r) => r.kind !== 'line' && r.amount.value === total(lines));
+  return { s, rows, lines, quotedTotal, balanced, score: balanced ? 1 : 0 };
+}
+
+export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): ReadResult {
+  const cells = page.lines.map(cellOf);
+  const tried = tilts(cells).map((t) => readRows(cells, t));
+  const best = tried
+    .reduce((b, r) => (r.score > b.score ? r : b));
+  const { lines, quotedTotal, balanced } = best;
   if (lines.length === 0) return { kind: 'unreadable', reason: 'no-priced-rows' };
 
-  const quotedTotal = checkedTotal(rows);
   const centsShare = lines.filter((l) => l.amount.cents).length / lines.length;
   const handwritten = centsShare < HANDWRITTEN_CENTS;
-  const balanced = quotedTotal !== null && total(lines) === quotedTotal;
 
   const priceOf = (l: Priced): LinePrice => {
     const a = l.amount;
@@ -274,13 +294,20 @@ export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): Rea
     return { kind: 'read', value: a.value };
   };
 
+  // A price left without a description means some rows paired with their neighbour's text.
+  const shifted = lines.some((l) => l.text === '');
+  const matchOf = (text: string): LineMatch => {
+    const m = matchService(text, services);
+    return shifted && m.kind === 'exact' ? { kind: 'fuzzy', serviceId: m.serviceId } : m;
+  };
+
   return {
     kind: 'lines',
     lines: lines.map(
       (l, i): DraftLine => ({
         id: `s${i + 1}`,
         rawText: l.text,
-        match: matchService(l.text, services),
+        match: matchOf(l.text),
         price: priceOf(l),
         origin: 'scanned',
       }),

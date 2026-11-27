@@ -29,7 +29,7 @@ sips -s format png /tmp/pms-icon.jpg --out ../png/app-icon-1024.png >/dev/null
 
 IMG="$REPO/app/mobile/assets/images"
 cp ../png/app-icon-1024.png "$IMG/icon.png"
-render pms-check-icon.svg -o "$IMG/splash-icon.png" --size 512
+render pms-check-icon-unchecked.svg -o "$IMG/splash-icon.png" --size 512
 render pms-check-icon-small.svg -o "$IMG/favicon.png" --size 48
 render android-foreground.svg -o "$IMG/android-icon-foreground.png" --size 512
 render android-background.svg -o "$IMG/android-icon-background.png" --size 512

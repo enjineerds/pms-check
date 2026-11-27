@@ -18,6 +18,7 @@ import { CATALOG, findModel, variantLabel } from '@/catalog';
 import { copyFor } from '@/i18n';
 import { LanguageToggle } from '@/features/LanguageToggle';
 import { ServiceRoad } from '@/features/ServiceRoad';
+import { splashLeadMs } from '@/features/SplashTick';
 import { currentCar, useStore } from '@/store/store';
 import { CAR_ARRIVE_MS, Card, CarImage, GlassButton, Icon, Text } from '@/ui';
 
@@ -43,6 +44,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
     arrived = true;
     return first && !reduceMotion;
   });
+  const [lead] = useState(splashLeadMs);
   const quotes = useStore((s) => s.quotes);
 
   const rise = useSharedValue(arriving ? 0 : 1);
@@ -51,7 +53,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   const onPanelLayout = (e: LayoutChangeEvent) => {
     if (!arriving || panelH.get() > 0) return;
     panelH.set(e.nativeEvent.layout.height);
-    rise.set(withDelay(CAR_ARRIVE_MS, withTiming(1, RISE)));
+    rise.set(withDelay(lead + CAR_ARRIVE_MS, withTiming(1, RISE)));
   };
   // Centre the car on screen while the panel is below it.
   const stageStyle = useAnimatedStyle(() => ({
@@ -113,7 +115,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
       {/* Clipped, so the car can’t paint over the header on short phones. */}
       <Animated.View className="flex-1 overflow-hidden" style={stageStyle}>
         <View className="flex-1 justify-center">
-          <CarImage style={car.bodyStyle} height={230} motion={arriving ? 'arrive' : undefined} />
+          <CarImage style={car.bodyStyle} height={230} motion={arriving ? 'arrive' : undefined} delay={lead} />
         </View>
       </Animated.View>
 
@@ -137,7 +139,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
               </Text>
             </View>
             <View className="mt-4">
-              <ServiceRoad progress={when.kind === 'away' ? Math.max(0, 1 - when.km / service.every.km) : 1} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
+              <ServiceRoad progress={when.kind === 'away' ? Math.max(0, 1 - when.km / service.every.km) : 1} animate={arriving} delayMs={lead + CAR_ARRIVE_MS + 250} />
             </View>
             <Text variant="lead" weight="bold" className="mt-2.5">
               {t.afterThis(groupDigits(service.after.km))}

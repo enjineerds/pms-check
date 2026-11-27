@@ -102,7 +102,7 @@ function extraSayNo(r: ReadResult, q: ExpectedQuote): string[] {
   });
 }
 
-describe('parseQuote invariants (SYSTEM_DESIGN §12 step 4); guides are menus of many visits and are excluded', () => {
+describe('parseQuote invariants on quotes, guides excluded', () => {
   it.each(quotes)('$name: every read price and the total are on the quote', ({ result, expected }) => {
     expect(wrongPrices(result, expected)).toEqual([]);
   });

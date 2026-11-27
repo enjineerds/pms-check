@@ -120,6 +120,16 @@ describe('parseQuote invariants on quotes, guides excluded', () => {
   });
 });
 
+const COLUMN_HEADING = /\b(DESCRIPTIONS?|DESC|PARTICULARS|ITEMS?|QTY|QUANTITY|UNIT|PRICE|COST|AMOUNT|AMT|NO|U\/P)\b/gi;
+const onlyHeadings = (text: string) => {
+  const rest = text.replace(COLUMN_HEADING, '');
+  return rest !== text && !/[A-Za-z]/.test(rest);
+};
+
+it.each(cases)('$name: no line is only column headings', ({ result }) => {
+  expect(linesOf(result).map((l) => l.rawText).filter(onlyHeadings)).toEqual([]);
+});
+
 type Case = (typeof quotes)[number];
 
 function score(group: Case[]) {

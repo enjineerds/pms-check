@@ -27,7 +27,7 @@ Verdict words: Say yes → **Oo**, Ask first → **Itanong**, Say no → **Hindi
 - Scanned just now → Kaka-scan lang
 - We found 6 lines. → Nakakita kami ng 6 na linya.
 - Tap a line to fix it. Amber needs a quick look. → I-tap ang linya para ayusin. Kailangan ng tingin ang amber.
-- The price is smudged. Is it ₱750? → Malabo ang presyo. ₱750 ba ito?
+- We couldn’t double-check this price. Is it ₱750? → Hindi namin ma-double-check ang presyo. ₱750 ba ito?
 - The lines add up to ₱14,000. → Pumapantay ang mga linya sa ₱14,000.
 - That matches the total on your quote. → Tugma ito sa kabuuan ng quote mo.
 - Looks right, check it → Tama na, suriin ito

@@ -209,7 +209,7 @@ export const en = {
     missing: (gap: string) => `A ${gap} line may be missing.`,
     justAdded: 'Just added',
     updated: 'Updated',
-    smudged: (price: string) => `The price is smudged. Is it ${price}?`,
+    checkPrice: (price: string) => `We couldn’t double-check this price. Is it ${price}?`,
     free: 'Free',
     freeCheck: 'Is this line free?',
     rightItem: 'Is this the right item?',

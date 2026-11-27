@@ -25,6 +25,7 @@ export default function ConfirmVisit() {
   const [raw, setRaw] = useState(car && fresh ? String(car.odometer.km) : '');
   const [typed, setTyped] = useState(false);
   const [picked, setPicked] = useState<ServicePoint | null>(null);
+  const [editing, setEditing] = useState(!fresh);
   if (!car) return <Redirect href="/" />;
 
   const km = Number(raw) as Km;
@@ -38,7 +39,7 @@ export default function ConfirmVisit() {
       <View className="flex-1">
         <Screen
           scroll
-          flushBottom
+          flushBottom={editing}
           header={<Header title={t.title} />}
           footer={
             <GlassButton
@@ -55,7 +56,7 @@ export default function ConfirmVisit() {
         >
           <Text variant="headline">{t.question}</Text>
           <Label>{t.odometer}</Label>
-          <OdometerReadout raw={raw} />
+          <OdometerReadout raw={raw} label={t.odometer} editing={editing} onPress={() => setEditing(true)} />
           <Text variant="caption" weight="regular" color="ink-soft" className="mt-2.5">
             {fresh ? t.fresh : t.stale(formatKm(car.odometer.km), daysOld)}
           </Text>
@@ -68,7 +69,10 @@ export default function ConfirmVisit() {
                     key={p.km}
                     label={t.point(groupDigits(p.km), p.months)}
                     selected={!!point && samePoint(p, point)}
-                    onPress={() => setPicked(p)}
+                    onPress={() => {
+                      setPicked(p);
+                      setEditing(false);
+                    }}
                   />
                 ))}
               </View>
@@ -79,12 +83,14 @@ export default function ConfirmVisit() {
           ) : null}
         </Screen>
       </View>
-      <Keypad
-        onKey={(k) => {
-          setRaw((v) => applyKey(typed ? v : '', k, { maxLength: 6 }));
-          setTyped(true);
-        }}
-      />
+      {editing ? (
+        <Keypad
+          onKey={(k) => {
+            setRaw((v) => applyKey(typed ? v : '', k, { maxLength: 6 }));
+            setTyped(true);
+          }}
+        />
+      ) : null}
     </>
   );
 }

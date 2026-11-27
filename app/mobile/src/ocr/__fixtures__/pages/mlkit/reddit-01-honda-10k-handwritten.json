@@ -1,0 +1,10 @@
+{"engine":"mlkit","width":1451,"height":644,"lines":[
+{"text":"|oT km. OHEN-Ur -|810D","confidence":0.287,"box":{"x":0.0758,"y":0.1801,"width":0.4252,"height":0.1165}},
+{"text":"SHor","confidence":0.3398,"box":{"x":0.0531,"y":0.3183,"width":0.0793,"height":0.0668}},
+{"text":"ttoos","confidence":0.4313,"box":{"x":0.532,"y":0.1258,"width":0.1178,"height":0.0714}},
+{"text":"OlLfiu","confidence":0.3001,"box":{"x":0.5369,"y":0.1801,"width":0.164,"height":0.1335}},
+{"text":"PIn GeERSE","confidence":0.395,"box":{"x":0.5569,"y":0.5668,"width":0.193,"height":0.0854}},
+{"text":"3600","confidence":0.5723,"box":{"x":0.7774,"y":0.118,"width":0.0896,"height":0.0528}},
+{"text":"-S26","confidence":0.3984,"box":{"x":0.7636,"y":0.1894,"width":0.0965,"height":0.0497}},
+{"text":"|20","confidence":0.5052,"box":{"x":0.7905,"y":0.4565,"width":0.091,"height":0.0823}}
+]}

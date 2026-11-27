@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.checkPrice/none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -212,7 +212,7 @@ export const fil: Copy = {
     missing: (gap: string) => `Baka may nawawalang linya na ${gap}.`,
     justAdded: 'Kadadagdag lang',
     updated: 'Na-update',
-    smudged: (price: string) => `Malabo ang presyo. ${price} ba ito?`,
+    checkPrice: (price: string) => `Hindi namin ma-double-check ang presyo. ${price} ba ito?`,
     free: 'Libre',
     freeCheck: 'Libre ba ang linyang ito?',
     rightItem: 'Ito ba ang tamang item?',

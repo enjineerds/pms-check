@@ -23,8 +23,8 @@ export function DraftRow({ line, mark, onPress }: Props) {
   const unsure = line.price.kind === 'unsure';
   const fuzzy = line.match.kind === 'fuzzy';
   const price = priceLabel(line, t.free);
-  const smudged = priceOf(line.price) === 0 ? t.freeCheck : t.smudged(price);
-  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? smudged : fuzzy ? t.rightItem : undefined;
+  const priceNote = priceOf(line.price) === 0 ? t.freeCheck : t.checkPrice(price);
+  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? priceNote : fuzzy ? t.rightItem : undefined;
   const tone = rowTone(line, mark);
   return (
     <Pressable

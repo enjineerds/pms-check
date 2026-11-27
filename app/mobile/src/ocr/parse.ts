@@ -183,6 +183,7 @@ function pricedRow(row: Cell[]): Priced | null {
     const others = words.map((w) => parseAmount(w)?.value).filter((v) => v !== undefined);
     const quantities = words.filter((w) => /^\d{1,2}(?:\.0+)?$/.test(w)).map(Number);
     const value = found.amount.value;
+    // Discount and tax columns repeat 0.00 on a row, so a second zero corroborates nothing.
     const corroborated = value > 0 && others.some((u) => u === value || quantities.some((q) => q > 1 && q * u === value));
     if (NOT_PRICE.test(printed) && !TOTAL.test(printed)) return null;
     // A ₱0 header row stays as a line: dropping it measured worse (mlkit prices 368 to 367, amber 209 to 214).
@@ -343,7 +344,7 @@ export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): Rea
     const shape = a.odd || (centsShare > CENTS_EXPECTED && !a.cents);
     const doubtful = low || shape || l.text === '';
     const checked = balanced || (l.corroborated && !doubtful);
-    if (handwritten || a.value === 0 || !checked) return { kind: 'unsure', guess: a.value };
+    if (handwritten || !checked) return { kind: 'unsure', guess: a.value };
     return { kind: 'read', value: a.value };
   };
 

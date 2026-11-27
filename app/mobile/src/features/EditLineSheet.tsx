@@ -99,7 +99,8 @@ function EditForm({
   );
 }
 
-export const priceLabel = (l: DraftLine) => {
+export const priceLabel = (l: DraftLine, free: string) => {
   const c = priceOf(l.price);
-  return c === null ? '—' : formatPeso(c);
+  if (c === null) return '—';
+  return c === 0 ? free : formatPeso(c);
 };

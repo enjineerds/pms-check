@@ -21,7 +21,8 @@ export function DraftRow({ line, mark, onPress }: Props) {
   const t = useCopy().lines;
   const unsure = line.price.kind === 'unsure';
   const fuzzy = line.match.kind === 'fuzzy';
-  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? t.smudged(priceLabel(line)) : fuzzy ? t.rightItem : undefined;
+  const price = priceLabel(line, t.free);
+  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? t.smudged(price) : fuzzy ? t.rightItem : undefined;
   const tone = rowTone(line, mark);
   return (
     <Pressable
@@ -39,7 +40,7 @@ export function DraftRow({ line, mark, onPress }: Props) {
         ) : null}
       </View>
       <Text variant="body" weight="bold">
-        {priceLabel(line)}
+        {price}
       </Text>
       <Icon name="pencil" size={14} colorClassName="accent-ink-soft" stroke={2} />
     </Pressable>

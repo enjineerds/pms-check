@@ -12,6 +12,7 @@ import { Redirect, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKm, groupDigits } from '@/core/money';
 import type { Car, Locale } from '@/core/types';
+import { quoteSummary } from '@/core/quote';
 import { ageMonths, serviceFor } from '@/core/schedule';
 import { CATALOG, findModel, variantLabel } from '@/catalog';
 import { copyFor } from '@/i18n';
@@ -68,7 +69,8 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
   const due = service.due.km;
   const next = service.after.km;
-  const checked = quotes.filter((q) => q.lines.every((l) => l.decision !== 'pending')).length;
+  const { open, done } = quoteSummary(quotes, car.id);
+  const quotesNote = open.length > 0 ? t.toFinish(open.length) : t.checked(done.length);
 
   return (
     <View className="flex-1 bg-ground">
@@ -143,13 +145,13 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
           <Card
             padded={false}
             className="min-h-26 flex-1 justify-between !rounded-[28px] p-4"
-            accessibilityLabel={`${t.pastQuotes}, ${t.checked(checked)}`}
+            accessibilityLabel={`${t.pastQuotes}, ${quotesNote}`}
             onPress={() => router.push('/quotes')}
           >
             <View className="flex-row items-center justify-between">
               <Icon name="receipt" size={22} stroke={2} />
-              <Text variant="small" weight="medium">
-                {t.checked(checked)}
+              <Text variant="small" weight={open.length > 0 ? 'bold' : 'medium'} color={open.length > 0 ? 'optional' : undefined}>
+                {quotesNote}
               </Text>
             </View>
             <Text variant="lead" weight="bold" className="mt-4">

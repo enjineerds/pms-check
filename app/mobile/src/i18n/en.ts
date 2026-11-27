@@ -20,6 +20,7 @@ export const en = {
     afterThis: (km: string) => `After this: ${km} km`,
     pastQuotes: 'Past quotes',
     checked: (n: number) => `${n} checked`,
+    toFinish: (n: number) => `${n} to finish`,
     cta: 'Check a casa quote',
   },
   language: {

@@ -3,6 +3,9 @@
 | vision | 39 | 0 | 92% | 81% | 89% | 773 ms |
 | vision-corrected | 39 | 0 | 92% | 84% | 91% | 872 ms |
 | mlkit | 39 | 0 | 80% | 75% | 80% | 94 ms |
+| mlkit on OPPO CPH2895 | 39 | 0 | 80% | 75% | 80% | 1062 ms |
+
+Vision timed on the iPhone 16 simulator, ML Kit on the Pixel emulator and on an OPPO CPH2895 (Android 16, Unisoc UMS9230E). The phone reads the same lines as the emulator; only the time differs.
 
 **printed**
 

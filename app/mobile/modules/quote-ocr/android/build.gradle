@@ -1,0 +1,16 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'dev.pmscheck'
+version = '1.0.0'
+
+android {
+  namespace "expo.modules.quoteocr"
+}
+
+dependencies {
+  // The bundled model, so the first scan works offline without a Play Services download.
+  implementation 'com.google.mlkit:text-recognition:16.0.1'
+}

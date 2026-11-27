@@ -22,7 +22,7 @@ The core loop has four steps:
 | Decision | Choice | Consequence |
 |---|---|---|
 | Accounts | None in v1. Everything lives on the device. | No auth and no PII on the server. Uninstalling loses history. |
-| Quote reading | On-device OCR plus a deterministic parser. The OCR engine is chosen by a spike in step 0 (section 6). | Free per scan and works offline at the counter. Accuracy depends on the parser and the review screen (V3-3). |
+| Quote reading | On-device OCR plus a deterministic parser. Apple Vision on iOS and ML Kit on Android, through our own Expo module, chosen by the step 0 spike (section 6). | Free per scan and works offline at the counter. Accuracy depends on the parser and the review screen (V3-3). |
 | Backend | Cloudflare Workers, with D1 and R2. | Stateless and cheap. It distributes catalog bundles and collects reports. It is never in the critical path of a check. |
 | Schedule data | Curated JSON in this repo, bundled in the app, refreshed over the air. | Every schedule change gets a git review. The app works with no network on first launch. |
 
@@ -357,7 +357,7 @@ sequenceDiagram
   participant R as Review (V3-3)
   U->>Cam: Scan (V3-2) or Choose a photo (V3-23)
   Cam->>OCR: temp image file
-  OCR->>P: text blocks + bounding boxes
+  OCR->>P: OcrPage (lines, boxes, confidence)
   OCR->>Cam: delete temp file (finally)
   P->>P: group rows, extract prices, match catalog
   alt nothing usable
@@ -369,17 +369,33 @@ sequenceDiagram
   U->>R: Looks right, check it
 ```
 
-**Capture.** `expo-camera` renders a live preview under V3-2's custom frame guide, "Hold steady" chip, and torch toggle. The system picker from `expo-image-picker` covers "Choose a photo" and needs no photo-library permission. We use these instead of a native scanner UI because V3-2 is a custom screen, and both libraries run in Expo Go. The camera permission flow is V3-18 (ask) and V3-19 (denied, deep link to Settings). Both paths offer "Type the lines instead". `src/ocr/capture.ts` is the only module that creates or deletes quote images.
+**Capture.** `expo-camera` renders a live preview under V3-2's custom frame guide, "Hold steady" chip, and torch toggle. The system picker from `expo-image-picker` covers "Choose a photo" and needs no photo-library permission. We use these instead of a native scanner UI because V3-2 is a custom screen, and both libraries ship with Expo. The OCR module below needs a development build. The camera permission flow is V3-18 (ask) and V3-19 (denied, deep link to Settings). Both paths offer "Type the lines instead". `src/ocr/capture.ts` is the only module that creates or deletes quote images.
 
-**OCR engine, chosen by a spike.** The review found that `@react-native-ml-kit/text-recognition` runs Google ML Kit on both platforms, not Apple Vision on iOS. Its last release was 2025-09, and nobody has confirmed it on React Native 0.88 with the New Architecture. Step 0 compares candidates on the real quote photos:
+**OCR engine.** Apple Vision on iOS and ML Kit's bundled Latin model on Android, behind our own Expo module, `modules/quote-ocr`. Both platforms return one shape, an `OcrPage`: the engine name, the upright image size, and lines of text with a 0..1 box (origin top-left) and a 0..1 confidence. `src/ocr/recognize.ts` is the only caller. It clamps boxes to the image, drops blank lines, and turns a confidence outside 0..1 into `null`.
 
-| Candidate | Engine | Check in the spike |
+The step 0 spike ran every engine on the 39 quote photos and scored the raw text against the expected lines, before any parser. The table is this module's own run on the same photos. Vision runs with language correction on, which the spike showed reads more lines.
+
+| | Vision (iOS) | ML Kit (Android) |
 |---|---|---|
-| `expo-text-extractor` | ML Kit on Android, Vision on iOS (reported) | Builds on SDK 58, output shape, confidence |
-| `@react-native-ml-kit/text-recognition` | ML Kit on both | New Architecture support on RN 0.88 |
-| Small custom Expo module | ML Kit on Android, Vision on iOS | Cost to own it |
+| Prices found, all 39 | 92% | 80% |
+| Printed (26) | 96% | 92% |
+| Screen (7) | 100% | 99% |
+| Handwritten (6) | 68% | 4% |
+| Lines read | 84% | 75% |
+| Totals found | 91% | 80% |
+| Median time | 881 ms (iPhone 16 simulator) | 648 ms (OPPO CPH2895, Unisoc UMS9230E) |
 
-The spike passes when the module builds on SDK 58, reads from a file URI the app deletes afterwards, and returns blocks with bounding boxes. Per-element confidence is a bonus. If no candidate exposes it, `unsure` prices come from digit-shape heuristics and the total check instead.
+How the candidates fared:
+
+- `expo-text-extractor` returns strings only, with no boxes. The parser needs boxes to group rows, so it was dropped.
+- `@react-native-ml-kit/text-recognition` built on RN 0.88, but it runs ML Kit on iOS too, which loses Vision's lead on handwriting. It ships no arm64 iOS-simulator build, hides ML Kit's per-line confidence, and took 1,062 ms a photo on the same phone.
+- Our own module costs two short native files, one Swift and one Kotlin. It gets the better engine on each platform and passes confidence through.
+
+The bundled ML Kit model adds a few MB to the Android app. In exchange, the first scan works offline with no Google Play services download.
+
+**Confidence.** With language correction on, Vision's confidence separates right prices from wrong ones. Of the price-only lines at 0.9 or above, 57% are a real line price. Below 0.9, only 2% are. ML Kit's confidence separates weakly: 71% above 0.9 and 43% below. So the parser keeps a threshold per engine (step 5 of Parse). On Android, `unsure` leans on digit shapes and the total check more than on confidence.
+
+**Handwriting.** Handwritten job orders still go through OCR. Vision finds about two thirds of their prices, and ML Kit almost none. Either way, every line from a page that reads as handwritten starts amber on the review screen, so nothing reaches a verdict unconfirmed. How the parser tells a handwritten page apart is settled in step 4, against the six handwritten fixtures. "Type the lines instead" stays one tap away.
 
 **Temp file lifecycle.** The capture or picker writes the image to the app cache. The OCR adapter deletes it in a `finally` block, on success and on failure. On launch, the app deletes any file left in its capture folder (crash or kill mid-read). Nothing else in the app gets the file path.
 
@@ -448,10 +464,12 @@ app/mobile/src/
   core/        pure logic: types, resolveSchedule, reachedPoint, verdict, totals, advisorCard, parser
   catalog/     bundle loading, OTA refresh
   db/          SQLite schema, migrations, repositories (cars, quotes, outbox)
-  ocr/         capture + text-recognition adapter -> TextBlock[], temp-file lifecycle
+  ocr/         capture, recognize() -> OcrPage, temp-file lifecycle
   i18n/        en.ts, fil.ts, typed keys
   ui/          V3 components from app/DESIGN.md (GlassButton, Tile, Line, Toast, AdvisorPanel)
   app/         routes only, thin
+app/mobile/modules/
+  quote-ocr/   Expo module: Apple Vision on iOS, ML Kit on Android, one output shape
 ```
 
 Boundaries are guarded once. `catalog/`, `db/`, and `ocr/` parse untrusted input into `core` types. `core` trusts its inputs and has no defensive checks.

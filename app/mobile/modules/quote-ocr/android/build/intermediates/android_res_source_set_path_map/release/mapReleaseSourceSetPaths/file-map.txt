@@ -1,0 +1,9 @@
+expo.modules.quoteocr.quote-ocr-pngs-0 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/generated/res/pngs/release
+expo.modules.quoteocr.quote-ocr-updated_navigation_xml-1 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/generated/updated_navigation_xml/release
+expo.modules.quoteocr.quote-ocr-mergeReleaseResources-2 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/intermediates/incremental/release/mergeReleaseResources/merged.dir
+expo.modules.quoteocr.quote-ocr-mergeReleaseResources-3 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+expo.modules.quoteocr.quote-ocr-release-4 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/intermediates/merged_res/release/mergeReleaseResources
+expo.modules.quoteocr.quote-ocr-release-5 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/build/intermediates/packaged_res/release/packageReleaseResources
+expo.modules.quoteocr.quote-ocr-main-6 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/src/main/res
+expo.modules.quoteocr.quote-ocr-release-7 /Users/enjineer/Documents/venture/pms-check/app/mobile/modules/quote-ocr/android/src/release/res
+gradleHome-0 /Users/enjineer/.gradle

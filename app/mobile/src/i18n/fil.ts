@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.checkPrice/none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.checkPrice/toConfirm/leftToConfirm/yes/fix/none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -204,6 +204,10 @@ export const fil: Copy = {
     added: (n: number) => `Nagdagdag ka ng ${n} na linya.`,
     noneBody: 'Idagdag ang singil ng casa, isang linya bawat isa.',
     tapToFix: 'I-tap ang linya para ayusin. Kailangan ng tingin ang amber.',
+    toConfirm: (n: number) => `${n} ang kukumpirmahin. I-tap ang Oo kung tama, o Ayusin.`,
+    leftToConfirm: (n: number) => `${n} pa ang kukumpirmahin`,
+    yes: 'Oo',
+    fix: 'Ayusin',
     matchesNow: (total: string) => `Pumapantay ang mga linya sa ${total}. Tugma ito sa quote mo.`,
     totalNow: (total: string) => `Kabuuan ngayon: ${total}.`,
     addsUp: (total: string) => `Pumapantay ang mga linya sa ${total}. `,

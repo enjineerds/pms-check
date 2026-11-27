@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
-import { formatDay, lineName, quoteTitle, quotedSum, totalsByVerdict } from '@/core/quote';
+import { decisionFor, formatDay, lineName, quoteTitle, quotedSum, totalsByVerdict } from '@/core/quote';
 import { lineNote, reasonShort, resultHeadline } from '@/core/verdictCopy';
 import type { SavedLine, VerdictKind } from '@/core/types';
 import { useCopy, useLocale } from '@/i18n';
@@ -86,12 +86,14 @@ export default function Result() {
 }
 
 function Row({ line, first, onPress }: { line: SavedLine; first: boolean; onPress: () => void }) {
-  const t = useCopy().verdict;
+  const copy = useCopy();
   const locale = useLocale();
+  const choice = line.decision === decisionFor(line.verdict.kind) ? undefined : copy.result.yourChoice(copy.item.decisions[line.decision]);
+  const note = [lineNote(line, copy.verdict), choice].filter(Boolean).join(' · ') || undefined;
   return (
     <View>
       {first ? null : <Divider />}
-      <LineRow title={lineName(line, locale)} price={line.price} kind={line.verdict.kind} note={lineNote(line, t)} onPress={onPress} />
+      <LineRow title={lineName(line, locale)} price={line.price} kind={line.verdict.kind} note={note} onPress={onPress} />
     </View>
   );
 }

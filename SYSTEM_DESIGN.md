@@ -338,7 +338,7 @@ Each saved line starts with a decision from its verdict: `yes` gives `accept`, `
 
 `advisorCard(quote, locale)` builds V3-6 in its three blocks, matching the design:
 
-- **"Please do only these"** lists `accept` lines, with "I will pay" as their sum.
+- **"Please do only these"** lists `accept` lines, with "I’ll pay" as their sum.
 - **"Show me first"** lists `pending` lines. They are never dropped from the card.
 - **"Not today, thank you"** lists `decline` lines.
 

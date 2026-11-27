@@ -59,7 +59,7 @@ export default function ItemDetail() {
             <Text variant="small" weight="bold" className="mb-1.5">
               {t.decision}
             </Text>
-            <Segmented size="sm" value={line.decision} options={DECISIONS.map((value) => ({ value, label: t.decisions[value] }))} onChange={(d) => setDecision(id, line.id, d)} />
+            <Segmented size="sm" widths="content" value={line.decision} options={DECISIONS.map((value) => ({ value, label: t.decisions[value] }))} onChange={(d) => setDecision(id, line.id, d)} />
           </View>
           <SecondaryButton label={copy.common.backToQuote} onPress={() => router.back()} />
         </>

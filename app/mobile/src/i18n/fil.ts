@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.checkPrice/toConfirm/leftToConfirm/yes/fix/none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed/starting/tooDark, lines.checkPrice/toConfirm/leftToConfirm/yes/fix/none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst/yourChoice, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -284,6 +284,7 @@ export const fil: Copy = {
     quoted: (amount: string, model: string) => `${amount} ang singil ng casa para sa ${model} mo.`,
     askMeans: ' ay makatwiran pero hindi pa kailangan. Hilingin na makita ito.',
     showAdvisor: 'Ipakita sa advisor',
+    yourChoice: (choice: string) => `Pinili mo: ${choice}`,
     source: (title: string) => `Pinagmulan: ${title}`,
     defaultSource: 'manual ng kotse mo',
   },
@@ -307,7 +308,7 @@ export const fil: Copy = {
     noWhy: 'Wala pa ito sa listahan namin. Itanong sa advisor kung para saan ito at bakit kailangan na ngayon.',
     onlyIf: 'Umoo lang kung ',
     decision: 'Desisyon ko',
-    decisions: { accept: 'Babayaran ko', pending: 'Hindi pa', decline: 'Hindi muna' },
+    decisions: { accept: 'Babayaran ko', pending: 'Ipakita muna sa akin', decline: 'Hindi muna' },
   },
   advisor: {
     title: 'Ipakita sa advisor',

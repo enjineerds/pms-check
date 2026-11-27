@@ -12,10 +12,9 @@ const VEE_LENGTH = 2 * Math.hypot(72, 104);
 /** Matches app.json: iOS draws `imageWidth` as is; this OPPO draws Android's 144 at half size. */
 const SPLASH_TILE = 72;
 
-const HANDOFF_MS = 120;
-const TICK_MS = 300;
-const HOLD_MS = 120;
-const LIFT_MS = 220;
+const TICK_MS = 240;
+const HOLD_MS = 60;
+const LIFT_MS = 200;
 const PEN = Easing.bezier(0.65, 0, 0.35, 1);
 const LIFT = Easing.bezier(0.16, 1, 0.3, 1);
 
@@ -30,7 +29,7 @@ export function SplashTick({ onDone }: { onDone: () => void }) {
   const [panel, panelInk, guide, accent] = useCSSVariable(['--color-panel', '--color-panel-ink', '--color-mark-guide', '--color-accent']) as string[];
   const tickMs = reduceMotion ? 150 : TICK_MS;
   useState(() => {
-    leadMs = HANDOFF_MS + tickMs + HOLD_MS;
+    leadMs = tickMs + HOLD_MS;
   });
   const ink = useSharedValue(0);
   const lift = useSharedValue(0);
@@ -39,13 +38,14 @@ export function SplashTick({ onDone }: { onDone: () => void }) {
   const start = () => {
     if (started.current) return;
     started.current = true;
-    SplashScreen.setOptions({ duration: HANDOFF_MS, fade: true });
+    // The overlay is drawn on the native splash's pixels, so it can replace it without a crossfade.
+    SplashScreen.setOptions({ duration: 0, fade: false });
     SplashScreen.hideAsync();
     // Reduce Motion is handled below by fading instead of drawing, so these always run.
-    ink.set(withDelay(HANDOFF_MS, withTiming(1, { duration: tickMs, easing: PEN, reduceMotion: ReduceMotion.Never }), ReduceMotion.Never));
+    ink.set(withTiming(1, { duration: tickMs, easing: PEN, reduceMotion: ReduceMotion.Never }));
     lift.set(
       withDelay(
-        HANDOFF_MS + tickMs + HOLD_MS,
+        tickMs + HOLD_MS,
         withTiming(1, { duration: LIFT_MS, easing: LIFT, reduceMotion: ReduceMotion.Never }, (finished) => {
           if (finished) scheduleOnRN(finish);
         }),

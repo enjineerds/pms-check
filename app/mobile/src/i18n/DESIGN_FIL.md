@@ -67,7 +67,7 @@ Verdict words: Say yes → **Oo**, Ask first → **Itanong**, Say no → **Hindi
 ## V3-6 Show the advisor
 - Show the advisor → Ipakita sa advisor
 - Please do only these for my 10,000 km PMS. → Pakigawa lang po ang mga ito para sa 10,000 km PMS ko.
-- I will pay → Babayaran ko
+- I’ll pay → Babayaran ko
 - Show me first → Ipakita muna sa akin
 - Not today, thank you → Hindi muna, salamat po
 - Back to my quote → Bumalik sa quote ko

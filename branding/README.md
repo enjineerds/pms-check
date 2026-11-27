@@ -13,6 +13,7 @@ An **M**, for Maintenance, drawn as two legs and a V. The V is the colour shift:
 | Tile | Panel | `#14171B` | 20 23 27 |
 | Legs on dark | Panel Ink | `#F3F5F6` | 243 245 246 |
 | Middle (V) | Showroom Yellow | `#FFC52E` | 255 197 46 |
+| Middle, not yet checked | Guide | `#3A3F45` | 58 63 69 |
 | Wordmark on light | Ink | `#0A0B0F` | 10 11 15 |
 
 Pantone/CMYK are not yet matched. Get a print proof before the first print run.
@@ -26,6 +27,7 @@ Pantone/CMYK are not yet matched. Get a print proof before the first print run.
 | One colour (print, stamp, embroidery) | `svg/pms-check-horizontal-black.svg`, `-white.svg`, `svg/pms-check-symbol-black.svg`, `-white.svg` |
 | Icon / avatar | `svg/pms-check-icon.svg` (rounded), `svg/pms-check-icon-square.svg` (full bleed, platforms round it) |
 | 32 px and below | `svg/pms-check-icon-small.svg` (thicker strokes, shallower V) |
+| App splash only | `svg/pms-check-icon-unchecked.svg`: the V in Guide grey. The app inks it yellow as it opens, so it is never shown as a finished logo anywhere else. |
 | Raster copies | `png/`, web icons in `web/` |
 
 The symbol in full colour always sits on the dark tile when the background is light. Yellow on white is too faint to carry the V.
@@ -44,7 +46,7 @@ The symbol in full colour always sits on the dark tile when the background is li
 
 ## Where it is wired in
 
-- `app/mobile/assets/images/`: `icon.png` (opaque 1024), `splash-icon.png`, `favicon.png`, `android-icon-*.png`.
+- `app/mobile/assets/images/`: `icon.png` (opaque 1024), `splash-icon.png` (the unchecked tile), `favicon.png`, `android-icon-*.png`.
 - `app/mobile/app.json`: iOS uses `icon.png` (the default `expo.icon` bundle is no longer referenced), Android adaptive background `#14171B`.
 - `landing-page/public/`: `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, linked in `src/layouts/Base.astro`. The site header and footer use `src/components/Brand.astro`: the small icon next to live "PMS Check" text (Plus Jakarta Sans 800) at the lockup proportions. Live text renders sharper on screen than the outlined lockup.
 

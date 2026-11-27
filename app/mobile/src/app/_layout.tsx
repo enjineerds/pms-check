@@ -1,6 +1,6 @@
 import '@/global.css';
 
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -14,6 +14,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import { useCSSVariable } from 'uniwind';
+import { SplashTick } from '@/features/SplashTick';
 import { sweepCaptures } from '@/ocr/capture';
 
 SplashScreen.preventAutoHideAsync();
@@ -29,9 +30,7 @@ export default function RootLayout() {
     PlusJakartaSans_800ExtraBold,
   });
 
-  useEffect(() => {
-    if (loaded || error) SplashScreen.hideAsync();
-  }, [loaded, error]);
+  const [splash, setSplash] = useState(true);
 
   if (!loaded && !error) return null;
 
@@ -40,6 +39,7 @@ export default function RootLayout() {
       <View className="w-full max-w-[390px] flex-1 bg-ground">
         <StatusBar style="dark" />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: ground } }} />
+        {splash ? <SplashTick onDone={() => setSplash(false)} /> : null}
       </View>
     </View>
   );

@@ -11,6 +11,8 @@ OUT = ROOT / "svg"
 FONT = ROOT.parent / "app/mobile/node_modules/@expo-google-fonts/plus-jakarta-sans/800ExtraBold/PlusJakartaSans_800ExtraBold.ttf"
 
 INK, PANEL, PANEL_INK, ACCENT = "#0A0B0F", "#14171B", "#F3F5F6", "#FFC52E"
+# The V before it is checked: reads as an M on the tile without competing with the legs.
+GUIDE = "#3A3F45"
 
 # Mark geometry on a 174×174 box: two legs and a V, stroke 30, round ends.
 STROKE = 30
@@ -43,12 +45,12 @@ def mark(legs_color, middle_color, small=False, transform=""):
     return f'<g{t}><path fill="{legs_color}" d="{legs}"/><path fill="{middle_color}" d="{middle}"/></g>'
 
 
-def tile(size=256, radius=58, small=False):
+def tile(size=256, radius=58, small=False, middle=ACCENT):
     # Glyph fills 42% of the tile, nudged up 1.5% for optical centring.
     scale = size * 0.42 / 174
     offset = (size - 174 * scale) / 2
     lift = size * 0.015
-    m = mark(PANEL_INK, ACCENT, small, f"translate({offset:.2f} {offset - lift:.2f}) scale({scale:.4f})")
+    m = mark(PANEL_INK, middle, small, f"translate({offset:.2f} {offset - lift:.2f}) scale({scale:.4f})")
     return f'<rect width="{size}" height="{size}" rx="{radius}" fill="{PANEL}"/>{m}'
 
 
@@ -94,6 +96,8 @@ def stacked(name, symbol_body, symbol_size, text_color, cap_ratio=0.26):
 
 def build():
     svg("pms-check-icon.svg", 256, 256, tile())
+    # The native splash: the app checks the V in yellow once it has loaded (app/mobile/src/features/SplashTick.tsx).
+    svg("pms-check-icon-unchecked.svg", 256, 256, tile(middle=GUIDE))
     svg("pms-check-icon-small.svg", 256, 256, tile(small=True))
     svg("pms-check-icon-square.svg", 1024, 1024, tile(1024, 0))
 

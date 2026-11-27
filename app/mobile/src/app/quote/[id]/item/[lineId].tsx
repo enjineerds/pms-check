@@ -8,7 +8,7 @@ import { CATALOG, findModel, findService } from '@/catalog';
 import { ruleFor } from '@/core/schedule';
 import { useCopy, useLocale } from '@/i18n';
 import { currentCar, setDecision, useQuote, useStore } from '@/store/store';
-import { GlassButton, GlossGradient, Header, Icon, Notice, Screen, SecondaryButton, Segmented, Text } from '@/ui';
+import { GlossGradient, Header, Icon, Notice, Screen, SecondaryButton, Segmented, Text } from '@/ui';
 
 const DECISIONS = ['accept', 'pending', 'decline'] as const;
 
@@ -55,7 +55,12 @@ export default function ItemDetail() {
       header={<Header title={name} subtitle={t.onQuote(formatPeso(line.price))} />}
       footer={
         <>
-          <GlassButton label={copied ? t.copied : t.copySay} onPress={copySay} />
+          <View>
+            <Text variant="small" weight="bold" className="mb-1.5">
+              {t.decision}
+            </Text>
+            <Segmented size="sm" value={line.decision} options={DECISIONS.map((value) => ({ value, label: t.decisions[value] }))} onChange={(d) => setDecision(id, line.id, d)} />
+          </View>
           <SecondaryButton label={copy.common.backToQuote} onPress={() => router.back()} />
         </>
       }
@@ -73,7 +78,7 @@ export default function ItemDetail() {
           <Pressable accessibilityRole="button" onPress={copySay} className="h-8 flex-row items-center gap-1.5 rounded-pill bg-panel-line px-3.5">
             <Icon name="copy" size={14} colorClassName="accent-panel-ink" stroke={2} />
             <Text variant="small" weight="bold" color="panel-ink">
-              {t.copy}
+              {copied ? t.copied : t.copy}
             </Text>
           </Pressable>
         </View>
@@ -108,9 +113,6 @@ export default function ItemDetail() {
           </Notice>
         </View>
       ) : null}
-
-      <Heading>{t.decision}</Heading>
-      <Segmented size="sm" value={line.decision} options={DECISIONS.map((value) => ({ value, label: t.decisions[value] }))} onChange={(d) => setDecision(id, line.id, d)} />
     </Screen>
   );
 }

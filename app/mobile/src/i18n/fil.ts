@@ -292,7 +292,6 @@ export const fil: Copy = {
     yourCar: 'kotse',
     onQuote: (price: string) => `${price} · Nasa quote mo`,
     copied: 'Nakopya na',
-    copySay: 'Kopyahin ang sasabihin',
     sayThis: 'Sabihin ito',
     copy: 'Kopyahin',
     manual: 'Ano ang sabi ng manual',

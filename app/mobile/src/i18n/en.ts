@@ -289,7 +289,6 @@ export const en = {
     yourCar: 'car',
     onQuote: (price: string) => `${price} · On your quote`,
     copied: 'Copied',
-    copySay: 'Copy what to say',
     sayThis: 'Say this',
     copy: 'Copy',
     manual: 'What the manual says',

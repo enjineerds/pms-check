@@ -46,3 +46,7 @@ example
 modules/*/android/build
 modules/*/android/.cxx
 modules/*/android/.gradle
+
+# device and browser e2e screenshots
+camera-e2e/
+capture-e2e/

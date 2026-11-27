@@ -47,6 +47,13 @@ export const MIGRATIONS = [
 
   CREATE TABLE setting (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   `,
+  `
+  CREATE TABLE outbox (
+    id TEXT PRIMARY KEY,
+    body TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
+  `,
 ];
 
 export function migrate(db: Db) {

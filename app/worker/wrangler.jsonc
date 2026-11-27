@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pms-check-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-15",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "pms-check",
+      "database_id": "local-only-replace-before-deploy",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

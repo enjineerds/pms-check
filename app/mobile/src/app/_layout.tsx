@@ -16,6 +16,7 @@ import {
 import { useCSSVariable } from 'uniwind';
 import { SplashTick } from '@/features/SplashTick';
 import { sweepCaptures } from '@/ocr/capture';
+import { useOutboxFlush } from '@/outbox';
 
 SplashScreen.preventAutoHideAsync();
 sweepCaptures();
@@ -31,6 +32,7 @@ export default function RootLayout() {
   });
 
   const [splash, setSplash] = useState(true);
+  useOutboxFlush();
 
   if (!loaded && !error) return null;
 

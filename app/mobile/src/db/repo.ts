@@ -191,5 +191,17 @@ export function insertQuote(db: Db, q: Quote) {
   });
 }
 
-export const updateDecision = (db: Db, quoteId: string, lineId: string, decision: Decision) =>
+export interface OutboxEntry {
+  id: string;
+  body: string;
+}
+
+export const enqueue = (db: Db, entry: OutboxEntry, createdAt: string) =>
+  db.run('INSERT OR IGNORE INTO outbox (id, body, created_at) VALUES (?, ?, ?)', [entry.id, entry.body, createdAt]);
+
+export const loadOutbox = (db: Db): OutboxEntry[] => db.all<OutboxEntry>('SELECT id, body FROM outbox ORDER BY created_at, id');
+
+export const dropFromOutbox = (db: Db, id: string) => db.run('DELETE FROM outbox WHERE id = ?', [id]);
+
+export const updateDecision =(db: Db, quoteId: string, lineId: string, decision: Decision) =>
   db.run('UPDATE quote_line SET decision = ? WHERE quote_id = ? AND id = ?', [decision, quoteId, lineId]);

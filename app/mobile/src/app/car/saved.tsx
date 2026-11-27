@@ -27,11 +27,11 @@ export default function CarSaved() {
           <GlassButton
             label={copy.common.checkQuote}
             onPress={() => {
-              router.dismissAll();
+              goHome();
               router.push('/check/visit');
             }}
           />
-          <SecondaryButton label={t.home} onPress={() => router.dismissAll()} />
+          <SecondaryButton label={t.home} onPress={goHome} />
         </>
       }
     >
@@ -59,3 +59,8 @@ export default function CarSaved() {
   );
 }
 
+// On first run Home redirected to car setup, so setup is the stack's root and dismissAll alone lands back on it.
+function goHome() {
+  router.dismissAll();
+  router.replace('/');
+}

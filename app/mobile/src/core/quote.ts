@@ -52,6 +52,11 @@ export const quotedSum = (q: Quote): Centavos => sum(q.lines.map((l) => l.price)
 
 export const isChecking = (q: Quote) => q.lines.some((l) => l.decision === 'pending');
 
+export function quoteSummary(quotes: readonly Quote[], carId: string): { open: Quote[]; done: Quote[] } {
+  const mine = quotes.filter((q) => q.carId === carId);
+  return { open: mine.filter(isChecking), done: mine.filter((q) => !isChecking(q)) };
+}
+
 export const savedAmount = (q: Quote): Centavos => sum(byDecision(q.lines, 'decline').map((l) => l.price));
 
 export const decisionFor = (k: VerdictKind): Decision => (k === 'yes' ? 'accept' : k === 'no' ? 'decline' : 'pending');

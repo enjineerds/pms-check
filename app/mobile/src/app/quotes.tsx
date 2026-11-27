@@ -1,20 +1,20 @@
 import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { formatPeso } from '@/core/money';
-import { formatDay, isChecking, quoteTitle, savedAmount, sum } from '@/core/quote';
+import { formatDay, isChecking, quoteSummary, quoteTitle, savedAmount, sum } from '@/core/quote';
 import { useCopy } from '@/i18n';
-import { useStore } from '@/store/store';
+import { currentCar, useStore } from '@/store/store';
 import { Card, cx, Divider, GlassButton, GlossGradient, Header, Icon, Screen, Text } from '@/ui';
 
 export default function Quotes() {
   const all = useStore((s) => s.quotes);
+  const car = useStore(currentCar);
   const copy = useCopy();
   const t = copy.quotes;
   // `?empty=1` previews the empty state.
   const { empty } = useLocalSearchParams<{ empty?: string }>();
-  const quotes = empty ? [] : all;
-  const open = quotes.filter(isChecking);
-  const done = quotes.filter((q) => !isChecking(q));
+  const { open, done } = quoteSummary(empty || !car ? [] : all, car?.id ?? '');
+  const quotes = [...open, ...done];
   const saved = sum(done.map(savedAmount));
   const cta = <GlassButton label={copy.common.checkQuote} onPress={() => router.push('/check/visit')} />;
 

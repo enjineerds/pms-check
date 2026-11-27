@@ -1,5 +1,5 @@
 import type { Centavos, Decision, Km, Quote, SavedLine, ScheduleId, Verdict, VerdictKind } from './types';
-import { advisorCard, savedAmount, totalCheck, totalsByVerdict } from './quote';
+import { advisorCard, quoteSummary, savedAmount, totalCheck, totalsByVerdict } from './quote';
 
 const peso = (n: number) => (n * 100) as Centavos;
 const VERDICT: Record<VerdictKind, Verdict> = {
@@ -15,9 +15,9 @@ const line = (id: string, price: number, kind: VerdictKind, decision: Decision):
   verdict: VERDICT[kind],
   decision,
 });
-const quote = (lines: SavedLine[]): Quote => ({
-  id: 'q',
-  carId: 'c',
+const quote = (lines: SavedLine[], id = 'q', carId = 'c'): Quote => ({
+  id,
+  carId,
   shopName: null,
   visit: { point: { km: 10_000 as Km, months: 12 }, odometerKm: 10_240 as Km },
   scheduleId: 's' as ScheduleId,
@@ -75,5 +75,19 @@ describe('advisorCard, SYSTEM_DESIGN §5.5', () => {
 describe('savedAmount', () => {
   it('is what the owner declined', () => {
     expect(savedAmount(quote([oil, filter, flush, injector]))).toBe(peso(4_000));
+  });
+});
+
+describe('quoteSummary', () => {
+  const done = quote([oil, flush], 'done');
+  const open = quote([oil, filter], 'open');
+  const otherCar = quote([flush], 'other', 'c2');
+
+  it('keeps only the given car’s quotes, so a second car starts with no history', () => {
+    expect(quoteSummary([done, open, otherCar], 'c2')).toEqual({ open: [], done: [otherCar] });
+  });
+
+  it('splits a car’s quotes into ones still being checked and ones decided', () => {
+    expect(quoteSummary([done, open, otherCar], 'c')).toEqual({ open: [open], done: [done] });
   });
 });

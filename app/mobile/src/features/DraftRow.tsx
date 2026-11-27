@@ -1,4 +1,5 @@
 import { Pressable, View } from 'react-native';
+import { priceOf } from '@/core/quote';
 import type { DraftLine } from '@/core/types';
 import { useCopy } from '@/i18n';
 import { cx, Icon, Text } from '@/ui';
@@ -22,7 +23,8 @@ export function DraftRow({ line, mark, onPress }: Props) {
   const unsure = line.price.kind === 'unsure';
   const fuzzy = line.match.kind === 'fuzzy';
   const price = priceLabel(line, t.free);
-  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? t.smudged(price) : fuzzy ? t.rightItem : undefined;
+  const smudged = priceOf(line.price) === 0 ? t.freeCheck : t.smudged(price);
+  const note = mark === 'added' ? t.justAdded : mark === 'updated' ? t.updated : unsure ? smudged : fuzzy ? t.rightItem : undefined;
   const tone = rowTone(line, mark);
   return (
     <Pressable

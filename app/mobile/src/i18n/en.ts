@@ -195,6 +195,7 @@ export const en = {
     updated: 'Updated',
     smudged: (price: string) => `The price is smudged. Is it ${price}?`,
     free: 'Free',
+    freeCheck: 'Is this line free?',
     rightItem: 'Is this the right item?',
     edit: (name: string) => `Edit ${name}`,
     toastAdded: (name: string) => `${name} added`,

@@ -1,0 +1,13 @@
+{"engine":"vision","width":1451,"height":644,"lines":[
+{"text":"I0T km. OHEOM-UP - 1820","confidence":1,"box":{"x":0.0625,"y":0.1863,"width":0.4375,"height":0.104}},
+{"text":"SHOP MATERIPAS","confidence":1,"box":{"x":0.0484,"y":0.3133,"width":0.2762,"height":0.1101}},
+{"text":"-850","confidence":1,"box":{"x":0.3309,"y":0.3458,"width":0.1571,"height":0.0667}},
+{"text":"OIL FILTER","confidence":1,"box":{"x":0.536,"y":0.2,"width":0.1793,"height":0.0833}},
+{"text":"-526","confidence":1,"box":{"x":0.7357,"y":0.1833,"width":0.1257,"height":0.0667}},
+{"text":"DIP WASHEN - 44","confidence":1,"box":{"x":0.536,"y":0.2667,"width":0.3253,"height":0.1045}},
+{"text":"BRANCE CUEATER -250","confidence":1,"box":{"x":0.5379,"y":0.3789,"width":0.3383,"height":0.092}},
+{"text":"TAD GRESSE -120","confidence":1,"box":{"x":0.5287,"y":0.4705,"width":0.3549,"height":0.0885}},
+{"text":"PIR GREASE","confidence":1,"box":{"x":0.5397,"y":0.5621,"width":0.2107,"height":0.1009}},
+{"text":"-70","confidence":1,"box":{"x":0.7671,"y":0.55,"width":0.1109,"height":0.0833}},
+{"text":"-","confidence":1,"box":{"x":0.8022,"y":0.7875,"width":0.0148,"height":0.0167}}
+]}

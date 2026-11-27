@@ -1,0 +1,11 @@
+{"engine":"mlkit","width":3024,"height":4032,"lines":[
+{"text":"Laleor","confidence":0.416,"box":{"x":0.1237,"y":0.0375,"width":0.0797,"height":0.0337}},
+{"text":"Lalbor nsuodns 33","confidence":0.312,"box":{"x":0.2037,"y":0.2334,"width":0.3882,"height":0.0295}},
+{"text":"Fully sunthcke oll =220","confidence":0.3141,"box":{"x":0.1293,"y":0.2783,"width":0.5651,"height":0.0263}},
+{"text":"windsheld uashen","confidence":0.3651,"box":{"x":0.1353,"y":0.4167,"width":0.2222,"height":0.029}},
+{"text":"Teaent","confidence":0.3379,"box":{"x":0.2282,"y":0.4551,"width":0.1197,"height":0.0221}},
+{"text":"kcane","confidence":0.3398,"box":{"x":0.2649,"y":0.4876,"width":0.0618,"height":0.0255}},
+{"text":">1","confidence":0.3516,"box":{"x":0.4772,"y":0.3204,"width":0.038,"height":0.0149}},
+{"text":"LsoD","confidence":0.3086,"box":{"x":0.6438,"y":0.3487,"width":0.047,"height":0.0223}},
+{"text":"= |2s0","confidence":0.3852,"box":{"x":0.6078,"y":0.4596,"width":0.085,"height":0.0188}}
+]}

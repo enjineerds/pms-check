@@ -1,0 +1,17 @@
+{"engine":"mlkit","width":1141,"height":1336,"lines":[
+{"text":"NAME","confidence":0.5488,"box":{"x":0.2077,"y":0.0711,"width":0.0649,"height":0.0247}},
+{"text":"A0DEL/ UNIT","confidence":0.6633,"box":{"x":0.0947,"y":0.1257,"width":0.1823,"height":0.0254}},
+{"text":"PLATE NO.","confidence":0.8052,"box":{"x":0.099,"y":0.1819,"width":0.1297,"height":0.0187}},
+{"text":"ODO","confidence":0.7214,"box":{"x":0.1008,"y":0.2358,"width":0.057,"height":0.0165}},
+{"text":"CELLPHONE #","confidence":0.8309,"box":{"x":0.099,"y":0.2904,"width":0.1691,"height":0.018}},
+{"text":"TECHNICIAN","confidence":0.7852,"box":{"x":0.0964,"y":0.3451,"width":0.1543,"height":0.0195}},
+{"text":"REMARKS","confidence":0.8722,"box":{"x":0.1025,"y":0.3945,"width":0.1218,"height":0.018}},
+{"text":"9-22-20","confidence":0.404,"box":{"x":0.3839,"y":0.0052,"width":0.213,"height":0.0322}},
+{"text":"ECOSPORT","confidence":0.4204,"box":{"x":0.383,"y":0.1145,"width":0.2138,"height":0.0337}},
+{"text":":S6365","confidence":0.4466,"box":{"x":0.355,"y":0.2208,"width":0.2007,"height":0.0382}},
+{"text":"CAANGI OL","confidence":0.3296,"box":{"x":0.1525,"y":0.4491,"width":0.2726,"height":0.0404}},
+{"text":"CALDFILTER-","confidence":0.3888,"box":{"x":0.1499,"y":0.497,"width":0.3374,"height":0.0479}},
+{"text":"TỊM |DE BELT ) g.500","confidence":0.3967,"box":{"x":0.0929,"y":0.7118,"width":0.5986,"height":0.0561}},
+{"text":"EPaINE vUPPORT- 5.500","confidence":0.4468,"box":{"x":0.0605,"y":0.7732,"width":0.6284,"height":0.0913}},
+{"text":"2C,300","confidence":0.4121,"box":{"x":0.546,"y":0.8398,"width":0.2042,"height":0.0726}}
+]}

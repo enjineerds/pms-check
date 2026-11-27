@@ -25,17 +25,22 @@ const context = await browser.newContext({
   locale: 'en-PH',
 });
 
+// Expo's dev error toast sits over the footer buttons and would land in every screenshot.
+const hideDevToast = (page) => page.evaluate(() => document.getElementById('error-toast')?.remove());
+
 const tap = async (page, label) => {
-  if (typeof label === 'object') {
-    await page.locator('input').first().fill(label.type);
-    await page.waitForTimeout(700);
-    return;
+  await hideDevToast(page);
+  if (label === 'back') {
+    await page.goBack();
+  } else if (typeof label === 'object') {
+    await page.locator('input:visible').last().fill(label.type);
+  } else {
+    // Screens under the top of a stack stay in the DOM, so only a visible control counts.
+    const text = page.getByText(label, { exact: true }).filter({ visible: true });
+    const control = page.locator('[role=button], [role=link], [role=radio], [tabindex]').filter({ has: text, visible: true });
+    // An inline link is a pressable Text with no role of its own.
+    await ((await control.count()) ? control : text).last().click({ timeout: 5000 });
   }
-  const target = page
-    .locator('[role=button], [role=link], [role=radio], [tabindex]')
-    .filter({ has: page.getByText(label, { exact: true }) })
-    .last();
-  await target.click({ timeout: 5000 });
   await page.waitForTimeout(700);
 };
 
@@ -48,7 +53,9 @@ for (const s of scenarios.filter((s) => !filter || s.name.includes(filter))) {
     if (s.waitText) await page.getByText(s.waitText, { exact: true }).last().waitFor({ timeout: 15000 });
     await page.waitForTimeout(1200);
     for (const label of s.taps ?? []) await tap(page, label);
+    if (s.shows) await page.getByText(s.shows, { exact: true }).last().waitFor({ timeout: 5000 });
     await page.waitForTimeout(800);
+    await hideDevToast(page);
     await page.screenshot({ path: join(outDir, `${s.name}.png`), caret: 'hide', animations: 'disabled' });
     console.log('ok', s.name);
   } catch (e) {

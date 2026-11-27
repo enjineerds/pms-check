@@ -1,6 +1,6 @@
 import type { Copy } from './en';
 
-// Need a native read: home.checked (`nasuri`), home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
+// Need a native read: home.checked (`nasuri`), home.upcoming/now/over/monthsOld, home.toFinish (`tatapusin pa`), common.back/close/clear/undo/deleteKey, cars.*, quotes.empty/noneTitle/noneBody, quote.oilChange, carVariant.variant, carDelivered.*, visit.*, carSaved.next/away/age, scan.flashOn/unavailable/shutter/failed, lines.none/noneBody/matchesNow/totalNow/addsUpBut/missing/carryOn/justAdded/updated/rightItem/edit/toast*, editLine.*, addLine.howMuch/add/item/change/quotedQuestion/range/search, verdict.reason.wasDue/wasDueAt/ageMonths/wear/notInYours/approximate/unknown, verdict.unlisted, verdict.headline.yes/notDue/wear/unsure, verdict.say.yes/ask, result.notFound/allIn/askFirst, item.notFound/yourCar/copied/noManual/either/listsEvery/listsAtThen/notListed/wearPart/sourceNotFound/noWhy/decision/decisions, report.thisQuote/sentNote.
 export const fil: Copy = {
   common: {
     back: 'Bumalik',
@@ -19,6 +19,10 @@ export const fil: Copy = {
     yourCars: 'Mga kotse mo',
     due: (km: string) => `Due na ang ${km} km service mo.`,
     pms: 'Ito ang PMS mo, ang naka-iskedyul na maintenance ng gumawa. Suriin ang quote ng casa bago ka umoo sa kahit ano.',
+    upcoming: (km: string) => `Sa ${km} km ang susunod mong service.`,
+    now: 'ngayon',
+    over: (km: string) => `lampas ${km} km`,
+    monthsOld: (months: number) => `${months} buwan na`,
     inKm: (km: string) => `sa ${km} km`,
     afterThis: (km: string) => `Susunod: ${km} km`,
     pastQuotes: 'Mga lumang quote',

@@ -67,8 +67,9 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
   const model = findModel(car.modelId);
   const km = car.odometer.km;
   const service = serviceFor(car, km, ageMonths(car.deliveredOn, new Date()), CATALOG);
-  const due = service.due.km;
-  const next = service.after.km;
+  const { when } = service;
+  const whenLabel =
+    when.kind === 'away' ? t.inKm(groupDigits(when.km)) : when.kind === 'age' ? t.monthsOld(when.months) : when.km > 0 ? t.over(groupDigits(when.km)) : t.now;
   const { open, done } = quoteSummary(quotes, car.id);
   const quotesNote = open.length > 0 ? t.toFinish(open.length) : t.checked(done.length);
 
@@ -122,7 +123,7 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
         onLayout={onPanelLayout}
       >
         <Text variant="headline">
-          {t.due(groupDigits(due))}
+          {(service.reached ? t.due : t.upcoming)(groupDigits(service.due.km))}
         </Text>
         <Text variant="small" weight="regular" color="ink-soft" className="mt-2 !text-[14px] !leading-5">
           {t.pms}
@@ -132,14 +133,14 @@ function Garage({ car, language }: { car: Car; language: Locale }) {
             <View className="flex-row items-center justify-between">
               <Icon name="clock" size={22} stroke={2} />
               <Text variant="small" weight="medium">
-                {t.inKm(groupDigits(next - km))}
+                {whenLabel}
               </Text>
             </View>
             <View className="mt-4">
-              <ServiceRoad progress={Math.min(1, Math.max(0, 1 - (next - km) / service.every.km))} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
+              <ServiceRoad progress={when.kind === 'away' ? Math.max(0, 1 - when.km / service.every.km) : 1} animate={arriving} delayMs={CAR_ARRIVE_MS + 250} />
             </View>
             <Text variant="lead" weight="bold" className="mt-2.5">
-              {t.afterThis(groupDigits(next))}
+              {t.afterThis(groupDigits(service.after.km))}
             </Text>
           </Card>
           <Card

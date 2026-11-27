@@ -1,6 +1,6 @@
 import type { Car, Km, Transmission, VariantId, YearMonth } from './types';
 import { CATALOG, CVT, FALLBACK, MANUAL, MODEL_ID, VARIANT_ID } from './__fixtures__/catalog';
-import { cadence, nextPoint, reachedPoint, resolveSchedule } from './schedule';
+import { cadence, nextPoint, reachedPoint, resolveSchedule, serviceFor } from './schedule';
 
 const car = (over: Partial<Car> = {}): Car => ({
   id: 'car-1',
@@ -121,5 +121,25 @@ describe('nextPoint', () => {
 
   it('moves past a service the moment the months reach it', () => {
     expect(next(3_000, 12)).toMatchObject({ point: { km: 20_000 } });
+  });
+});
+
+describe('serviceFor, how far the due visit is (#25)', () => {
+  const at = (km: number, months: number) => serviceFor(car(), km as Km, months, CATALOG);
+
+  it('counts the distance to the due visit, not the one after it', () => {
+    expect(at(2_000, 2)).toMatchObject({ due: { km: 5_000 }, reached: false, when: { kind: 'away', km: 3_000 } });
+  });
+
+  it('is due within tolerance and still counts the last few km', () => {
+    expect(at(4_900, 4)).toMatchObject({ due: { km: 5_000 }, reached: true, when: { kind: 'away', km: 100 } });
+  });
+
+  it('says the car is due by age when the months ran out before the km', () => {
+    expect(at(4_900, 8)).toMatchObject({ due: { km: 5_000 }, reached: true, when: { kind: 'age', months: 8 } });
+  });
+
+  it('says how far past the due visit the car has driven', () => {
+    expect(at(5_400, 5)).toMatchObject({ due: { km: 5_000 }, reached: true, when: { kind: 'past', km: 400 } });
   });
 });

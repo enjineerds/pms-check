@@ -74,15 +74,26 @@ export function ageMonths(deliveredOn: YearMonth, now: Date): number {
 
 type CarSchedule = Pick<Car, 'modelId' | 'variantId' | 'year' | 'transmission'>;
 
-/** The visit the car is due for (reached, or the next one), and the visit after it. */
+export type DueWhen = { kind: 'away'; km: number } | { kind: 'past'; km: number } | { kind: 'age'; months: number };
+
+/** The visit the car is due for (reached, or the next one), how far off it is, and the visit after it. */
 export function serviceFor(car: CarSchedule, odometerKm: Km, months: number, catalog: CatalogBundle, conditions: Conditions = 'severe') {
   const every = cadence(resolveSchedule(car, catalog).schedule, conditions);
-  const reached = reachedPoint(odometerKm, months, every);
-  const due = reached.point ?? nextPoint(odometerKm, months, every).point;
+  const point = reachedPoint(odometerKm, months, every).point;
+  const reached = point !== null;
+  const due = point ?? nextPoint(odometerKm, months, every).point;
+  const over = odometerKm - due.km;
+  const when: DueWhen =
+    over >= 0
+      ? { kind: 'past', km: over }
+      : reached && months + DEFAULT_TOLERANCE.months >= due.months
+        ? { kind: 'age', months }
+        : { kind: 'away', km: -over };
   return {
     every,
     due,
-    reached: reached.point !== null,
+    reached,
+    when,
     after: { km: (due.km + every.km) as Km, months: due.months + every.months },
   };
 }

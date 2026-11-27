@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`measured accuracy per engine and medium 1`] = `
-"vision all: 39 quotes · prices 394/504 78% · amber 263/458 57% · totals 17/35 · matches 65/79 · unreadable 0
-vision printed: 26 quotes · prices 249/306 81% · amber 141/281 50% · totals 14/24 · matches 39/47 · unreadable 0
-vision screen: 7 quotes · prices 111/122 91% · amber 67/122 55% · totals 3/6 · matches 21/25 · unreadable 0
-vision handwritten: 6 quotes · prices 34/76 45% · amber 55/55 100% · totals 0/5 · matches 5/7 · unreadable 0
+"vision all: 39 quotes · prices 394/504 78% · amber 278/458 61% · totals 18/35 · matches 86/103 · unreadable 0
+vision printed: 26 quotes · prices 249/306 81% · amber 148/281 53% · totals 15/24 · matches 51/59 · unreadable 0
+vision screen: 7 quotes · prices 111/122 91% · amber 75/122 61% · totals 3/6 · matches 29/34 · unreadable 0
+vision handwritten: 6 quotes · prices 34/76 45% · amber 55/55 100% · totals 0/5 · matches 6/10 · unreadable 0
 vision guide (report only) vision/reddit-01-mitsubishi-mirage-60k-table.json: 17 lines, total 1498800
-mlkit all: 39 quotes · prices 368/504 73% · amber 194/427 45% · totals 14/35 · matches 59/70 · unreadable 0
-mlkit printed: 26 quotes · prices 252/306 82% · amber 143/292 49% · totals 10/24 · matches 39/47 · unreadable 0
-mlkit screen: 7 quotes · prices 114/122 93% · amber 40/124 32% · totals 4/6 · matches 20/23 · unreadable 0
+mlkit all: 39 quotes · prices 368/504 73% · amber 209/427 49% · totals 15/35 · matches 80/93 · unreadable 0
+mlkit printed: 26 quotes · prices 252/306 82% · amber 150/292 51% · totals 11/24 · matches 51/61 · unreadable 0
+mlkit screen: 7 quotes · prices 114/122 93% · amber 48/124 39% · totals 4/6 · matches 29/32 · unreadable 0
 mlkit handwritten: 6 quotes · prices 2/76 3% · amber 11/11 100% · totals 0/5 · matches 0/0 · unreadable 0
 mlkit guide (report only) mlkit/reddit-01-mitsubishi-mirage-60k-table.json: 17 lines, total 1498800"
 `;

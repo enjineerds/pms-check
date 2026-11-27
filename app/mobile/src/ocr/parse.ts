@@ -57,7 +57,6 @@ function parseAmount(raw: string): Parsed | null {
   return { value, cents: !!cents, odd: token !== digits || !(GROUPED.test(token) || PLAIN.test(token)), peso, pesoAs9 };
 }
 
-/** The right-most amount at the end of a cell's text, and the text before it. */
 function trailingAmount(text: string): { amount: Parsed; rest: string } | null {
   const words = text.trim().split(/\s+/);
   if (words.length >= 2 && /^\d{1,3},$/.test(words.at(-2)!) && /^\d{3}\.\d{2}$/.test(words.at(-1)!)) words.splice(-2, 2, words.at(-2)! + words.at(-1)!);
@@ -89,8 +88,10 @@ const isAmountCell = (c: Cell) => trailingAmount(c.text)?.rest === '';
 
 const SLOPES = Array.from({ length: 41 }, (_, i) => (i - 20) * 0.005);
 const PEAK_SHARE = 0.7;
+const PAIR_GAP = 0.35;
+const SAME_ROW = 0.5;
+const TALL = 2;
 
-/** How many amounts pair one-to-one with text to their left once rows are tilted by `s`. */
 function pairsAt(amounts: Cell[], texts: Cell[], s: number): number {
   const y = (c: Cell) => midY(c) - s * midX(c);
   const candidates = amounts
@@ -98,7 +99,7 @@ function pairsAt(amounts: Cell[], texts: Cell[], s: number): number {
       texts
         .filter((t) => t.x1 < a.x0)
         .map((t) => ({ a, t, d: Math.abs(y(t) - y(a)) / Math.min(height(a), height(t)) }))
-        .filter((p) => p.d < 0.35),
+        .filter((p) => p.d < PAIR_GAP),
     )
     .sort((p, q) => p.d - q.d);
   const used = new Set<Cell>();
@@ -109,15 +110,13 @@ function pairsAt(amounts: Cell[], texts: Cell[], s: number): number {
   return used.size / 2;
 }
 
-/**
- * Tilts worth trying, nearest level first. A tilt that shifts every row by one pairs as well as the true
- * one, so each peak of the pairing curve is a candidate and the total check picks between them.
- */
+/** A tilt that shifts every row by one pairs as well as the true one, so every peak is a candidate. */
 function tilts(cells: Cell[]): number[] {
   const amounts = cells.filter(isAmountCell);
   const texts = cells.filter((c) => !isAmountCell(c) && /[A-Za-z]{3}/.test(c.text));
   const curve = SLOPES.map((s) => pairsAt(amounts, texts, s));
   const top = Math.max(...curve);
+  if (top === 0) return [0];
   return SLOPES.filter(
     (_, i) => curve[i] >= PEAK_SHARE * top && curve[i] >= (curve[i - 1] ?? 0) && curve[i] >= (curve[i + 1] ?? 0),
   ).sort((a, b) => Math.abs(a) - Math.abs(b));
@@ -130,7 +129,7 @@ const overlap = (a: Cell, b: Cell) =>
 
 function groupRows(cells: Cell[]): Cell[][] {
   const heights = cells.map(height).sort((a, b) => a - b);
-  const tall = 2 * heights[heights.length >> 1];
+  const tall = TALL * heights[heights.length >> 1];
   const rows: Cell[][] = [];
   for (const cell of [...cells].sort((a, b) => midY(a) - midY(b))) {
     if (height(cell) > tall) {
@@ -138,7 +137,7 @@ function groupRows(cells: Cell[]): Cell[][] {
       continue;
     }
     let best: Cell[] | null = null;
-    let bestScore = 0.5;
+    let bestScore = SAME_ROW;
     for (const row of rows) {
       if (row.length === 1 && height(row[0]) > tall) continue;
       const score = Math.max(...row.map((c) => overlap(c, cell)));
@@ -153,9 +152,13 @@ function groupRows(cells: Cell[]): Cell[][] {
   return rows.map((r) => r.sort((a, b) => a.x0 - b.x0)).sort((a, b) => midY(a[0]) - midY(b[0]));
 }
 
-const TOTAL = /\bTOTAL\b|AMOUNT\s*DUE|\bNET\b|EST(IMATED)?\.?\s*COST/i;
+const TOTAL = /TOTAL\b|AMOUNT\s*DUE|\bNET\b|EST(IMATED)?\.?\s*COST/i;
 const SUMMARY =
-  /SUB\s*-?\s*TOTAL|\bTOTAL\s*(AMOUNT\s*)?(OF\s*)?(LABOU?R|PARTS?|MAT\w*|MISC\w*|OIL\w*|SUBLET)\b(?!\s*(&|AND)\b)|\bVAT|DISCOUNT|\bLESS\b|BALANCE|DEPOSIT|\bCASH\b|COST\s+OF\b|(LABOU?R|PARTS?)\s*AMOUNT/i;
+  /SUB\s*-?\s*TOTAL|\bTOTAL\s*(AMOUNT\s*)?(OF\s*)?(LABOU?R|PARTS?|MAT\w*|MISC\w*|OIL\w*|SUBLET)\b(?!\s*(&|AND\b))|\bVAT|DISCOUNT|\bLESS\b|BALANCE|DEPOSIT|\bCASH\b|COST\s+OF\b|(LABOU?R|PARTS?)\s*AMOUNT/i;
+const BARE_INTEGER = 100_00 as Centavos;
+const SUBTOTAL = /SUB\s*-?\s*TOTAL/i;
+const TAX = /\bVAT|DISCOUNT|\bLESS\b/i;
+
 /** An odometer, phone or document number sits right after its label. */
 const NOT_PRICE = /\b(KILOMETERS?|KMS?|MILEAGE|ODO\w*|YEAR|MODEL|TEL|PHONE|MOBILE|TIN|INVOICE|DATE|PLATE|VIN|NO)\W*$|\bCALL\b/i;
 
@@ -170,7 +173,7 @@ function pricedRow(row: Cell[]): Priced | null {
     const value = found.amount.value;
     const corroborated = value > 0 && others.some((u) => u === value || quantities.some((q) => q > 1 && q * u === value));
     if (NOT_PRICE.test(text) && !TOTAL.test(text)) return null;
-    if (text === '' && !found.amount.cents && found.amount.value < 10000) return null;
+    if (text === '' && !found.amount.cents && found.amount.value < BARE_INTEGER) return null;
     const kind: Kind = SUMMARY.test(text) ? 'summary' : TOTAL.test(text) ? 'total' : /:\s*$/.test(text) ? 'summary' : 'line';
     return { text, amount: { ...found.amount, confidence: row[i].confidence, x1: row[i].x1 }, kind, corroborated };
   }
@@ -216,7 +219,10 @@ function addsUp(target: number, parts: number[]): boolean {
 /** The grand total only when the lines, or summary rows above it, add up to it. */
 function checkedTotal(rows: Priced[]): Centavos | null {
   const labelled = rows.filter((r) => r.kind === 'total');
-  const pool = labelled.length ? labelled : rows.filter((r) => (r.adds || r.text === '') && !SUMMARY.test(r.text));
+  const taxed = rows.some((r) => TAX.test(r.text));
+  const pool = labelled.length
+    ? labelled
+    : rows.filter((r) => ((r.adds || r.text === '') && !SUMMARY.test(r.text)) || (!taxed && SUBTOTAL.test(r.text)));
   if (pool.length === 0) return null;
   const top = pool.reduce((a, b) => (b.amount.value > a.amount.value ? b : a));
   const block = rows
@@ -228,11 +234,16 @@ function checkedTotal(rows: Priced[]): Centavos | null {
 }
 
 const compact = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
+const stem = (t: string) => (t.length > 5 ? t.replace(/(ING|ER|S)$/, '') : t);
 const tokens = (s: string) =>
   s
     .toUpperCase()
     .split(/[^A-Z0-9]+/)
-    .filter((t) => t.length > 1);
+    .filter((t) => t.length > 1)
+    .map(stem);
+
+/** Words that name a product sold alongside a service, so "ENGINE OIL TREATMENT" is not engine oil. */
+const PRODUCT = new Set(['TREATMENT', 'ADDITIVE', 'STICKER', 'GREASE', 'PASTE', 'SPRAY', 'DIFF', 'PROTECTOR', 'SAND', 'PAPER']);
 
 function editDistance(a: string, b: string): number {
   const d = Array.from({ length: b.length + 1 }, (_, j) => j);
@@ -250,19 +261,21 @@ function editDistance(a: string, b: string): number {
 
 const sameToken = (a: string, b: string) => a === b || (a.length >= 4 && b.length >= 4 && editDistance(a, b) <= 1);
 
+const EXTRA_WORD = 0.05;
+const FUZZY_MIN = 0.6;
+const FUZZY_MARGIN = 0.15;
+
 function similarity(text: string, alias: string): number {
   const t = tokens(text);
   const a = tokens(alias);
   if (a.length === 0 || t.length === 0) return 0;
+  if (t.some((y) => PRODUCT.has(y) && !a.includes(y))) return 0;
   const covered = a.filter((x) => t.some((y) => sameToken(x, y))).length / a.length;
   const extra = t.filter((y) => !a.some((x) => sameToken(x, y))).length;
   const [ct, ca] = [compact(text), compact(alias)];
   const close = 1 - editDistance(ct, ca) / Math.max(ct.length, ca.length);
-  return covered * (0.75 + 0.25 * close) - 0.05 * extra;
+  return covered * (0.75 + 0.25 * close) - EXTRA_WORD * Math.min(extra, 3);
 }
-
-const FUZZY_MIN = 0.6;
-const FUZZY_MARGIN = 0.15;
 
 export function matchService(rawText: string, services: readonly ServiceItem[]): LineMatch {
   const key = compact(rawText);
@@ -277,10 +290,12 @@ export function matchService(rawText: string, services: readonly ServiceItem[]):
 
 const CONFIDENT = { vision: 0.9, mlkit: 0.6 } as const;
 const HANDWRITTEN_CENTS = 0.35;
+const PESO_SHARE = 0.6;
+const CENTS_EXPECTED = 0.5;
 
 /** When the other amounts print the peso sign, a leading 9 on one of them is that sign misread. */
 function fixPesoSign(rows: Priced[]) {
-  if (rows.filter((r) => r.amount.peso).length < 0.6 * rows.length) return;
+  if (rows.filter((r) => r.amount.peso).length < PESO_SHARE * rows.length) return;
   for (const r of rows)
     if (r.amount.pesoAs9 !== null) r.amount = { ...r.amount, value: r.amount.pesoAs9, odd: true, pesoAs9: null };
 }
@@ -300,18 +315,18 @@ function readRows(cells: Cell[], s: number) {
 export function parseQuote(page: OcrPage, services: readonly ServiceItem[]): ReadResult {
   const cells = page.lines.map(cellOf);
   const tried = tilts(cells).map((t) => readRows(cells, t));
-  const best = tried
-    .reduce((b, r) => (r.score > b.score ? r : b));
+  const best = tried.reduce((b, r) => (r.score > b.score ? r : b));
   const { lines, quotedTotal, balanced } = best;
   if (lines.length === 0) return { kind: 'unreadable', reason: 'no-priced-rows' };
 
   const centsShare = lines.filter((l) => l.amount.cents).length / lines.length;
+  // Printed and on-screen quotes print centavos; handwritten job orders almost never do.
   const handwritten = centsShare < HANDWRITTEN_CENTS;
 
   const priceOf = (l: Priced): LinePrice => {
     const a = l.amount;
     const low = a.confidence !== null && a.confidence < CONFIDENT[page.engine];
-    const shape = a.odd || (centsShare > 0.5 && !a.cents);
+    const shape = a.odd || (centsShare > CENTS_EXPECTED && !a.cents);
     const doubtful = low || shape || l.text === '';
     const checked = balanced || (l.corroborated && !doubtful);
     if (handwritten || a.value === 0 || !checked) return { kind: 'unsure', guess: a.value };
